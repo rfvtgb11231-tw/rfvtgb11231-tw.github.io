@@ -45,6 +45,63 @@
 </head>
 <body>
 
+<header>🐶 熊嶼寵物美容｜定型化契約確認</header>
+
+<section>
+  <h2>📄 寵物美容服務定型化契約</h2>
+
+  <div class="contract-box">
+    <p>
+      一、本契約為寵物美容服務之定型化契約。<br><br>
+
+      二、服務期間如發生不可抗力或寵物突發健康問題，乙方不負醫療責任，惟應即時通知甲方。<br><br>
+
+      三、甲方應如實告知寵物健康狀況、攻擊性、疾病史，若隱匿導致損害，責任由甲方自負。<br><br>
+
+      四、其他未盡事宜，依相關法令辦理。<br><br>
+
+      （以下請放你完整的定型化契約全文）
+    </p>
+  </div>
+
+  <label class="agree">
+    <input type="checkbox" id="agreeCheck">
+    我已完整閱讀並同意上述定型化契約內容
+  </label>
+</section>
+
+<section id="formSection" class="disabled">
+  <h2>📝 契約資料填寫</h2>
+
+  <form>
+    <label>飼主姓名</label>
+    <input type="text" placeholder="請輸入姓名">
+
+    <label>聯絡電話</label>
+    <input type="tel" placeholder="請輸入電話">
+
+    <label>寵物姓名</label>
+    <input type="text" placeholder="請輸入寵物姓名">
+
+    <button type="submit">送出契約資料</button>
+  </form>
+</section>
+
+<script>
+  const checkbox = document.getElementById('agreeCheck');
+  const formSection = document.getElementById('formSection');
+
+  checkbox.addEventListener('change', function () {
+    if (this.checked) {
+      formSection.classList.remove('disabled');
+    } else {
+      formSection.classList.add('disabled');
+    }
+  });
+</script>
+
+</body>
+
 <header>🐶 有吉寵物精品美容SPA</header>
 
 <section>

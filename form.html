@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>契約資料填寫</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+  margin: 0;
+  background: #f7f7f7;
+  color: #333;
+}
+
+header {
+  background: #ffffff;
+  padding: 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+}
+
+section {
+  margin: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 6px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  background: #06c755;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<header>📝 契約資料填寫</header>
+
+<section>
+  <label>飼主姓名
+    <input type="text" placeholder="請輸入姓名">
+  </label>
+
+  <label>聯絡電話
+    <input type="tel" placeholder="請輸入電話">
+  </label>
+
+  <label>寵物姓名
+    <input type="text" placeholder="請輸入寵物姓名">
+  </label>
+
+  <label>寵物種類
+    <input type="text" placeholder="犬 / 貓">
+  </label>
+
+  <button>送出資料</button>
+</section>
+
+</body>
+</html>

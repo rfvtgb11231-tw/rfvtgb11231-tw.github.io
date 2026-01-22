@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>犬、貓美容服務定型化契約</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+  margin: 0;
+  background: #f7f7f7;
+  color: #333;
+}
+
+header {
+  background: #ffffff;
+  padding: 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+}
+
+section {
+  margin: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.contract-box {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #fafafa;
+}
+
+label {
+  display: block;
+  margin-top: 16px;
+  font-weight: bold;
+}
+
+button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: #06c755;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+button:disabled {
+  background: #ccc;
+}
+</style>
+</head>
+
+<body>
+
+<header>🐶 犬、貓美容服務定型化契約</header>
+
+<section>
+  <div class="contract-box">
+    <p>
+      本契約係依農業部於114年6月9日公告之「犬、貓美容服務定型化契約範本」訂定。<br><br>
+
+      一、甲方為接受犬、貓美容服務之消費者；乙方為提供犬、貓美容服務之業者。<br><br>
+
+      二、乙方於提供服務前，應向甲方說明服務項目、內容、費用、注意事項及相關風險。<br><br>
+
+      三、甲方應如實告知犬、貓之健康狀況、疾病史、攻擊性及特殊行為；如因未據實告知致生損害，概由甲方自行負責。<br><br>
+
+      四、乙方應以善良管理人之注意義務提供美容服務；服務期間如犬、貓發生異常狀況，乙方應即時通知甲方。<br><br>
+
+      五、服務費用、支付方式及其他收費事項，依雙方約定辦理。<br><br>
+
+      六、甲方逾時未接回犬、貓者，乙方得依約收取逾時照護費用。<br><br>
+
+      七、本契約未盡事宜，依相關法令及雙方協議辦理。
+    </p>
+  </div>
+
+  <label>
+    <input type="checkbox" id="agree">
+    我已完整閱讀並同意上述定型化契約內容
+  </label>
+
+  <button id="nextBtn" disabled>下一步，填寫資料</button>
+</section>
+
+<script>
+const agree = document.getElementById('agree');
+const nextBtn = document.getElementById('nextBtn');
+
+agree.addEventListener('change', function () {
+  nextBtn.disabled = !this.checked;
+});
+
+nextBtn.addEventListener('click', function () {
+  window.location.href = "form.html";
+});
+</script>
+
+</body>
+</html>

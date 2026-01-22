@@ -26,32 +26,20 @@ section {
   margin: 16px;
   background: #ffffff;
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
+  text-align: center;
 }
 
-label {
+.button {
   display: block;
-  margin-top: 12px;
-  font-weight: bold;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  margin-top: 6px;
-  box-sizing: border-box;
-}
-
-button {
   margin-top: 20px;
-  width: 100%;
   padding: 14px;
   background: #06c755;
   color: white;
-  border: none;
+  text-decoration: none;
   border-radius: 10px;
   font-size: 16px;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -61,23 +49,14 @@ button {
 <header>📝 契約資料填寫</header>
 
 <section>
-  <label>飼主姓名
-    <input type="text" placeholder="請輸入姓名">
-  </label>
+  <p>
+    感謝您完成犬、貓美容服務定型化契約之閱讀與同意。<br><br>
+    請點擊下方按鈕，前往填寫契約所需之基本資料。
+  </p>
 
-  <label>聯絡電話
-    <input type="tel" placeholder="請輸入電話">
-  </label>
-
-  <label>寵物姓名
-    <input type="text" placeholder="請輸入寵物姓名">
-  </label>
-
-  <label>寵物種類
-    <input type="text" placeholder="犬 / 貓">
-  </label>
-
-  <button>送出資料</button>
+  <a class="button" href="你的Google表單網址">
+    前往填寫契約資料
+  </a>
 </section>
 
 </body>

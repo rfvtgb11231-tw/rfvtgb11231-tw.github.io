@@ -87,12 +87,38 @@ function renderContent() {
     h3.innerText = sec.heading;
     sectionDiv.appendChild(h3);
 
+    // 摘要（預設顯示）
+    if (sec.summary) {
+      const summary = document.createElement("p");
+      summary.style.background = "#f7f7f7";
+      summary.style.padding = "10px";
+      summary.style.borderLeft = "4px solid #666";
+      summary.innerText = "重點說明：" + sec.summary;
+      sectionDiv.appendChild(summary);
+    }
+
+    // 展開按鈕
+    const toggleBtn = document.createElement("button");
+    toggleBtn.innerText = "展開政府公告全文";
+    toggleBtn.style.marginBottom = "8px";
+
+    const fullTextDiv = document.createElement("div");
+    fullTextDiv.style.display = "none";
+
     sec.paragraphs.forEach(p => {
       const para = document.createElement("p");
       para.innerText = p;
-      sectionDiv.appendChild(para);
+      fullTextDiv.appendChild(para);
     });
 
+    toggleBtn.onclick = () => {
+      const isOpen = fullTextDiv.style.display === "block";
+      fullTextDiv.style.display = isOpen ? "none" : "block";
+      toggleBtn.innerText = isOpen ? "展開政府公告全文" : "收合政府公告全文";
+    };
+
+    sectionDiv.appendChild(toggleBtn);
+    sectionDiv.appendChild(fullTextDiv);
     contentDiv.appendChild(sectionDiv);
   });
 }

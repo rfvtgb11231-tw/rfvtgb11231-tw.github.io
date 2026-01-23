@@ -144,23 +144,7 @@ data.tabs.forEach(tab => {
 });
   });
 
-function renderTabs() {
-  const tabsDiv = document.getElementById("tabs");
-  tabsDiv.innerHTML = "";
-  contractData.tabs.forEach((tab, index) => {
-    const btn = document.createElement("button");
-    btn.innerText = tab.title;
-    btn.className = index === currentTab ? "active" : "";
-    btn.onclick = () => {
-      currentTab = index;
-      renderTabs();
-      renderContent();
-    };
-    tabsDiv.appendChild(btn);
-  });
-}
 
-function renderContent() {
   const contentDiv = document.getElementById("content");
   contentDiv.innerHTML = "";
   const tab = contractData.tabs[currentTab];

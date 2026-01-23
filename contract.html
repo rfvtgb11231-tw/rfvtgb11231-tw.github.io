@@ -9,28 +9,35 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
   margin: 0;
-  background: #f7f7f7;
+  background: #f6f6f6;
   color: #333;
 }
-
 header {
-  background: #ffffff;
+  background: #fff;
   padding: 16px;
   text-align: center;
   font-size: 20px;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0,0,0,.06);
 }
-
-section {
+.section {
   margin: 16px;
-  background: #ffffff;
+  background: #fff;
   border-radius: 12px;
   padding: 16px;
+  display: none;
 }
+.section.active { display: block; }
 
-.contract-box {
-  max-height: 320px;
+.notice {
+  background: #f0f0f0;
+  border-left: 4px solid #06c755;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.contract {
+  max-height: 280px;
   overflow-y: auto;
   border: 1px solid #ddd;
   padding: 12px;
@@ -39,15 +46,13 @@ section {
   background: #fafafa;
 }
 
-label {
-  display: block;
+.nav {
+  display: flex;
+  gap: 10px;
   margin-top: 16px;
-  font-weight: bold;
 }
-
 button {
-  width: 100%;
-  margin-top: 16px;
+  flex: 1;
   padding: 14px;
   background: #06c755;
   color: #fff;
@@ -55,57 +60,118 @@ button {
   border-radius: 10px;
   font-size: 16px;
 }
+button.secondary { background: #ccc; color:#333; }
+button:disabled { background:#ccc; }
 
-button:disabled {
-  background: #ccc;
-}
+label { display:block; margin-top: 12px; font-weight: bold; }
 </style>
 </head>
 
 <body>
-
 <header>🐶 犬、貓美容服務定型化契約</header>
 
-<section>
-  <div class="contract-box">
-    <p>
-      本契約係依農業部於114年6月9日公告之「犬、貓美容服務定型化契約範本」訂定。<br><br>
+<!-- 第 1 頁：閱讀說明 -->
+<section class="section active">
+  <div class="notice">
+    <strong>閱讀提醒（白話說明）</strong><br>
+    本頁為農業部公告之「犬、貓美容服務定型化契約」。<br>
+    請您依序閱讀每一頁條款，最後勾選同意後，才能填寫資料。<br>
+    若您是老顧客且資料未變更，後續可直接預約，不需重填。
+  </div>
+  <div class="nav">
+    <button onclick="next()">開始閱讀</button>
+  </div>
+</section>
 
-      一、甲方為接受犬、貓美容服務之消費者；乙方為提供犬、貓美容服務之業者。<br><br>
-
-      二、乙方於提供服務前，應向甲方說明服務項目、內容、費用、注意事項及相關風險。<br><br>
-
-      三、甲方應如實告知犬、貓之健康狀況、疾病史、攻擊性及特殊行為；如因未據實告知致生損害，概由甲方自行負責。<br><br>
-
-      四、乙方應以善良管理人之注意義務提供美容服務；服務期間如犬、貓發生異常狀況，乙方應即時通知甲方。<br><br>
-
-      五、服務費用、支付方式及其他收費事項，依雙方約定辦理。<br><br>
-
-      六、甲方逾時未接回犬、貓者，乙方得依約收取逾時照護費用。<br><br>
-
-      七、本契約未盡事宜，依相關法令及雙方協議辦理。
+<!-- 第 2 頁：第 1～3 條 -->
+<section class="section">
+  <div class="notice">
+    <strong>白話補充</strong><br>
+    這一頁是在說：契約適用對象、要填哪些基本資料，以及店家在簽約前要說清楚服務內容。
+  </div>
+  <div class="contract">
+    <p><strong>【原文】</strong><br>
+    一、本契約適用於消費者（以下稱甲方）與美容服務業者（以下稱乙方），就犬、貓美容服務之權利義務，依農業部公告之定型化契約範本訂定。<br><br>
+    二、乙方於訂約前，應向甲方說明服務項目、內容、費用、注意事項及相關風險。<br><br>
+    三、本契約應記載甲方、犬或貓及乙方之基本資料。
     </p>
+  </div>
+  <div class="nav">
+    <button class="secondary" onclick="prev()">上一頁</button>
+    <button onclick="next()">下一頁</button>
+  </div>
+</section>
+
+<!-- 第 3 頁：第 4～6 條 -->
+<section class="section">
+  <div class="notice">
+    <strong>白話補充</strong><br>
+    這一頁重點是：美容過程中的照護義務、異常狀況的處理，以及雙方責任。
+  </div>
+  <div class="contract">
+    <p><strong>【原文】</strong><br>
+    四、乙方應依約提供美容服務，並以善良管理人之注意義務為之。<br><br>
+    五、服務期間，如犬、貓發生異常狀況，乙方應立即通知甲方。<br><br>
+    六、如因乙方過失致犬、貓受傷或死亡，乙方應依法負損害賠償責任。
+    </p>
+  </div>
+  <div class="nav">
+    <button class="secondary" onclick="prev()">上一頁</button>
+    <button onclick="next()">下一頁</button>
+  </div>
+</section>
+
+<!-- 第 4 頁：第 7～9 條 -->
+<section class="section">
+  <div class="notice">
+    <strong>白話補充</strong><br>
+    這一頁是在說費用、退費與解除契約的原則。
+  </div>
+  <div class="contract">
+    <p><strong>【原文】</strong><br>
+    七、服務費用、支付方式及其他收費事項，依雙方約定辦理。<br><br>
+    八、契約解除與退費，依本契約及相關法令規定辦理。<br><br>
+    九、甲方逾時未接回犬、貓者，乙方得依約收取逾時照護費用。
+    </p>
+  </div>
+  <div class="nav">
+    <button class="secondary" onclick="prev()">上一頁</button>
+    <button onclick="next()">下一頁</button>
+  </div>
+</section>
+
+<!-- 第 5 頁：同意 -->
+<section class="section">
+  <div class="notice">
+    <strong>白話補充（很重要）</strong><br>
+    勾選下方選項，代表您已完整閱讀並同意上述定型化契約內容。
   </div>
 
   <label>
     <input type="checkbox" id="agree">
-    我已完整閱讀並同意上述定型化契約內容
+    我已完整閱讀並同意犬、貓美容服務定型化契約內容
   </label>
 
-  <button id="nextBtn" disabled>下一步，填寫資料</button>
+  <div class="nav">
+    <button class="secondary" onclick="prev()">上一頁</button>
+    <button id="goForm" disabled onclick="toForm()">前往填寫資料</button>
+  </div>
 </section>
 
 <script>
+let page = 0;
+const sections = document.querySelectorAll('.section');
 const agree = document.getElementById('agree');
-const nextBtn = document.getElementById('nextBtn');
+const goForm = document.getElementById('goForm');
 
-agree.addEventListener('change', function () {
-  nextBtn.disabled = !this.checked;
-});
+function show(i){
+  sections.forEach((s,idx)=>s.classList.toggle('active', idx===i));
+}
+function next(){ if(page < sections.length-1){ page++; show(page);} }
+function prev(){ if(page > 0){ page--; show(page);} }
 
-nextBtn.addEventListener('click', function () {
-  window.location.href = "form.html";
-});
+agree?.addEventListener('change', ()=> goForm.disabled = !agree.checked);
+function toForm(){ window.location.href = "form.html"; }
 </script>
 
 </body>

@@ -132,23 +132,42 @@ contentDiv.innerHTML = "";
   contentDiv.appendChild(section);
 });
   });
-const list = data.tabs || data.sections || [];
+data.tabs.forEach(tab => {
+  // 每一個大區塊（例如：契約說明、第一條、第二條）
+  const tabTitle = document.createElement("h3");
+  tabTitle.innerText = tab.title;
+  contentDiv.appendChild(tabTitle);
 
-list.forEach(sectionData => {
-  const section = document.createElement("section");
+  tab.sections.forEach(sec => {
+    const section = document.createElement("section");
 
-  if (sectionData.title) {
-    const h4 = document.createElement("h4");
-    h4.innerText = sectionData.title;
-    section.appendChild(h4);
-  }
+    // 條號 / 小標題
+    if (sec.heading) {
+      const h4 = document.createElement("h4");
+      h4.innerText = sec.heading;
+      section.appendChild(h4);
+    }
 
-  if (Array.isArray(sectionData.items)) {
-    sectionData.items.forEach(item => {
-      const p = document.createElement("p");
-      p.innerText = item;
-      section.appendChild(p);
-    });
+    // 摘要（如果有）
+    if (sec.summary) {
+      const summary = document.createElement("p");
+      summary.style.fontStyle = "italic";
+      summary.innerText = sec.summary;
+      section.appendChild(summary);
+    }
+
+    // 正文條文（重點）
+    if (Array.isArray(sec.paragraphs)) {
+      sec.paragraphs.forEach(text => {
+        const p = document.createElement("p");
+        p.innerText = text;
+        section.appendChild(p);
+      });
+    }
+
+    contentDiv.appendChild(section);
+  });
+});
   }
 
   if (sectionData.content) {

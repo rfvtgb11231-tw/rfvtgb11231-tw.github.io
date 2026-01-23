@@ -1,155 +1,102 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>有吉寵物精品美容SPA預約</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
-      margin: 0;
-      background: #f7f7f7;
-      color: #333;
-    }
-    header {
-      background: #ffffff;
-      padding: 20px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,.06);
-    }
-    section {
-      margin: 16px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-    }
-    h2 {
-      font-size: 18px;
-      margin-top: 0;
-    }
-    a.button {
-      display: block;
-      text-align: center;
-      margin-top: 12px;
-      padding: 14px;
-      background: #06c755;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>犬、貓美容服務定型化契約</title>
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 20px;
+  line-height: 1.7;
+}
+h1 {
+  margin-bottom: 10px;
+}
+#tabs {
+  margin-bottom: 16px;
+}
+#tabs button {
+  margin: 4px 4px 4px 0;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+#tabs button.active {
+  background: #333;
+  color: #fff;
+}
+.section {
+  margin-bottom: 20px;
+}
+.section h3 {
+  margin-bottom: 6px;
+}
+</style>
 </head>
+
 <body>
 
-<header>🐶 有吉寵物精品美容SPA｜定型化契約確認</header>
+<h1 id="contractTitle">載入中…</h1>
+<div id="meta"></div>
 
-<section>
-  <h2>📄 寵物美容服務定型化契約</h2>
-
-  <div class="contract-box">
-    <p>
-      一、本契約為寵物美容服務之定型化契約。<br><br>
-
-      二、服務期間如發生不可抗力或寵物突發健康問題，乙方不負醫療責任，惟應即時通知甲方。<br><br>
-
-      三、甲方應如實告知寵物健康狀況、攻擊性、疾病史，若隱匿導致損害，責任由甲方自負。<br><br>
-
-      四、其他未盡事宜，依相關法令辦理。<br><br>
-
-      （以下請放你完整的定型化契約全文）
-    </p>
-  </div>
-
-  <label class="agree">
-    <input type="checkbox" id="agreeCheck">
-    我已完整閱讀並同意上述定型化契約內容
-  </label>
-</section>
-
-<section id="formSection" class="disabled">
-  <h2>📝 契約資料填寫</h2>
-
-  <form>
-    <label>飼主姓名</label>
-    <input type="text" placeholder="請輸入姓名">
-
-    <label>聯絡電話</label>
-    <input type="tel" placeholder="請輸入電話">
-
-    <label>寵物姓名</label>
-    <input type="text" placeholder="請輸入寵物姓名">
-
-    <button type="submit">送出契約資料</button>
-  </form>
-</section>
+<div id="tabs"></div>
+<div id="content"></div>
 
 <script>
-  const checkbox = document.getElementById('agreeCheck');
-  const formSection = document.getElementById('formSection');
+let contractData;
+let currentTab = 0;
 
-  checkbox.addEventListener('change', function () {
-    if (this.checked) {
-      formSection.classList.remove('disabled');
-    } else {
-      formSection.classList.add('disabled');
-    }
+fetch("contract.json")
+  .then(res => res.json())
+  .then(data => {
+    contractData = data;
+    document.getElementById("contractTitle").innerText = data.meta.name;
+    document.getElementById("meta").innerText =
+      "版本：" + data.meta.version + "｜來源：" + data.meta.source;
+    renderTabs();
+    renderContent();
   });
+
+function renderTabs() {
+  const tabsDiv = document.getElementById("tabs");
+  tabsDiv.innerHTML = "";
+  contractData.tabs.forEach((tab, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = tab.title;
+    btn.className = index === currentTab ? "active" : "";
+    btn.onclick = () => {
+      currentTab = index;
+      renderTabs();
+      renderContent();
+    };
+    tabsDiv.appendChild(btn);
+  });
+}
+
+function renderContent() {
+  const contentDiv = document.getElementById("content");
+  contentDiv.innerHTML = "";
+  const tab = contractData.tabs[currentTab];
+
+  tab.sections.forEach(sec => {
+    const sectionDiv = document.createElement("div");
+    sectionDiv.className = "section";
+
+    const h3 = document.createElement("h3");
+    h3.innerText = sec.heading;
+    sectionDiv.appendChild(h3);
+
+    sec.paragraphs.forEach(p => {
+      const para = document.createElement("p");
+      para.innerText = p;
+      sectionDiv.appendChild(para);
+    });
+
+    contentDiv.appendChild(sectionDiv);
+  });
+}
 </script>
-
-</body>
-
-<header>🐶 有吉寵物精品美容SPA</header>
-
-<section>
-  <h2>💰 價目表</h2>
-  <p>小型犬 洗＋剪：$1,200 起<br>
-     中型犬 洗＋剪：$1,500 起<br>
-     大型犬 洗＋剪：$2,000 起</p>
-</section>
-
-<section>
-  <h2>📌 預約須知</h2>
-  <p>
-    ・請提前預約<br>
-    ・遲到 15 分鐘以上視同取消<br>
-    ・美容前請先如廁
-  </p>
-</section>
-
-<section>
-  <h2>📍 店家位置</h2>
-  <p>台中市 XXX 區 XXX 路</p>
-</section>
-
-<section>
-  <h2>📅 線上預約</h2>
-  <a class="button" href="https://example.com">點我預約</a>
-<section style="text-align:center; margin-top:40px;">
-  <h2>🐶 歡迎預約美容服務</h2>
-
-  <p style="margin-top:20px;">
-    第一次來店？
-  </p>
-
-  <a class="button"
-     href="https://rfvtgb11231-tw.github.io/contract.html">
-    填寫契約與資料
-  </a>
-
-  <p style="margin-top:40px;">
-    老顧客？
-  </p>
-
-  <a class="button"
-     href="https://forms.gle/【熟客預約表單網址】"
-     target="_blank">
-    直接預約時間
-  </a>
-</section>
 
 </body>
 </html>

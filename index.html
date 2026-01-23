@@ -127,23 +127,38 @@ fetch("contract.json")
     const contentDiv = document.getElementById("content");
 contentDiv.innerHTML = "";
 
-data.tabs.forEach(tab => {
-  const section = document.createElement("section");
 
-  const h4 = document.createElement("h4");
-  h4.innerText = tab.title;
-  section.appendChild(h4);
-
-  tab.items.forEach(item => {
-    const p = document.createElement("p");
-    p.innerText = item;
-    section.appendChild(p);
-  });
 
   contentDiv.appendChild(section);
 });
   });
+const list = data.tabs || data.sections || [];
 
+list.forEach(sectionData => {
+  const section = document.createElement("section");
+
+  if (sectionData.title) {
+    const h4 = document.createElement("h4");
+    h4.innerText = sectionData.title;
+    section.appendChild(h4);
+  }
+
+  if (Array.isArray(sectionData.items)) {
+    sectionData.items.forEach(item => {
+      const p = document.createElement("p");
+      p.innerText = item;
+      section.appendChild(p);
+    });
+  }
+
+  if (sectionData.content) {
+    const p = document.createElement("p");
+    p.innerText = sectionData.content;
+    section.appendChild(p);
+  }
+
+  contentDiv.appendChild(section);
+});
 
   const contentDiv = document.getElementById("content");
   contentDiv.innerHTML = "";

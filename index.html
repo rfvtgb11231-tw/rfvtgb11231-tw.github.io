@@ -80,7 +80,39 @@ h1 {
   ">
     <!-- 契約內容會由 JS 放進來 -->
   </div>
+<!-- 同意與下一步 -->
+<div style="
+  max-width: 720px;
+  margin: 16px auto 0;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+">
 
+  <label style="display:flex; align-items:flex-start; gap:8px;">
+    <input type="checkbox" id="agreeCheckbox" disabled>
+    <span>
+      我已完整閱讀並同意上述契約內容
+    </span>
+  </label>
+
+  <button id="nextBtn"
+    disabled
+    style="
+      margin-top:12px;
+      width:100%;
+      padding:12px;
+      font-size:16px;
+      border:none;
+      border-radius:8px;
+      background:#ccc;
+      color:#666;
+    ">
+    下一步：填寫確認表單
+  </button>
+
+</div>
 </div>
 
 <script>
@@ -161,6 +193,44 @@ function renderContent() {
     contentDiv.appendChild(sectionDiv);
   });
 }
+  <script>
+// ===== 滑動到底解鎖同意 =====
+document.addEventListener("DOMContentLoaded", () => {
+  const content = document.getElementById("content");
+  const agreeCheckbox = document.getElementById("agreeCheckbox");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (!content || !agreeCheckbox || !nextBtn) return;
+
+  // 偵測是否滑到最底
+  content.addEventListener("scroll", () => {
+    const isBottom =
+      content.scrollTop + content.clientHeight >= content.scrollHeight - 5;
+
+    if (isBottom) {
+      agreeCheckbox.disabled = false;
+    }
+  });
+
+  // 勾選後啟用按鈕
+  agreeCheckbox.addEventListener("change", () => {
+    if (agreeCheckbox.checked) {
+      nextBtn.disabled = false;
+      nextBtn.style.background = "#333";
+      nextBtn.style.color = "#fff";
+    } else {
+      nextBtn.disabled = true;
+      nextBtn.style.background = "#ccc";
+      nextBtn.style.color = "#666";
+    }
+  });
+
+  // 點下一步 → 前往表單
+  nextBtn.addEventListener("click", () => {
+    window.location.href = "form.html";
+  });
+});
+</script>
 </script>
 <hr>
 

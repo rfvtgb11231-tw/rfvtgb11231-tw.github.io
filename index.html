@@ -193,6 +193,42 @@ function renderContent() {
     contentDiv.appendChild(sectionDiv);
   });
 }
+  // ===== 滑動到底解鎖同意 =====
+document.addEventListener("DOMContentLoaded", () => {
+  const content = document.getElementById("content");
+  const agreeCheckbox = document.getElementById("agreeCheckbox");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (!content || !agreeCheckbox || !nextBtn) return;
+
+  // 偵測是否滑到最底
+  content.addEventListener("scroll", () => {
+    const isBottom =
+      content.scrollTop + content.clientHeight >= content.scrollHeight - 5;
+
+    if (isBottom) {
+      agreeCheckbox.disabled = false;
+    }
+  });
+
+  // 勾選後啟用按鈕
+  agreeCheckbox.addEventListener("change", () => {
+    if (agreeCheckbox.checked) {
+      nextBtn.disabled = false;
+      nextBtn.style.background = "#333";
+      nextBtn.style.color = "#fff";
+    } else {
+      nextBtn.disabled = true;
+      nextBtn.style.background = "#ccc";
+      nextBtn.style.color = "#666";
+    }
+  });
+
+  // 點下一步 → 前往表單
+  nextBtn.addEventListener("click", () => {
+    window.location.href = "form.html";
+  });
+});
   <script>
 // ===== 滑動到底解鎖同意 =====
 document.addEventListener("DOMContentLoaded", () => {

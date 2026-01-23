@@ -124,9 +124,24 @@ fetch("contract.json")
   .then(data => {
     contractData = data;
     document.getElementById("contractTitle").innerText = data.meta.name;
-    
-    renderTabs();
-    renderContent();
+    const contentDiv = document.getElementById("content");
+contentDiv.innerHTML = "";
+
+data.tabs.forEach(tab => {
+  const section = document.createElement("section");
+
+  const h4 = document.createElement("h4");
+  h4.innerText = tab.title;
+  section.appendChild(h4);
+
+  tab.items.forEach(item => {
+    const p = document.createElement("p");
+    p.innerText = item;
+    section.appendChild(p);
+  });
+
+  contentDiv.appendChild(section);
+});
   });
 
 function renderTabs() {

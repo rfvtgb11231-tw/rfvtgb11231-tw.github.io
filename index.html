@@ -56,10 +56,28 @@ h1 {
     官方 LINE：@kumajima2025
   </p>
 </div>
-<h1 id="contractTitle">載入中…</h1>
+
 
 
 <!-- 契約滑動閱讀區 -->
+ <label style="font-weight:bold;">
+  契約內容（請完整閱讀）
+</label>
+
+<textarea
+  id="contractContent"
+  rows="16"
+  readonly
+  style="
+    width:100%;
+    margin-top:8px;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+    line-height:1.6;
+  "
+></textarea> 
 <div style="
   max-width: 720px;
   margin: 0 auto;
@@ -320,5 +338,24 @@ document.addEventListener("DOMContentLoaded", () => {
      前往填寫 Google 表單
   </a>
 </div>
+  <script>
+  const contractText = `
+【寵物美容服務定型化契約】
+
+第一條（服務項目）
+本店提供寵物洗澡、美容、修剪、造型等相關服務。
+
+第二條（健康狀況告知）
+飼主應主動告知寵物之健康狀況、疾病史、年齡、攻擊行為。
+
+第三條（風險告知）
+美容過程中，因寵物本身體質、行為或不可抗力因素所生之意外，
+本店於已盡合理注意義務情形下，不負賠償責任。
+
+（⬅️⬅️⬅️ 這裡整段直接貼你「農業部完整定型化契約全文」 ⬅️⬅️⬅️）
+`;
+
+  document.getElementById("contractContent").value = contractText;
+</script>
 </body>
 </html>

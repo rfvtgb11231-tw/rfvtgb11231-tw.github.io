@@ -266,7 +266,10 @@ function start(e){
   ctx.moveTo(p.x,p.y);
 }
 function move(e){if(!drawing)return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();}
-function end(){drawing=false; checkReady();}
+function end(){
+  drawing = false;
+  unlockScroll(); // 🔓 放開手 → 恢復頁面滑動
+}
 
 canvas.addEventListener("mousedown",start);
 canvas.addEventListener("mousemove",move);

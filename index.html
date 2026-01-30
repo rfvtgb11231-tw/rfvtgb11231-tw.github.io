@@ -12,7 +12,9 @@ body{
   background:#FFF3E0;
   color:#333;
 }
-
+#sign {
+  touch-action: none;
+}
 .container{
   max-width:720px;
   margin:0 auto;
@@ -209,7 +211,13 @@ ____________________________
 const content = document.getElementById("contractContent");
 const agree = document.getElementById("agree");
 const btn = document.getElementById("nextBtn");
+function lockScroll(){
+  document.body.style.overflow = "hidden";
+}
 
+function unlockScroll(){
+  document.body.style.overflow = "";
+}
 content.addEventListener("scroll",()=>{
   if(content.scrollTop+content.clientHeight>=content.scrollHeight-5){
     agree.disabled=false;
@@ -233,8 +241,14 @@ function pos(e){
 }
 
 function start(e){
-  drawing=true;
-  signed=true;
+  drawing = true;
+  signed = true;
+  lockScroll();   // 🔒 開始簽名 → 鎖住頁面
+
+  const p = pos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+}
 
   // 👉 自動產生簽署時間
   const now = new Date();

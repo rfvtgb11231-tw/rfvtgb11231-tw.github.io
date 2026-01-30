@@ -2,261 +2,256 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>犬、貓美容服務定型化契約</title>
+
 <style>
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  margin: 20px;
-  line-height: 1.7;
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;
+  background:#FFF3E0;
+  color:#333;
 }
-h1 {
-  margin-bottom: 10px;
+
+.container{
+  max-width:720px;
+  margin:0 auto;
+  padding:16px;
 }
-#tabs {
-  margin-bottom: 16px;
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
 }
-#tabs button {
-  margin: 4px 4px 4px 0;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
-  cursor: pointer;
+
+h1{font-size:22px;margin:0 0 12px;}
+h3{font-size:16px;margin:16px 0 8px;}
+
+#contractContent{
+  height:360px;
+  overflow-y:auto;
+  padding:16px;
+  border-radius:12px;
+  background:#FFF8EE;
+  border:1px solid #f0e0c8;
+  line-height:1.9;
+  font-size:15px;
 }
-#tabs button.active {
-  background: #333;
-  color: #fff;
+
+.agree-box{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  font-weight:bold;
 }
-.section {
-  margin-bottom: 20px;
+
+canvas{
+  width:100%;
+  height:180px;
+  border:2px dashed #ccc;
+  border-radius:8px;
+  background:#fafafa;
+  touch-action:none;
 }
-.section h3 {
-  margin-bottom: 6px;
+
+.sign-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:8px;
+}
+
+button{
+  padding:10px 14px;
+  border:none;
+  border-radius:8px;
+  font-size:14px;
+}
+
+.clear-btn{
+  background:#eee;
+}
+
+.next-btn{
+  width:100%;
+  margin-top:12px;
+  background:#ccc;
+  color:#666;
+  font-size:16px;
+}
+
+.next-btn.enabled{
+  background:#333;
+  color:#fff;
 }
 </style>
 </head>
 
-<body style="
-  margin:0;
-  background:#FFF4E6;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-">
-<!-- 上方卡片區塊 -->
-<div style="
-  max-width: 100%;
-  margin: 16px auto;
-  padding: 22px 20px;
-  background: #FFFDF9;
-  border-radius: 20px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-">
-  <h2 style="margin-top:0;">寵物美容服務定型化契約</h2>
+<body>
+<div class="container">
 
-  <p style="margin:6px 0;">
-    公司名稱：有吉寵物精品美容SPA
-  </p>
-  <p style="margin:6px 0;">
-    地址：台中市南區工學北路115號
-  </p>
-  <p style="margin:6px 0;">
-    官方 LINE：@422xxuvm
-  </p>
+<!-- 店家資訊 -->
+<div class="card">
+  <h1>寵物美容服務定型化契約</h1>
+  <p>公司名稱：有吉寵物精品美容 SPA</p>
+  <p>地址：台中市南區工學北路115號</p>
+  <p>官方 LINE：@422xxuvm</p>
 </div>
 
+<!-- 契約 -->
+<div class="card">
+<h3>契約內容（請完整閱讀）</h3>
 
+<div id="contractContent">
+犬、貓美容服務定型化契約範本  
+（中華民國114年6月9日 農業部農護字第1140072572號）
 
+【簽約注意事項】
+一、本契約審閱期間不得少於一日。
+二、乙方應於訂約前充分說明契約內容。
+三、本契約屬定型化契約。
 
-<div style="
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 16px;
-">
+第一條（契約目的與範圍）
+犬、貓美容服務係指外部清潔、吹乾、梳毛、修剪及造型，不得涉及醫療行為。
 
-  <h3 style="margin-bottom:8px;">
-    契約內容（請完整閱讀）
-  </h3>
+第二條（資訊揭露義務）
+乙方應公告本契約於營業場所。
 
-  <div
-  id="contractContent"
-  style="
-    font-size:16px;
-    line-height:1.9;
-    color:#333;
+第三條（基本資料）
+應記載犬、貓、甲方及乙方資料。
 
-    height:320px;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  "
->
-    <!-- 契約內容會由 JS 放進來 -->
-  </div>
-<!-- 同意與下一步 -->
-<div style="
-  max-width: 720px;
-  margin: 16px auto 0;
-  padding: 16px;
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-">
+第四條（服務內容說明）
+乙方應事前說明服務項目、費用。
 
-  <label style="display:flex; align-items:flex-start; gap:8px;">
-    <input type="checkbox" id="agreeCheckbox" disabled>
-    <span>
-      我已完整閱讀並同意上述契約內容
-    </span>
-  </label>
+第五條（詢問與照護義務）
+乙方應確認犬、貓健康狀況。
 
-  <button id="nextBtn"
-    disabled
-    style="
-      margin-top:12px;
-      width:100%;
-      padding:12px;
-      font-size:16px;
-      border:none;
-      border-radius:8px;
-      background:#ccc;
-      color:#666;
-    ">
-    下一步：填寫確認表單
-  </button>
+第六條（異常或死亡處理）
+應即時處理並通知甲方。
+
+第七條（繳款方式）
+□ 現金 □ 信用卡 □ 其他
+
+第八條（服務前解除契約）
+甲方得於服務前解除。
+
+第九條（服務後終止契約）
+依實際服務比例退費。
+
+第十條（可歸責乙方）
+應全額退費並賠償。
+
+第十一條（不可歸責雙方）
+依實際情況處理。
+
+第十二條（逾時接回）
+乙方得酌收費用。
+
+第十三條（無法接回）
+乙方應妥善照護。
+
+第十四條（費用明確性）
+費用應清楚標示。
+
+第十五條（預收費用保障）
+乙方應提供保障。
+
+第十六條（個資保護）
+應遵守個資法。
+
+第十七條（違約賠償）
+違約方負賠償責任。
+
+第十八條（履行輔助人）
+視同本人行為。
+
+第十九條（申訴方式）
+甲方得申訴。
+
+第二十條（管轄法院）
+乙方所在地法院。
+
+第二十一條（契約效力）
+自簽署日起生效。
+
+第二十二條（其他約定）
+____________________________
+</div>
+
+<div class="agree-box">
+  <input type="checkbox" id="agree" disabled>
+  <label for="agree">我已完整閱讀並同意上述契約內容</label>
+</div>
+
+<h3>甲方手寫簽名</h3>
+<canvas id="sign"></canvas>
+<div class="sign-actions">
+  <button class="clear-btn" id="clearSign">清除簽名</button>
+</div>
+
+<button id="nextBtn" class="next-btn" disabled>
+下一步：填寫確認表單
+</button>
 
 </div>
 </div>
 
 <script>
-const CONTRACT_TEXT = `
-犬、貓美容服務定型化契約範本
-（中華民國114年6月9日 農業部農護字第1140072572號）
+const content = document.getElementById("contractContent");
+const agree = document.getElementById("agree");
+const btn = document.getElementById("nextBtn");
 
-【簽約注意事項】
-一、本契約之審閱期間不得少於一日；提供單次犬、貓美容或必要時，應給予即時或合理之審閱期間。
-二、乙方應於訂約前提供「犬、貓美容服務簽約前詢問事項及基本資料表」，並由甲、乙雙方就契約內容共同填寫及說明。
-三、本契約為定型化契約之一種，甲、乙雙方仍得針對個別狀況，經合意後增列、刪除或修正內容。
-
-第一條（契約目的與範圍）
-犬、貓美容服務，係指提供犬、貓外表部位清洗或清潔、吹乾、梳毛、毛髮修剪及造型設計等美容服務之行為。但不得涉及動物醫療行為及宣稱醫療效能。
-
-第二條（資訊揭露義務）
-乙方應至少以半開大小以上紙張或以電子方式，將犬、貓美容服務定型化契約公告於營業櫃台或場所明顯處；有網站或社群媒體者，亦應於網頁明顯處公告。
-
-第三條（寵物、甲方及乙方相關資料）
-本契約應記載下列基本資料：
-一、寵物：犬、貓之寵物登記晶片號碼；尚未辦理登記者，應提供足以辨識個體身分之資訊。
-二、甲方（消費者）：
-（一）姓名
-（二）國民身分證統一編號或居留證號碼
-（三）聯絡地址
-（四）聯絡電話
-（五）緊急聯絡人
-（六）緊急聯絡人電話
-（七）犬、貓緊急就醫時指定之獸醫診療場所
-三、乙方（企業經營者）：
-（一）公司或商號名稱
-（二）代表人或負責人姓名
-（三）營業地址
-（四）營業時間
-（五）聯絡電話
-（六）犬、貓緊急就醫時指定之獸醫診療場所
-
-第四條（服務內容之說明及確認）
-乙方應將甲方所選擇之美容服務項目、期間、次數、是否指定服務人員、費用及支付方式，於訂約前向甲方充分說明。
-乙方於完成犬、貓美容服務後，應將服務內容製作紀錄，經甲方簽名確認後，提供正本予甲方留存。
-
-第五條（詢問及照護義務）
-乙方於實施犬、貓美容服務前，應向甲方詢問犬、貓個性、是否具攻擊性、有無疾病、病史或生理狀況及其他應注意事項，並檢查犬、貓狀況，以判斷是否適合接受美容服務。
-乙方於美容服務期間，應提供犬、貓安全、乾淨、通風、排水良好、適當照明及溫度之環境，並符合相關照護規定。
-
-第六條（犬、貓美容服務期間有異常狀況或死亡情形之處理）
-於美容服務期間，乙方如發現犬、貓於施作美容部位或生理健康有異常狀況時，應立即妥善處理，並通知甲方或其指定之緊急聯絡人。
-犬、貓緊急就醫必要時，除立即通知甲方或其指定之緊急聯絡人外，乙方應優先將犬、貓送往甲方指定之獸醫診療機構；未指定者，得送往適當之獸醫診療機構，並將就醫情形通知甲方。
-犬、貓於美容服務期間死亡，或經乙方送往獸醫診療機構後死亡者，乙方應即通知甲方或其指定之緊急聯絡人，妥善保存犬、貓遺體，並向動物保護主管機關通報。
-
-第七條（甲方繳款方式）
-甲方應依契約約定之方式支付契約總金額：
-□ 現金
-□ 信用卡
-□ 其他方式：＿＿＿＿＿＿＿＿
-
-第八條（犬、貓美容服務實施前，甲方任意解除契約之退費規定）
-犬、貓美容服務實施前，甲方得隨時解除契約。
-甲方因任意解除契約者，乙方應於解除契約日起三日內，將已收取之費用扣除解約手續費後退還甲方。
-解約手續費之收取如下：
-□ 不收取
-□ 定額：新臺幣＿＿＿元
-□ 不定額：不得超過本契約總費用百分之五，且不得逾新臺幣一千元。
-
-第九條（犬、貓美容服務實施後，甲方任意終止契約之退費規定）
-犬、貓美容服務實施後，甲方得隨時終止契約。但單次服務不適用之。
-因甲方任意終止契約者，乙方應於終止契約日起三日內，將已收取之費用扣除已接受美容服務費用及手續費後退還甲方；未依前條第三項約定手續費金額者，不得扣除手續費。
-
-第十條（可歸責於乙方，甲方解除或終止契約之退費規定）
-乙方有未經甲方同意變更服務內容、地點或指定服務人員等情形者，甲方得解除或終止契約。
-前項情形，乙方應於解除或終止契約後三日內退還相關費用；甲方另有損害時，乙方應負賠償責任。
-
-第十一條（管轄法院）
-雙方同意以乙方營業所在地之地方法院為第一審管轄法院。
-
-第十二條（契約及附件效力）
-本契約自簽署日起生效。
-
-【立契約書人】
-甲方（消費者）簽名：
-乙方（企業經營者）簽名：
-`;
-
-document.addEventListener("DOMContentLoaded", () => {
-  const contentDiv = document.getElementById("content");
-  if (contentDiv) {
-    contentDiv.innerText = CONTRACT_TEXT;
+content.addEventListener("scroll",()=>{
+  if(content.scrollTop+content.clientHeight>=content.scrollHeight-5){
+    agree.disabled=false;
   }
 });
+
+// 簽名
+const canvas=document.getElementById("sign");
+const ctx=canvas.getContext("2d");
+canvas.width=canvas.offsetWidth;
+canvas.height=canvas.offsetHeight;
+ctx.lineWidth=2;
+ctx.lineCap="round";
+
+let drawing=false, signed=false;
+
+function pos(e){
+  const r=canvas.getBoundingClientRect();
+  return {x:(e.touches?e.touches[0].clientX:e.clientX)-r.left,
+          y:(e.touches?e.touches[0].clientY:e.clientY)-r.top};
+}
+
+function start(e){drawing=true; signed=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);}
+function move(e){if(!drawing)return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();}
+function end(){drawing=false; checkReady();}
+
+canvas.addEventListener("mousedown",start);
+canvas.addEventListener("mousemove",move);
+canvas.addEventListener("mouseup",end);
+canvas.addEventListener("touchstart",start);
+canvas.addEventListener("touchmove",move);
+canvas.addEventListener("touchend",end);
+
+document.getElementById("clearSign").onclick=()=>{
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  signed=false;
+  btn.disabled=true;
+  btn.classList.remove("enabled");
+};
+
+agree.addEventListener("change",checkReady);
+
+function checkReady(){
+  if(agree.checked && signed){
+    btn.disabled=false;
+    btn.classList.add("enabled");
+  }
+}
 </script>
 
-  <script>
-// ===== 滑動到底解鎖同意 =====
-document.addEventListener("DOMContentLoaded", () => {
-  const content = document.getElementById("content");
-  const agreeCheckbox = document.getElementById("agreeCheckbox");
-  const nextBtn = document.getElementById("nextBtn");
-
-  if (!content || !agreeCheckbox || !nextBtn) return;
-
-  // 偵測是否滑到最底
-  content.addEventListener("scroll", () => {
-    const isBottom =
-      content.scrollTop + content.clientHeight >= content.scrollHeight - 5;
-
-    if (isBottom) {
-      agreeCheckbox.disabled = false;
-    }
-  });
-
-  // 勾選後啟用按鈕
-  agreeCheckbox.addEventListener("change", () => {
-    if (agreeCheckbox.checked) {
-      nextBtn.disabled = false;
-      nextBtn.style.background = "#333";
-      nextBtn.style.color = "#fff";
-    } else {
-      nextBtn.disabled = true;
-      nextBtn.style.background = "#ccc";
-      nextBtn.style.color = "#666";
-    }
-  });
-
-  // 點下一步 → 前往表單
-  nextBtn.addEventListener("click", () => {
-    window.location.href = "form.html";
-  });
-});
-</script>
-</script>
-<hr>
-
-<div style="margin-top:20px; padding:15px; background:#f9f9f9;">
- 
-</div>
-  
 </body>
 </html>

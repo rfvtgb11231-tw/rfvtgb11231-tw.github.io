@@ -187,6 +187,13 @@ ____________________________
 
 <h3>甲方手寫簽名</h3>
 <canvas id="sign"></canvas>
+<p id="signTime" style="
+  margin-top:8px;
+  font-size:14px;
+  color:#666;
+">
+  簽署時間：尚未簽名
+</p>
 <div class="sign-actions">
   <button class="clear-btn" id="clearSign">清除簽名</button>
 </div>
@@ -218,14 +225,32 @@ ctx.lineWidth=2;
 ctx.lineCap="round";
 
 let drawing=false, signed=false;
-
+const signTimeEl = document.getElementById("signTime");
 function pos(e){
   const r=canvas.getBoundingClientRect();
   return {x:(e.touches?e.touches[0].clientX:e.clientX)-r.left,
           y:(e.touches?e.touches[0].clientY:e.clientY)-r.top};
 }
 
-function start(e){drawing=true; signed=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);}
+function start(e){
+  drawing=true;
+  signed=true;
+
+  // 👉 自動產生簽署時間
+  const now = new Date();
+  const timeText =
+    now.getFullYear() + "-" +
+    String(now.getMonth()+1).padStart(2,"0") + "-" +
+    String(now.getDate()).padStart(2,"0") + " " +
+    String(now.getHours()).padStart(2,"0") + ":" +
+    String(now.getMinutes()).padStart(2,"0");
+
+  signTimeEl.innerText = "簽署時間：" + timeText;
+
+  const p=pos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x,p.y);
+}
 function move(e){if(!drawing)return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();}
 function end(){drawing=false; checkReady();}
 
@@ -241,6 +266,7 @@ document.getElementById("clearSign").onclick=()=>{
   signed=false;
   btn.disabled=true;
   btn.classList.remove("enabled");
+  signTimeEl.innerText = "簽署時間：尚未簽名";
 };
 
 agree.addEventListener("change",checkReady);

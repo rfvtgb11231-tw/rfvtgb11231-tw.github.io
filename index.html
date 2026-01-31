@@ -195,9 +195,7 @@ ____________________________
 <div class="sign-box">
   <div class="sign-title">甲方手寫簽名</div>
 
-  <canvas id="sign"
-          width="320"
-          height="160"></canvas>
+  <canvas id="sign"></canvas>
 
   <div id="signTime">簽署時間：尚未簽名</div>
 
@@ -207,6 +205,15 @@ ____________________________
 <script>
 const canvas = document.getElementById("sign");
 const ctx = canvas.getContext("2d");
+/* ⭐ 關鍵：同步 canvas 實際顯示尺寸（解決手指歪掉） */
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 ctx.lineWidth = 2;
 ctx.lineCap = "round";
 

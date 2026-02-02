@@ -85,6 +85,16 @@ button:disabled{
   <!-- 契約內容 -->
   <div class="card">
     <h3>契約內容（請完整閱讀）</h3>
+    <p id="scrollHint" style="
+  font-size:14px;
+  color:#b45309;
+  background:#fff4d6;
+  padding:8px 12px;
+  border-radius:8px;
+  margin-bottom:8px;
+">
+  🔔 請將契約內容滑至最底部後，方可勾選「我已完整閱讀並同意」
+</p>
     <div id="contractContent">
 
 <!-- 🔽 官方契約全文（逐字）開始 -->
@@ -263,5 +273,25 @@ canvas.addEventListener("mousemove",move);
 canvas.addEventListener("mouseup",end);
 </script>
 </div>
+  <script>
+const contract = document.getElementById("contractContent");
+const agree = document.getElementById("agree");
+const hint = document.getElementById("scrollHint");
+
+agree.disabled = true;
+
+contract.addEventListener("scroll", () => {
+  const isBottom =
+    contract.scrollTop + contract.clientHeight >=
+    contract.scrollHeight - 5;
+
+  if (isBottom) {
+    agree.disabled = false;
+    hint.innerText = "✅ 您已滑閱完整契約內容，請勾選同意後繼續";
+    hint.style.background = "#e6f7e6";
+    hint.style.color = "#166534";
+  }
+});
+</script>
 </body>
 </html>

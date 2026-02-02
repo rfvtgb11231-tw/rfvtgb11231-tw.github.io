@@ -239,7 +239,10 @@ const canvas=document.getElementById("sign");
 const ctx=canvas.getContext("2d");
 ctx.lineWidth=2;
 ctx.lineCap="round";
-
+function clearSign(){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById("signTime").innerText = "簽署時間：尚未簽名";
+}
 function resizeCanvas(){
   const r=canvas.getBoundingClientRect();
   canvas.width=r.width;
@@ -283,6 +286,9 @@ canvas.addEventListener("touchend",end);
 canvas.addEventListener("mousedown",start);
 canvas.addEventListener("mousemove",move);
 canvas.addEventListener("mouseup",end);
+  document
+  .getElementById("clearSignBtn")
+  .addEventListener("click", clearSign)
 </script>
 </div>
   <script>

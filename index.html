@@ -17,6 +17,15 @@ body{
   margin:16px auto;
   padding:16px;
 }
+  .clear-btn{
+  margin-top:8px;
+  padding:6px 14px;
+  font-size:14px;
+  border-radius:8px;
+  border:none;
+  background:#eee;
+  cursor:pointer;
+}
 .card{
   background:#fff;
   border-radius:14px;
@@ -207,6 +216,9 @@ button:disabled{
     <h3>甲方手寫簽名</h3>
     <canvas id="sign"></canvas>
     <div id="signTime">簽署時間：尚未簽名</div>
+    <button type="button" id="clearSignBtn" class="clear-btn">
+  清除簽名
+</button>
   </div>
 
 </div>

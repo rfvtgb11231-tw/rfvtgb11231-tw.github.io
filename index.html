@@ -26,6 +26,20 @@ body{
   background:#eee;
   cursor:pointer;
 }
+  .scroll-btn {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  background-color: #fff4d6;
+  border: 1px solid #f5d37b;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.scroll-btn:hover {
+  background-color: #ffe8a6;
+}
 .card{
   background:#fff;
   border-radius:14px;
@@ -104,6 +118,9 @@ button:disabled{
 ">
   🔔 請將契約內容滑至最底部後，方可勾選「我已完整閱讀並同意」
 </p>
+    <button type="button" onclick="scrollToBottom()" class="scroll-btn">
+  ⬇ 一鍵滑到契約最底部
+</button>
     <div id="contractContent">
 
 <!-- 🔽 官方契約全文（逐字）開始 -->
@@ -274,6 +291,13 @@ function move(e){
   const p=pos(e);
   ctx.lineTo(p.x,p.y);
   ctx.stroke();
+}
+  function scrollToBottom() {
+  const box = document.getElementById('contractContent');
+  box.scrollTo({
+    top: box.scrollHeight,
+    behavior: 'smooth'
+  });
 }
 function end(){
   drawing=false;

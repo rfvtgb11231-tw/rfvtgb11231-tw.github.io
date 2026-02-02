@@ -30,18 +30,24 @@ body{
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 
   padding: 10px 14px;
   margin: 10px 0 14px 0;
-background: #f7f9fc;              /* 淺灰藍背景 */
-  border: 1px solid #d0d7e2;        /* 銀行常見細邊線 */
+
+  background: #f7f9fc;
+  border: 1px solid #d0d7e2;
   border-radius: 6px;
 
   font-size: 14px;
-  color: #2f3a4a;
 }
 .hint-text {
+  flex: 1;              /* ✅ 關鍵：撐滿左側 */
+  min-width: 0;         /* ✅ 防止被擠成直排 */
+
   line-height: 1.5;
+  color: #2f3a4a;
+  white-space: normal;  /* 正常換行 */
 }
 .scroll-btn-inline {
   flex-shrink: 0;

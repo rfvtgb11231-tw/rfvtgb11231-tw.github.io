@@ -32,26 +32,23 @@ body{
 }
 .contract-hint-bar {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
 
-  padding: 12px;
-  margin: 12px 0;
+  padding: 14px;
+  margin: 12px 0 16px 0;
 
-  background: #f7f9fc;
-  border: 1px solid #d0d7e2;
-  border-radius: 6px;
-}
-  .hint-text {
-  flex: 1;
-  min-width: 0;
+  background: #f9fafb;               /* 比現在更淡 */
+  border: 1px solid #e2e8f0;         /* 銀行常見灰藍邊線 */
+  border-radius: 10px;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
 
   font-size: 14px;
-  line-height: 1.5;
-  color: #2f3a4a;
-
-  white-space: normal;
-  word-break: break-word;
+}
+ .hint-text {
+  color: #1f2937;                    /* 深灰而非純黑 */
+  line-height: 1.6;
 }
   .scroll-btn-inline {
   flex-shrink: 0;
@@ -73,13 +70,23 @@ body{
     align-items: stretch;
   }
 
-  .scroll-btn-inline {
-    width: 100%;
-    text-align: center;
-  }
+ .scroll-btn-inline {
+  align-self: flex-start;            /* 不撐滿 */
+  padding: 6px 14px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  background: #ffffff;
+  color: #1f4fd8;
+
+  border: 1px solid #c7d2fe;
+  border-radius: 999px;
+
+  cursor: pointer;
 }
-.scroll-btn:hover {
-  background-color: #ffe8a6;
+.scroll-btn-inline:hover {
+  background: #f5f7ff;
 }
 .card{
   background:#fff;

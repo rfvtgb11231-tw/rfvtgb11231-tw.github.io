@@ -26,30 +26,34 @@ body{
   background:#eee;
   cursor:pointer;
 }
+
+.scroll-btn-inline:hover {
+  background: #f0f4ff;
+}
 .contract-hint-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 
-  padding: 10px 14px;
-  margin: 10px 0 14px 0;
+  padding: 12px;
+  margin: 12px 0;
 
   background: #f7f9fc;
   border: 1px solid #d0d7e2;
   border-radius: 6px;
+}
+  .hint-text {
+  flex: 1;
+  min-width: 0;
 
   font-size: 14px;
-}
-.hint-text {
-  flex: 1;              /* ✅ 關鍵：撐滿左側 */
-  min-width: 0;         /* ✅ 防止被擠成直排 */
-
   line-height: 1.5;
   color: #2f3a4a;
-  white-space: normal;  /* 正常換行 */
+
+  white-space: normal;
+  word-break: break-word;
 }
-.scroll-btn-inline {
+  .scroll-btn-inline {
   flex-shrink: 0;
 
   padding: 6px 14px;
@@ -63,10 +67,17 @@ body{
 
   cursor: pointer;
 }
-.scroll-btn-inline:hover {
-  background: #f0f4ff;
-}
+  @media (max-width: 600px) {
+  .contract-hint-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
+  .scroll-btn-inline {
+    width: 100%;
+    text-align: center;
+  }
+}
 .scroll-btn:hover {
   background-color: #ffe8a6;
 }

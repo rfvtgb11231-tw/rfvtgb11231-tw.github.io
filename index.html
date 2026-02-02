@@ -30,33 +30,37 @@ body{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  margin-bottom: 10px;
-  background: #fff4d6;
-  border: 1px solid #f0d48a;
-  border-radius: 8px;
-  font-size: 14px;
-}
 
+  padding: 10px 14px;
+  margin: 10px 0 14px 0;
+background: #f7f9fc;              /* 淺灰藍背景 */
+  border: 1px solid #d0d7e2;        /* 銀行常見細邊線 */
+  border-radius: 6px;
+
+  font-size: 14px;
+  color: #2f3a4a;
+}
 .hint-text {
-  color: #8a5a00;
-  line-height: 1.4;
+  line-height: 1.5;
 }
-
 .scroll-btn-inline {
-  white-space: nowrap;
-  padding: 6px 12px;
-  font-size: 14px;
-  background: #ffe08a;
-  border: 1px solid #e6c260;
-  border-radius: 20px;
+  flex-shrink: 0;
+
+  padding: 6px 14px;
+  font-size: 13px;
+
+  background: #ffffff;
+  color: #1f4fd8;
+
+  border: 1px solid #1f4fd8;
+  border-radius: 4px;
+
   cursor: pointer;
 }
-
 .scroll-btn-inline:hover {
-  background: #ffd45a;
+  background: #f0f4ff;
 }
+
 .scroll-btn:hover {
   background-color: #ffe8a6;
 }
@@ -130,11 +134,11 @@ button:disabled{
     <h3>契約內容（請完整閱讀）</h3>
     <div class="contract-hint-bar">
   <div class="hint-text">
-    📜 請完整閱讀契約內容後，方可勾選「我已完整閱讀並同意」
+    請詳閱契約內容，閱讀完成後方可勾選同意
   </div>
 
   <button type="button" onclick="scrollToBottom()" class="scroll-btn-inline">
-    ⬇ 一鍵滑到最底部
+    前往契約底部
   </button>
 </div>
     <div id="contractContent">

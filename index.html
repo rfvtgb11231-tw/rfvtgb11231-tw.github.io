@@ -377,25 +377,33 @@ canvas.addEventListener("mouseup",end);
   .addEventListener("click", clearSign)
 </script>
 </div>
-  <script>
-const contract = document.getElementById("contractContent");
-const agree = document.getElementById("agree");
-const hint = document.getElementById("scrollHint");
+ <script>
+const agree = document.getElementById("agreeCheckbox");
+const hintBar = document.getElementById("contractHint");
+const hintText = document.querySelector("#contractHint .hint-text");
 
 agree.disabled = true;
+let hasRead = false;
 
-contract.addEventListener("scroll", () => {
-  const isBottom =
-    contract.scrollTop + contract.clientHeight >=
-    contract.scrollHeight - 5;
+// 用「按鈕」當銀行認定的閱讀完成
+function scrollToBottom() {
+  const target = document.getElementById("contractContent");
+  target.scrollIntoView({ behavior: "smooth", block: "end" });
 
-  if (isBottom) {
-    agree.disabled = false;
-    hint.innerText = "✅ 您已滑閱完整契約內容，請勾選同意後繼續";
-    hint.style.background = "#e6f7e6";
-    hint.style.color = "#166534";
-  }
-});
+  if (hasRead) return;
+  hasRead = true;
+
+  // ✔ 完成閱讀狀態
+  hintText.textContent = "✔ 已完成閱讀，可進行同意";
+  hintBar.classList.add("completed");
+
+  // 解鎖 checkbox
+  agree.disabled = false;
+
+  // 隱藏按鈕
+  const btn = hintBar.querySelector("button");
+  if (btn) btn.style.display = "none";
+}
 </script>
 </body>
 </html>

@@ -169,22 +169,20 @@ button:disabled{
   <!-- 契約內容 -->
  <div class="card contract-card">
   <h3>簽約內容（請完整閱讀）</h3>
-
-  <!-- 銀行提示卡 -->
-  <div id="contractHint" class="contract-hint-bar">
-    <div class="hint-text">
-      請詳閱以下契約內容，完成閱讀後方可進行同意
-    </div>
-
-    <button
-      type="button"
-      onclick="scrollToBottom()"
-      class="scroll-btn-inline"
-    >
-      前往契約底部
-    </button>
+<!-- 銀行提示卡（正確結構） -->
+<div id="contractHint" class="contract-hint-bar">
+  <div class="hint-text">
+    請詳閱以下契約內容，完成閱讀後方可進行同意
   </div>
 
+  <button
+    type="button"
+    onclick="scrollToBottom()"
+    class="scroll-btn-inline"
+  >
+    前往契約底部
+  </button>
+</div>
   <!-- 條款內容（原本的「簽約注意事項」） -->
   <div id="contractContent" class="contract-content">
     <h4>簽約注意事項</h4>

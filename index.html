@@ -87,6 +87,45 @@ html, body {
   background: #eee;
   font-size: 14px;
 }
+/* ===== LINE Bank 底部固定操作列 ===== */
+#actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 16px;
+  z-index: 9999;
+}
+
+/* checkbox 行 */
+.agree-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+/* 同意並繼續按鈕（LINE Bank 綠） */
+#continueBtn {
+  width: 100%;
+  background: #22c55e;
+  color: white;
+  font-size: 16px;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* 尚未解鎖狀態 */
+#continueBtn:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+}  
 </style>
 </head>
 

@@ -303,15 +303,7 @@ button:disabled{
 </div>
 
 <script>
-/* 滑到底才可勾 */
-const box=document.getElementById("contractContent");
-const agree=document.getElementById("agree");
 
-box.addEventListener("scroll",()=>{
-  if(box.scrollTop+box.clientHeight>=box.scrollHeight-5){
-    agree.disabled=false;
-  }
-});
 
 /* 簽名 */
 const canvas=document.getElementById("sign");
@@ -378,24 +370,28 @@ canvas.addEventListener("mouseup",end);
 </script>
 </div>
  <script>
-const agree = document.getElementById("agreeCheckbox");
+const agree = document.getElementById("agree");
 const hintBar = document.getElementById("contractHint");
 const hintText = document.querySelector("#contractHint .hint-text");
 
 agree.disabled = true;
 let hasRead = false;
 
-// 用「按鈕」當銀行認定的閱讀完成
+// 銀行認定：點「前往契約底部」＝完成閱讀
 function scrollToBottom() {
-  const target = document.getElementById("contractContent");
-  target.scrollIntoView({ behavior: "smooth", block: "end" });
+  const box = document.getElementById("contractContent");
+  box.scrollTo({
+    top: box.scrollHeight,
+    behavior: "smooth"
+  });
 
   if (hasRead) return;
   hasRead = true;
 
-  // ✔ 完成閱讀狀態
+  // 更新銀行提示卡
   hintText.textContent = "✔ 已完成閱讀，可進行同意";
-  hintBar.classList.add("completed");
+  hintBar.style.background = "#e6f7ee";
+  hintBar.style.borderColor = "#86efac";
 
   // 解鎖 checkbox
   agree.disabled = false;

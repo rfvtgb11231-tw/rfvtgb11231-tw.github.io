@@ -289,6 +289,16 @@ document.getElementById("clearSignBtn").addEventListener("click", () => {
   document.getElementById("signTime").innerText = "簽署時間：尚未簽名";
 });
 </script>
+<!-- LINE Bank 底部固定操作列 -->
+<div id="actionBar">
+  <label class="agree-row">
+    <input type="checkbox" id="agreeCheckbox" disabled>
+    我已詳讀並同意上述契約內容
+  </label>
 
+  <button id="continueBtn" disabled>
+    同意並繼續
+  </button>
+</div>
 </body>
 </html>

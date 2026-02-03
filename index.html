@@ -316,7 +316,14 @@ html, body {
 const contract = document.getElementById("contractContent");
 const agreeCheckbox = document.getElementById("agreeCheckbox");
 const continueBtn = document.getElementById("continueBtn");
+const jumpBtn = document.getElementById("jumpToEndBtn");
 
+jumpBtn.addEventListener("click", () => {
+  contract.scrollTo({
+    top: contract.scrollHeight,
+    behavior: "smooth"
+  });
+});
 /* ① 滑到最底才能勾選（LINE Bank） */
 contract.addEventListener("scroll", () => {
   if (

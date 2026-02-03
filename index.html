@@ -21,7 +21,28 @@ html, body {
   margin: 0 auto;
   padding: 16px;
 }
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
+  margin: 10px 0 12px 0;
+  padding: 10px 12px;
+
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  font-size: 14px;
+  color: #374151;
+}
+
+.scroll-hint .dot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e; /* LINE Bank 綠 */
+  border-radius: 50%;
+}
 /* 卡片 */
 .card {
   background: #fff;
@@ -145,7 +166,10 @@ html, body {
   <!-- 合約內容（唯一一個框） -->
   <div class="card">
     <h3>契約內容（請完整閱讀）</h3>
-
+<div id="scrollHint" class="scroll-hint">
+  <span class="dot"></span>
+  請滑動頁面詳讀合約內容
+</div>
     <div id="contractContent">
       <h4>簽約注意事項</h4>
       <p>一、本契約之審閱期間不得少於 1 日⋯⋯</p>

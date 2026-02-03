@@ -17,90 +17,6 @@ body{
   margin:16px auto;
   padding:16px;
 }
-  .clear-btn{
-  margin-top:8px;
-  padding:6px 14px;
-  font-size:14px;
-  border-radius:8px;
-  border:none;
-  background:#eee;
-  cursor:pointer;
-}
-.contract-card h3 {
-  margin-bottom: 12px;
-}
-  .contract-content {
-  margin-top: 16px;
-  padding-top: 16px;
-
-  border-top: 1px solid #e5e7eb; /* 淡分隔線 */
-}
-  .contract-content h4 {
-  margin-bottom: 12px;
-  font-size: 15px;
-  font-weight: 600;
-}
-.scroll-btn-inline:hover {
-  background: #f0f4ff;
-}
-.contract-hint-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  padding: 14px;
-  margin: 12px 0 16px 0;
-
-  background: #f9fafb;               /* 比現在更淡 */
-  border: 1px solid #e2e8f0;         /* 銀行常見灰藍邊線 */
-  border-radius: 10px;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-
-  font-size: 14px;
-}
- .hint-text {
-  color: #1f2937;                    /* 深灰而非純黑 */
-  line-height: 1.6;
-}
-  .scroll-btn-inline {
-  flex-shrink: 0;
-
-  padding: 6px 14px;
-  font-size: 13px;
-
-  background: #ffffff;
-  color: #1f4fd8;
-
-  border: 1px solid #1f4fd8;
-  border-radius: 4px;
-
-  cursor: pointer;
-}
-  @media (max-width: 600px) {
-  .contract-hint-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
- .scroll-btn-inline {
-  align-self: flex-start;            /* 不撐滿 */
-  padding: 6px 14px;
-
-  font-size: 13px;
-  font-weight: 500;
-
-  background: #ffffff;
-  color: #1f4fd8;
-
-  border: 1px solid #c7d2fe;
-  border-radius: 999px;
-
-  cursor: pointer;
-}
-.scroll-btn-inline:hover {
-  background: #f5f7ff;
-}
 .card{
   background:#fff;
   border-radius:14px;
@@ -108,19 +24,36 @@ body{
   margin-bottom:16px;
   box-shadow:0 2px 6px rgba(0,0,0,.06);
 }
-  /* 公司資訊內層淡奶油圓框（照左圖） */
 .info-box{
   background:#fff4ea;
   border-radius:16px;
   padding:14px 16px;
   margin-top:10px;
 }
-
 .info-box p{
   margin:6px 0;
   line-height:1.6;
 }
+.contract-hint-bar{
+  margin-top:12px;
+  padding:14px;
+  background:#f9fafb;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  font-size:14px;
+}
+.scroll-btn-inline{
+  margin-top:10px;
+  padding:8px 14px;
+  font-size:14px;
+  background:#fff;
+  color:#1f4fd8;
+  border:1px solid #1f4fd8;
+  border-radius:999px;
+  cursor:pointer;
+}
 #contractContent{
+  margin-top:14px;
   height:360px;
   overflow-y:auto;
   border:1px solid #ddd;
@@ -130,6 +63,9 @@ body{
   line-height:1.9;
   font-size:15px;
 }
+#contractContent h4{
+  margin-top:18px;
+}
 #sign{
   width:100%;
   height:180px;
@@ -138,17 +74,14 @@ body{
   background:#fff;
   touch-action:none;
 }
-#signTime{
+.clear-btn{
   margin-top:8px;
+  padding:6px 14px;
   font-size:14px;
-  color:#666;
-}
-button{
-  width:100%;
-  padding:14px;
+  border-radius:8px;
   border:none;
-  border-radius:10px;
-  font-size:16px;
+  background:#eee;
+  cursor:pointer;
 }
 button:disabled{
   background:#ccc;
@@ -157,9 +90,12 @@ button:disabled{
 </style>
 </head>
 
-<div class="card">
-  <h2 class="title">寵物美容服務定型化契約</h2>
+<body>
+<div class="container">
 
+<!-- 公司資訊 -->
+<div class="card">
+  <h2>寵物美容服務定型化契約</h2>
   <div class="info-box">
     <p><strong>公司名稱：</strong>有吉寵物美容精品SPA</p>
     <p><strong>地址：</strong>台中市南區工學北路115號</p>
@@ -167,39 +103,34 @@ button:disabled{
   </div>
 </div>
 
-  <!-- 條款內容（原本的「簽約注意事項」） -->
-  <div id="contractContent" class="contract-content">
-     <!-- 契約內容 -->
- <div class="card contract-card">
-  <h3>簽約內容（請完整閱讀）</h3>
-<!-- 銀行提示卡（正確結構） -->
-<!-- 銀行提示卡（正確結構） -->
-<div id="contractHint" class="contract-hint-bar">
-  <div class="hint-text">
+<!-- 契約內容（單一框） -->
+<div class="card">
+  <h3>契約內容（請完整閱讀）</h3>
+
+  <div id="contractHint" class="contract-hint-bar">
     請詳閱以下契約內容，完成閱讀後方可進行同意
+    <br>
+    <button type="button" class="scroll-btn-inline" onclick="scrollToBottom()">
+      前往契約底部
+    </button>
   </div>
 
-  <button
-    type="button"
-    onclick="scrollToBottom()"
-    class="scroll-btn-inline"
-  >
-    前往契約底部
-  </button>
-</div>
-</div>
+  <div id="contractContent">
+
     <h4>簽約注意事項</h4>
-<p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
-<p>二、乙方應於簽訂本契約前，提供「犬、貓美容服務簽約前詢問事項及基本資料表」（如附件），並由甲、乙雙方就相關內容共同填妥。乙方並應出示本定型化契約書空白文本，就其契約條款逐條向甲方為說明，使甲方充分瞭解其權利義務。</p>
-<p>三、本契約雖為定型化契約之一種，甲、乙方仍得針對個別狀況，經雙方合意後，增、刪、修改內容。雙方不得以本契約內容為主管機關所定為由，主張無法修改，亦不得為有利於己之修正後，宣稱為政府機關版本，而主張不得修改。</p>
+    <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
+    <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
+    <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
 
-<p><strong>第一條（契約目的與範圍）</strong><br>
-犬、貓美容服務，指提供犬、貓外表部位清洗或清潔、吹乾梳毛、毛髮修剪及造型設計等美容服務之行為。但不得涉及動物醫療行為及宣稱醫療效能。</p>
+    <h4>契約條款</h4>
 
-<p><strong>第二條（資訊揭露義務）</strong><br>
-乙方應至少以半開大小以上紙張或以電子方式，將犬、貓美容服務定型化契約公告於營業櫃台或場所明顯處；有設置網站或經營社群媒體者，並應於網頁明顯處公告。</p>
+    <p><strong>第一條（契約目的與範圍）</strong><br>
+    犬、貓美容服務係指清洗、吹乾、修剪毛髮及造型設計等，不得涉及醫療行為。</p>
 
-<p><strong>第三條（寵物、甲方及乙方相關資料）</strong></p>
+    <p><strong>第二條（資訊揭露義務）</strong><br>
+    乙方應將本契約公告於營業場所或網站明顯處。</p>
+
+   <p><strong>第三條（寵物、甲方及乙方相關資料）</strong></p>
 <p>本契約應記載寵物、甲方及乙方之下列基本資料（如附件）：</p>
 <p>（一）寵物：犬、貓之寵物登記晶片號碼。但貓未辦理寵物登記者，得提供其他足以辨識個體身分之資訊。</p>
 <p>（二）甲方：1.姓名。2.國民身分證統一編號／居留證號碼。3.通訊地址。4.聯絡電話。5.緊急聯絡人。6.緊急聯絡人之聯絡電話。7.犬、貓需緊急就醫時指定之獸醫診療場所。</p>
@@ -276,131 +207,92 @@ button:disabled{
 <p>本契約及其附件，均為契約之一部分。</p>
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
-<p>______________________________________________。</p>
 
-<!-- 🔼 官方契約全文結束 -->
+    ______________________________________________。</p>
 
-    </div>
   </div>
+</div>
 
-  <!-- 同意 -->
-  <div class="card">
-    <label>
-      <input type="checkbox" id="agree" disabled>
-      我已完整閱讀並同意上述契約內容
-    </label>
-  </div>
+<!-- 同意 -->
+<div class="card">
+  <label>
+    <input type="checkbox" id="agree" disabled>
+    我已完整閱讀並同意上述契約內容
+  </label>
+</div>
 
-  <!-- 簽名 -->
-  <div class="card">
-    <h3>甲方手寫簽名</h3>
-    <canvas id="sign"></canvas>
-    <div id="signTime">簽署時間：尚未簽名</div>
-    <button type="button" id="clearSignBtn" class="clear-btn">
-  清除簽名
-</button>
-  </div>
+<!-- 簽名 -->
+<div class="card">
+  <h3>甲方手寫簽名</h3>
+  <canvas id="sign"></canvas>
+  <div id="signTime">簽署時間：尚未簽名</div>
+  <button type="button" class="clear-btn" onclick="clearSign()">清除簽名</button>
+</div>
 
 </div>
 
 <script>
+const box = document.getElementById("contractContent");
+const agree = document.getElementById("agree");
 
+box.addEventListener("scroll",()=>{
+  if(box.scrollTop + box.clientHeight >= box.scrollHeight - 5){
+    agree.disabled = false;
+    document.getElementById("contractHint").style.background="#e6f7ee";
+  }
+});
+
+function scrollToBottom(){
+  box.scrollTo({ top: box.scrollHeight, behavior:"smooth" });
+}
 
 /* 簽名 */
-const canvas=document.getElementById("sign");
-const ctx=canvas.getContext("2d");
-ctx.lineWidth=2;
-ctx.lineCap="round";
-function clearSign(){
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  document.getElementById("signTime").innerText = "簽署時間：尚未簽名";
-}
+const canvas = document.getElementById("sign");
+const ctx = canvas.getContext("2d");
+ctx.lineWidth = 2;
+ctx.lineCap = "round";
+
 function resizeCanvas(){
-  const r=canvas.getBoundingClientRect();
-  canvas.width=r.width;
-  canvas.height=r.height;
+  const r = canvas.getBoundingClientRect();
+  canvas.width = r.width;
+  canvas.height = r.height;
 }
 resizeCanvas();
-window.addEventListener("resize",resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
 
 let drawing=false;
-
 function pos(e){
   const r=canvas.getBoundingClientRect();
   const t=e.touches?e.touches[0]:e;
-  return{x:t.clientX-r.left,y:t.clientY-r.top};
+  return {x:t.clientX-r.left,y:t.clientY-r.top};
 }
 function start(e){
-  e.preventDefault();
   drawing=true;
-  document.body.style.overflow="hidden";
   const p=pos(e);
   ctx.beginPath();
   ctx.moveTo(p.x,p.y);
-  document.getElementById("signTime").innerText=
-    "簽署時間："+new Date().toLocaleString("zh-TW");
+  document.getElementById("signTime").innerText =
+    "簽署時間：" + new Date().toLocaleString("zh-TW");
 }
 function move(e){
   if(!drawing)return;
-  e.preventDefault();
   const p=pos(e);
   ctx.lineTo(p.x,p.y);
   ctx.stroke();
 }
-  function scrollToBottom() {
-  const box = document.getElementById('contractContent');
-  box.scrollTo({
-    top: box.scrollHeight,
-    behavior: 'smooth'
-  });
-}
-function end(){
-  drawing=false;
-  document.body.style.overflow="";
+function end(){ drawing=false; }
+function clearSign(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  document.getElementById("signTime").innerText="簽署時間：尚未簽名";
 }
 
-canvas.addEventListener("touchstart",start,{passive:false});
-canvas.addEventListener("touchmove",move,{passive:false});
-canvas.addEventListener("touchend",end);
 canvas.addEventListener("mousedown",start);
 canvas.addEventListener("mousemove",move);
 canvas.addEventListener("mouseup",end);
-  document
-  .getElementById("clearSignBtn")
-  .addEventListener("click", clearSign)
+canvas.addEventListener("touchstart",start,{passive:false});
+canvas.addEventListener("touchmove",move,{passive:false});
+canvas.addEventListener("touchend",end);
 </script>
-</div>
- <script>
-const agree = document.getElementById("agree");
-const hintBar = document.getElementById("contractHint");
-const hintText = document.querySelector("#contractHint .hint-text");
 
-agree.disabled = true;
-let hasRead = false;
-
-// 銀行認定：點「前往契約底部」＝完成閱讀
-function scrollToBottom() {
-  const box = document.getElementById("contractContent");
-  box.scrollTo({
-    top: box.scrollHeight,
-    behavior: "smooth"
-  });
-
-  if (hasRead) return;
-  hasRead = true;
-
-  // 更新銀行提示卡
-  hintText.textContent = "✔ 已完成閱讀，可進行同意";
-  hintBar.style.background = "#e6f7ee";
-  hintBar.style.borderColor = "#86efac";
-
-  // 解鎖 checkbox
-  agree.disabled = false;
-
-  // 隱藏按鈕
-  const btn = hintBar.querySelector("button");
-  if (btn) btn.style.display = "none";
-}
-</script>
 </body>
 </html>

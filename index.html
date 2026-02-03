@@ -43,6 +43,25 @@ html, body {
   background: #22c55e; /* LINE Bank 綠 */
   border-radius: 50%;
 }
+  .jump-btn {
+  width: 100%;
+  margin: 10px 0 12px 0;
+  padding: 12px;
+
+  background: #f0fdf4;
+  border: 1px solid #22c55e;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #15803d;
+
+  cursor: pointer;
+}
+
+.jump-btn:active {
+  background: #dcfce7;
+}
 /* 卡片 */
 .card {
   background: #fff;
@@ -170,6 +189,13 @@ html, body {
   <span class="dot"></span>
   請滑動頁面詳讀合約內容
 </div>
+    <button
+  type="button"
+  id="jumpToEndBtn"
+  class="jump-btn"
+>
+  前往契約底部
+</button>
     <div id="contractContent">
       <h4>簽約注意事項</h4>
       <p>一、本契約之審閱期間不得少於 1 日⋯⋯</p>

@@ -277,12 +277,6 @@ agreeCheckbox.addEventListener("change", () => {
   continueBtn.disabled = !agreeCheckbox.checked;
 });
 
-contract.addEventListener("scroll", () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
-    agree.disabled = false;
-  }
-});
-
 /* ✍️ 簽名（頁面完全不動） */
 const canvas = document.getElementById("sign");
 const ctx = canvas.getContext("2d");

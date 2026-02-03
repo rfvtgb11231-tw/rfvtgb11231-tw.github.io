@@ -267,10 +267,15 @@ function pos(e){
   return {x:t.clientX-r.left,y:t.clientY-r.top};
 }
 function start(e){
-  drawing=true;
-  const p=pos(e);
+  e.preventDefault();           // ⭐ 關鍵
+  drawing = true;
+
+  document.body.style.overflow = "hidden";  // ⭐ 鎖住頁面
+
+  const p = pos(e);
   ctx.beginPath();
-  ctx.moveTo(p.x,p.y);
+  ctx.moveTo(p.x, p.y);
+
   document.getElementById("signTime").innerText =
     "簽署時間：" + new Date().toLocaleString("zh-TW");
 }
@@ -280,10 +285,9 @@ function move(e){
   ctx.lineTo(p.x,p.y);
   ctx.stroke();
 }
-function end(){ drawing=false; }
-function clearSign(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  document.getElementById("signTime").innerText="簽署時間：尚未簽名";
+function end(){
+  drawing = false;
+  document.body.style.overflow = "";   // ⭐ 還原頁面捲動
 }
 
 canvas.addEventListener("mousedown",start);

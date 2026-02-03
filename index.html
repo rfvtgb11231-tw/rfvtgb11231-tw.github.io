@@ -258,9 +258,24 @@ html, body {
 </div>
 
 <script>
-/* ✅ 滑到底才可同意（LINE Bank） */
 const contract = document.getElementById("contractContent");
-const agree = document.getElementById("agree");
+const agreeCheckbox = document.getElementById("agreeCheckbox");
+const continueBtn = document.getElementById("continueBtn");
+
+/* ① 滑到最底才能勾選（LINE Bank） */
+contract.addEventListener("scroll", () => {
+  if (
+    contract.scrollTop + contract.clientHeight >=
+    contract.scrollHeight - 5
+  ) {
+    agreeCheckbox.disabled = false;
+  }
+});
+
+/* ② 勾選後才能繼續 */
+agreeCheckbox.addEventListener("change", () => {
+  continueBtn.disabled = !agreeCheckbox.checked;
+});
 
 contract.addEventListener("scroll", () => {
   if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {

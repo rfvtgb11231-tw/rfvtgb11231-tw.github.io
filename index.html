@@ -7,18 +7,17 @@
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
-/* ===== 全域鎖滑 ===== */
+/* ===== 全域 ===== */
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden;              /* 🔒 永久鎖整頁 */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  overflow: hidden;
   background: #FFF3E0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
   overscroll-behavior: none;
-  touch-action: none;
 }
 
-/* ===== 主頁 ===== */
+/* ===== 主頁結構 ===== */
 .page {
   height: 100%;
   display: flex;
@@ -30,7 +29,7 @@ html, body {
   padding: 16px;
   max-width: 720px;
   margin: auto;
-  overflow: hidden;              /* 🔒 不給滑 */
+  overflow: hidden;
 }
 
 .card {
@@ -56,24 +55,24 @@ html, body {
   color: #15803d;
 }
 
-/* ✅ 只允許這裡滑 */
+/* ✅ 正確高度計算（關鍵） */
 #contract {
-  height: 60vh;
+  height: calc(100vh - 420px); /* 🔥 扣掉 header + footer */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   border: 1px solid #ddd;
   border-radius: 12px;
   background: #fffaf3;
-  padding: 14px 14px 80px;
+  padding: 14px;
+  box-sizing: border-box;
 }
 
-/* ===== 底部 ===== */
+/* ===== Footer ===== */
 .footer {
-  flex-shrink: 0;
+  padding: 12px 16px;
   background: #fff;
   border-top: 1px solid #eee;
-  padding: 12px 16px;
 }
 
 .agree {
@@ -119,17 +118,18 @@ html, body {
   display: none;
   flex-direction: column;
   z-index: 9999;
-  touch-action: none;
 }
 #signLayer.active { display: flex; }
 
-/* 防 LINE 手勢 */
-#topBlocker {
-  height: env(safe-area-inset-top, 44px);
+/* 🚫 手勢隔離層（真正關鍵） */
+#gestureBlocker {
+  height: 80px;
   background: #000;
   flex-shrink: 0;
+  touch-action: none;
 }
 
+/* 簽名資訊 */
 .sign-head {
   color: #fff;
   text-align: center;
@@ -269,7 +269,7 @@ html, body {
 <p>本契約及其附件，均為契約之一部分。</p>
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
-        <p style="height:900px"></p>
+        <p style="height:1200px"></p>
       </div>
     </div>
   </div>
@@ -284,7 +284,7 @@ html, body {
 
 <!-- ===== 簽名 ===== -->
 <div id="signLayer">
-  <div id="topBlocker"></div>
+  <div id="gestureBlocker"></div>
   <div class="sign-head">請於下方簽名 ｜ <span id="time"></span></div>
   <canvas id="signCanvas"></canvas>
   <div class="sign-foot">
@@ -305,7 +305,7 @@ const time = document.getElementById("time");
 
 let drawing = false;
 
-/* 合約滑到底 */
+/* 滑到底解鎖 */
 jump.onclick = () => contract.scrollTo({ top: contract.scrollHeight });
 contract.onscroll = () => {
   if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
@@ -316,7 +316,6 @@ contract.onscroll = () => {
 /* 開啟簽名 */
 agree.onclick = () => {
   if (!agree.classList.contains("enabled")) return;
-
   layer.classList.add("active");
 
   const dpr = window.devicePixelRatio || 1;
@@ -326,11 +325,10 @@ agree.onclick = () => {
 
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
-
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 取得正確座標 */
+/* 簽名座標 */
 function pos(e){
   const r = canvas.getBoundingClientRect();
   return { x: e.clientX - r.left, y: e.clientY - r.top };
@@ -365,7 +363,7 @@ ok.onclick = () => {
 
 /* 下一步 */
 next.onclick = () => {
-  location.href = "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
+  location.href="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

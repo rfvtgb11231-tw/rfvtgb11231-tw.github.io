@@ -22,43 +22,49 @@ html,body{
 
 /* ===== 契約 ===== */
 .jump-btn{
-  width:100%;margin-bottom:12px;padding:12px;border-radius:10px;
-  border:1px solid #22c55e;background:#f0fdf4;color:#15803d;
+  width:100%;margin-bottom:12px;padding:12px;
+  border-radius:10px;border:1px solid #22c55e;
+  background:#f0fdf4;color:#15803d;
 }
 #contract{
-  max-height:60vh;overflow-y:auto;border:1px solid #ddd;
-  border-radius:12px;background:#fffaf3;
-  padding:14px 14px 80px;line-height:1.9;font-size:15px;
+  max-height:60vh;overflow-y:auto;
+  border:1px solid #ddd;border-radius:12px;
+  background:#fffaf3;padding:14px 14px 80px;
+  line-height:1.9;font-size:15px;
 }
 
 /* ===== footer ===== */
 .footer{
   position:fixed;left:0;right:0;bottom:0;
-  background:#fff;border-top:1px solid #eee;padding:12px 16px;
+  background:#fff;border-top:1px solid #eee;
+  padding:12px 16px;
 }
 .agree{display:flex;align-items:center;gap:12px;color:#9ca3af;cursor:not-allowed;margin-bottom:8px;}
 .agree.enabled{color:#111;cursor:pointer}
 .circle{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;}
 .agree.checked .circle{background:#22c55e;border-color:#22c55e;}
 .agree.checked .circle::after{content:"✓";color:#fff;display:flex;justify-content:center;}
-
 .footer button{
-  width:100%;padding:14px;border-radius:10px;border:none;font-size:16px;
+  width:100%;padding:14px;border-radius:10px;
+  border:none;font-size:16px;
 }
 .footer button:disabled{background:#d1d5db;color:#6b7280}
 .footer button.enabled{background:#22c55e;color:#fff}
 
-/* ===== 簽名 ===== */
+/* ===== 簽名層 ===== */
 #signLayer{
-  position:fixed;inset:0;background:#000;
-  display:none;flex-direction:column;z-index:9999;
-  touch-action:none;overscroll-behavior:none;
+  position:fixed;inset:0;
+  background:#000;display:none;
+  flex-direction:column;z-index:9999;
 }
 #signLayer.active{display:flex}
 .sign-head{color:#fff;text-align:center;padding:12px;}
 #signCanvas{flex:1;background:#fff;touch-action:none;}
 .sign-foot{display:flex;gap:12px;padding:12px;background:#111;}
-.sign-foot button{flex:1;padding:12px;font-size:16px;border:none;border-radius:8px;}
+.sign-foot button{
+  flex:1;padding:12px;font-size:16px;
+  border:none;border-radius:8px;
+}
 .clear{background:#444;color:#fff}
 .ok{background:#22c55e;color:#fff}
 </style>
@@ -68,7 +74,6 @@ html,body{
 
 <div class="page">
   <div class="container">
-
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -174,7 +179,6 @@ html,body{
         <p>＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿</p>
       </div>
     </div>
-
   </div>
 
   <div class="footer">
@@ -207,7 +211,7 @@ const ctx = canvas.getContext("2d");
 let scrollY = 0;
 let drawing = false;
 
-/* ===== 滑到底 ===== */
+/* ===== 滑到底才可勾 ===== */
 jump.onclick = () => contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
 contract.addEventListener("scroll",()=>{
   if(contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5){
@@ -215,7 +219,7 @@ contract.addEventListener("scroll",()=>{
   }
 });
 
-/* ===== 開簽名 ===== */
+/* ===== 開簽名（完全鎖頁） ===== */
 agree.onclick = ()=>{
   if(!agree.classList.contains("enabled")) return;
   scrollY = window.scrollY;
@@ -227,12 +231,24 @@ agree.onclick = ()=>{
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* ===== 畫簽名 ===== */
-ctx.lineWidth=2;ctx.lineCap="round";
-canvas.onpointerdown=e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
-canvas.onpointermove=e=>{if(!drawing)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}
-canvas.onpointerup=()=>drawing=false;
+/* 阻止任何滑動 */
+["touchmove","wheel","pointermove"].forEach(evt=>{
+  layer.addEventListener(evt,e=>e.preventDefault(),{passive:false});
+});
 
+/* ===== 簽名 ===== */
+ctx.lineWidth=2;ctx.lineCap="round";
+canvas.addEventListener("pointerdown",e=>{
+  e.preventDefault();drawing=true;
+  ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);
+});
+canvas.addEventListener("pointermove",e=>{
+  if(!drawing) return;
+  e.preventDefault();ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();
+});
+canvas.addEventListener("pointerup",()=>drawing=false);
+
+/* 清除 */
 clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
 /* ===== 送 Google 表單 ===== */

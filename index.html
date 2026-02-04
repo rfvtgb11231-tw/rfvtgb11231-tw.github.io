@@ -13,20 +13,19 @@ html,body{
   background:#FFF3E0;
 }
 
-/* ===== 整頁結構（關鍵） ===== */
+/* ===== 整頁 ===== */
 .page{
-  height:100%;
+  min-height:100%;
   display:flex;
   flex-direction:column;
 }
 
-/* ===== 上方內容 ===== */
+/* ===== 內容區（允許自然撐高） ===== */
 .container{
-  flex:1;
-  overflow:hidden;
   padding:16px;
   max-width:720px;
   margin:auto;
+  padding-bottom:140px; /* ✅ 預留 footer 空間 */
 }
 
 .card{
@@ -43,19 +42,7 @@ html,body{
   padding:14px 16px;
 }
 
-/* ===== 契約可滑區（正確寫法） ===== */
-#contract{
-  flex:1;
-  overflow-y:auto;
-  border:1px solid #ddd;
-  border-radius:12px;
-  background:#fffaf3;
-  padding:14px;
-  line-height:1.9;
-  font-size:15px;
-}
-
-/* 前往底部 */
+/* ===== 前往底部 ===== */
 .jump-btn{
   width:100%;
   margin-bottom:12px;
@@ -64,10 +51,27 @@ html,body{
   border:1px solid #22c55e;
   background:#f0fdf4;
   color:#15803d;
+  font-size:14px;
 }
 
-/* ===== 底部固定列 ===== */
+/* ===== 契約（唯一滾動者） ===== */
+#contract{
+  max-height:60vh;           /* ✅ 關鍵：不是 100% */
+  overflow-y:auto;
+  border:1px solid #ddd;
+  border-radius:12px;
+  background:#fffaf3;
+  padding:14px 14px 80px;    /* ✅ 底部安全距 */
+  line-height:1.9;
+  font-size:15px;
+}
+
+/* ===== footer ===== */
 .footer{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
   background:#fff;
   border-top:1px solid #eee;
   padding:12px 16px;
@@ -174,11 +178,11 @@ html,body{
       </div>
     </div>
 
-    <div class="card" style="display:flex;flex-direction:column;height:100%;">
+    <div class="card">
       <button id="jump" class="jump-btn">前往契約底部</button>
 
       <div id="contract">
-       <h4>簽約注意事項</h4>
+        <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -306,22 +310,14 @@ const agree=document.getElementById("agree");
 const next=document.getElementById("next");
 const layer=document.getElementById("signLayer");
 
-let atBottom=false;
+jump.onclick=()=>contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
 
-/* 前往底部 */
-jump.onclick=()=>{
-  contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
-};
-
-/* 判斷真的滑到底 */
 contract.addEventListener("scroll",()=>{
   if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
-    atBottom=true;
     agree.classList.add("enabled");
   }
 });
 
-/* 點同意 → 簽名 */
 agree.onclick=()=>{
   if(!agree.classList.contains("enabled"))return;
   openSign();
@@ -330,8 +326,7 @@ agree.onclick=()=>{
 /* ===== 簽名 ===== */
 const canvas=document.getElementById("signCanvas");
 const ctx=canvas.getContext("2d");
-ctx.lineWidth=2;
-ctx.lineCap="round";
+ctx.lineWidth=2;ctx.lineCap="round";
 
 function openSign(){
   document.body.style.overflow="hidden";
@@ -341,18 +336,10 @@ function openSign(){
   time.textContent=new Date().toLocaleString("zh-TW");
 }
 
-let drawing=false;
-canvas.onpointerdown=e=>{
-  drawing=true;
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX,e.offsetY);
-};
-canvas.onpointermove=e=>{
-  if(!drawing)return;
-  ctx.lineTo(e.offsetX,e.offsetY);
-  ctx.stroke();
-};
-canvas.onpointerup=()=>drawing=false;
+let draw=false;
+canvas.onpointerdown=e=>{draw=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
+canvas.onpointermove=e=>{if(!draw)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}
+canvas.onpointerup=()=>draw=false;
 
 clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 

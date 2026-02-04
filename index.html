@@ -91,7 +91,7 @@ html, body {
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-  padding-bottom: 120px;
+  padding-bottom: 140px;
   line-height: 1.9;
   font-size: 15px;
   
@@ -321,8 +321,11 @@ const continueBtn = document.getElementById("continueBtn");
 const jumpBtn = document.getElementById("jumpToEndBtn");
 
 jumpBtn.addEventListener("click", () => {
+  const actionBarHeight =
+    document.getElementById("actionBar").offsetHeight;
+
   contract.scrollTo({
-    top: contract.scrollHeight,
+    top: contract.scrollHeight - actionBarHeight - 20,
     behavior: "smooth"
   });
 });

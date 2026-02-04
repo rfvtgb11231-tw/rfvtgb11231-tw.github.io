@@ -6,7 +6,6 @@
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
-/* 🔒 LINE Bank 關鍵：整頁不滑 */
 html, body {
   height: 100%;
   overflow: hidden;
@@ -21,48 +20,7 @@ html, body {
   margin: 0 auto;
   padding: 16px;
 }
-.scroll-hint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 
-  margin: 10px 0 12px 0;
-  padding: 10px 12px;
-
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-
-  font-size: 14px;
-  color: #374151;
-}
-
-.scroll-hint .dot {
-  width: 8px;
-  height: 8px;
-  background: #22c55e; /* LINE Bank 綠 */
-  border-radius: 50%;
-}
-  .jump-btn {
-  width: 100%;
-  margin: 10px 0 12px 0;
-  padding: 12px;
-
-  background: #f0fdf4;
-  border: 1px solid #22c55e;
-  border-radius: 10px;
-
-  font-size: 14px;
-  font-weight: 500;
-  color: #15803d;
-
-  cursor: pointer;
-}
-
-.jump-btn:active {
-  background: #dcfce7;
-}
-/* 卡片 */
 .card {
   background: #fff;
   border-radius: 16px;
@@ -71,19 +29,43 @@ html, body {
   box-shadow: 0 2px 6px rgba(0,0,0,.06);
 }
 
-/* 公司資訊 */
 .info-box {
   background: #fff4ea;
   border-radius: 14px;
   padding: 14px 16px;
 }
 
-.info-box p {
-  margin: 6px 0;
-  line-height: 1.6;
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+}
+.scroll-hint .dot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
 }
 
-/* 合約閱讀框（唯一可滑） */
+.jump-btn {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f0fdf4;
+  border: 1px solid #22c55e;
+  border-radius: 10px;
+  color: #15803d;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 合約唯一可滑區 */
 #contractContent {
   height: 360px;
   overflow-y: auto;
@@ -91,18 +73,9 @@ html, body {
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-  padding-bottom: 170px; /* 一次給夠，iOS 安全 */
+  padding-bottom: 240px;
   line-height: 1.9;
   font-size: 15px;
-  box-sizing: border-box;
-}
-  padding-bottom: 110px; /* ⬅ 預留給底部 actionBar */
-/* 同意區 */
-.agree-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
 }
 
 /* 簽名 */
@@ -127,89 +100,86 @@ html, body {
   border-radius: 8px;
   border: none;
   background: #eee;
-  font-size: 14px;
 }
-/* ===== LINE Bank 底部固定操作列 ===== */
+
+/* 底部操作列 */
 #actionBar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: #ffffff;
+  background: #fff;
   border-top: 1px solid #e5e7eb;
   padding: 12px 16px;
-  z-index: 9999;
 }
 
-/* checkbox 行 */
+/* 灰階 checkbox（LINE Bank 風） */
 .agree-row {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #374151;
-  margin-bottom: 10px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+.agree-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #9ca3af; /* 反灰 */
 }
 
-/* 同意並繼續按鈕（LINE Bank 綠） */
 #continueBtn {
   width: 100%;
-  background: #22c55e;
-  color: white;
-  font-size: 16px;
   padding: 14px;
+  font-size: 16px;
   border: none;
   border-radius: 10px;
-  font-weight: 600;
+  background: #22c55e;
+  color: #fff;
 }
-
-/* 尚未解鎖狀態 */
 #continueBtn:disabled {
   background: #d1d5db;
   color: #6b7280;
-}  
+}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-  <!-- 標題 / 公司資訊 -->
- <div class="card">
-  <h2>寵物美容服務定型化契約</h2>
-  <div class="info-box">
-    <p><strong>公司名稱：</strong>有吉寵物美容精品SPA</p>
-    <p><strong>地址：</strong>台中市南區工學北路115號</p>
-    <p><strong>官方 LINE：</strong>@422xxuvm</p>
+  <div class="card">
+    <h2>寵物美容服務定型化契約</h2>
+    <div class="info-box">
+      <p><strong>公司名稱：</strong>有吉寵物美容精品SPA</p>
+      <p><strong>地址：</strong>台中市南區工學北路115號</p>
+      <p><strong>官方 LINE：</strong>@422xxuvm</p>
+    </div>
   </div>
-</div>
 
-  <!-- 合約內容（唯一一個框） -->
   <div class="card">
     <h3>契約內容（請完整閱讀）</h3>
-<div id="scrollHint" class="scroll-hint">
-  <span class="dot"></span>
-  請滑動頁面詳讀合約內容
-</div>
-    <button
-  type="button"
-  id="jumpToEndBtn"
-  class="jump-btn"
->
-  前往契約底部
-</button>
+
+    <div class="scroll-hint">
+      <span class="dot"></span> 請滑動詳讀合約內容
+    </div>
+
+    <button id="jumpToEndBtn" class="jump-btn">前往契約底部</button>
+
     <div id="contractContent">
-      <h4>簽約注意事項</h4>
-      <p>一、本契約之審閱期間不得少於 1 日⋯⋯</p>
-      <p>二、乙方應於簽訂本契約前提供相關資料⋯⋯</p>
+     <h4>簽約注意事項</h4>
+    <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
+    <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
+    <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
 
-      <h4>正式契約條款</h4>
-      <p><strong>第一條（契約目的與範圍）</strong><br>
-      犬、貓美容服務，指提供清洗、修剪等服務。</p>
+    <h4>契約條款</h4>
 
-      <p><strong>第二條（資訊揭露義務）</strong><br>
-      乙方應公告定型化契約。</p>
-<p><strong>第三條（寵物、甲方及乙方相關資料）</strong></p>
+    <p><strong>第一條（契約目的與範圍）</strong><br>
+    犬、貓美容服務係指清洗、吹乾、修剪毛髮及造型設計等，不得涉及醫療行為。</p>
+
+    <p><strong>第二條（資訊揭露義務）</strong><br>
+    乙方應將本契約公告於營業場所或網站明顯處。</p>
+
+   <p><strong>第三條（寵物、甲方及乙方相關資料）</strong></p>
 <p>本契約應記載寵物、甲方及乙方之下列基本資料（如附件）：</p>
 <p>（一）寵物：犬、貓之寵物登記晶片號碼。但貓未辦理寵物登記者，得提供其他足以辨識個體身分之資訊。</p>
 <p>（二）甲方：1.姓名。2.國民身分證統一編號／居留證號碼。3.通訊地址。4.聯絡電話。5.緊急聯絡人。6.緊急聯絡人之聯絡電話。7.犬、貓需緊急就醫時指定之獸醫診療場所。</p>
@@ -287,97 +257,84 @@ html, body {
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
 
-      ______________________________</p>
+
+      ______________________________
+
+      <h3 style="margin-top:24px;">甲方手寫簽名</h3>
+      <canvas id="sign"></canvas>
+      <div id="signTime">簽署時間：尚未簽名</div>
+      <button type="button" class="clear-btn" id="clearSignBtn">清除簽名</button>
+
       <div id="contractEnd"></div>
     </div>
   </div>
-
-  <!-- 同意 -->
- 
-
-  <!-- 簽名 -->
-  <div class="card">
-    <h3>甲方手寫簽名</h3>
-    <canvas id="sign"></canvas>
-    <div id="signTime">簽署時間：尚未簽名</div>
-    <button type="button" class="clear-btn" id="clearSignBtn">清除簽名</button>
-  </div>
-
 </div>
-<!-- LINE Bank 底部固定操作列 -->
+
 <div id="actionBar">
   <label class="agree-row">
     <input type="checkbox" id="agreeCheckbox" disabled>
     我已詳讀並同意上述契約內容
   </label>
-
-  <button id="continueBtn" disabled>
-    同意並繼續
-  </button>
+  <button id="continueBtn" disabled>同意並繼續</button>
 </div>
+
 <script>
 const contract = document.getElementById("contractContent");
 const agreeCheckbox = document.getElementById("agreeCheckbox");
 const continueBtn = document.getElementById("continueBtn");
-const jumpBtn = document.getElementById("jumpToEndBtn");
+const signCanvas = document.getElementById("sign");
 
+let reachedBottom = false;
+let hasSigned = false;
 
-jumpBtn.addEventListener("click", () => {
-  document.getElementById("contractEnd")
-    .scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-});
-/* ① 滑到最底才能勾選（LINE Bank） */
+document.getElementById("jumpToEndBtn").onclick = () => {
+  document.getElementById("contractEnd").scrollIntoView({ behavior: "smooth" });
+};
+
 contract.addEventListener("scroll", () => {
-  if (
-    contract.scrollTop + contract.clientHeight >=
-    contract.scrollHeight - 5
-  ) {
-    agreeCheckbox.disabled = false;
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 30) {
+    reachedBottom = true;
+    unlockAgree();
   }
 });
 
-/* ② 勾選後才能繼續 */
+function unlockAgree() {
+  agreeCheckbox.disabled = !(reachedBottom && hasSigned);
+}
+
 agreeCheckbox.addEventListener("change", () => {
   continueBtn.disabled = !agreeCheckbox.checked;
 });
 
-/* ✍️ 簽名（頁面完全不動） */
-const canvas = document.getElementById("sign");
-const ctx = canvas.getContext("2d");
+/* 簽名 */
+const ctx = signCanvas.getContext("2d");
 ctx.lineWidth = 2;
 ctx.lineCap = "round";
 
 function resizeCanvas() {
-  const r = canvas.getBoundingClientRect();
-  canvas.width = r.width;
-  canvas.height = r.height;
+  const r = signCanvas.getBoundingClientRect();
+  signCanvas.width = r.width;
+  signCanvas.height = r.height;
 }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
 let drawing = false;
-
 function pos(e) {
-  const r = canvas.getBoundingClientRect();
+  const r = signCanvas.getBoundingClientRect();
   const t = e.touches ? e.touches[0] : e;
   return { x: t.clientX - r.left, y: t.clientY - r.top };
 }
-
 function start(e) {
   e.preventDefault();
   drawing = true;
-  document.body.style.position = "fixed";
-  document.body.style.width = "100%";
+  hasSigned = true;
+  unlockAgree();
   const p = pos(e);
   ctx.beginPath();
   ctx.moveTo(p.x, p.y);
   document.getElementById("signTime").innerText =
     "簽署時間：" + new Date().toLocaleString("zh-TW");
 }
-
 function move(e) {
   if (!drawing) return;
   e.preventDefault();
@@ -385,24 +342,23 @@ function move(e) {
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
 }
+function end() { drawing = false; }
 
-function end() {
-  drawing = false;
-  document.body.style.position = "";
-  document.body.style.width = "";
-}
+signCanvas.addEventListener("touchstart", start, { passive: false });
+signCanvas.addEventListener("touchmove", move, { passive: false });
+signCanvas.addEventListener("touchend", end);
+signCanvas.addEventListener("mousedown", start);
+signCanvas.addEventListener("mousemove", move);
+signCanvas.addEventListener("mouseup", end);
 
-canvas.addEventListener("touchstart", start, { passive: false });
-canvas.addEventListener("touchmove", move, { passive: false });
-canvas.addEventListener("touchend", end);
-canvas.addEventListener("mousedown", start);
-canvas.addEventListener("mousemove", move);
-canvas.addEventListener("mouseup", end);
-
-document.getElementById("clearSignBtn").addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+document.getElementById("clearSignBtn").onclick = () => {
+  ctx.clearRect(0, 0, signCanvas.width, signCanvas.height);
+  hasSigned = false;
+  agreeCheckbox.checked = false;
+  unlockAgree();
+  continueBtn.disabled = true;
   document.getElementById("signTime").innerText = "簽署時間：尚未簽名";
-});
+};
 </script>
 
 </body>

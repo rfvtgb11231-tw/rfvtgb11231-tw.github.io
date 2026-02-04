@@ -7,20 +7,15 @@
 
 <style>
 html,body{
-  margin:0;
-  height:100%;
+  margin:0;height:100%;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-  background:#FFF3E0;
-  overscroll-behavior:none;
+  background:#FFF3E0;overscroll-behavior:none;
 }
-
-/* ===== 主結構 ===== */
 .page{min-height:100%;display:flex;flex-direction:column;}
 .container{padding:16px;max-width:720px;margin:auto;padding-bottom:140px;}
 .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.06);}
 .info-box{background:#fff4ea;border-radius:14px;padding:14px 16px;}
 
-/* ===== 契約 ===== */
 .jump-btn{
   width:100%;margin-bottom:12px;padding:12px;
   border-radius:10px;border:1px solid #22c55e;
@@ -32,12 +27,9 @@ html,body{
   background:#fffaf3;padding:14px 14px 80px;
   line-height:1.9;font-size:15px;
 }
-
-/* ===== footer ===== */
 .footer{
   position:fixed;left:0;right:0;bottom:0;
-  background:#fff;border-top:1px solid #eee;
-  padding:12px 16px;
+  background:#fff;border-top:1px solid #eee;padding:12px 16px;
 }
 .agree{display:flex;align-items:center;gap:12px;color:#9ca3af;cursor:not-allowed;margin-bottom:8px;}
 .agree.enabled{color:#111;cursor:pointer}
@@ -51,11 +43,10 @@ html,body{
 .footer button:disabled{background:#d1d5db;color:#6b7280}
 .footer button.enabled{background:#22c55e;color:#fff}
 
-/* ===== 簽名層 ===== */
+/* ===== 簽名 ===== */
 #signLayer{
-  position:fixed;inset:0;
-  background:#000;display:none;
-  flex-direction:column;z-index:9999;
+  position:fixed;inset:0;background:#000;
+  display:none;flex-direction:column;z-index:9999;
 }
 #signLayer.active{display:flex}
 .sign-head{color:#fff;text-align:center;padding:12px;}
@@ -208,10 +199,9 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 
-let scrollY = 0;
-let drawing = false;
+let scrollY = 0, drawing=false;
 
-/* ===== 滑到底才可勾 ===== */
+/* 滑到底 */
 jump.onclick = () => contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
 contract.addEventListener("scroll",()=>{
   if(contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5){
@@ -219,7 +209,7 @@ contract.addEventListener("scroll",()=>{
   }
 });
 
-/* ===== 開簽名（完全鎖頁） ===== */
+/* 開簽名 */
 agree.onclick = ()=>{
   if(!agree.classList.contains("enabled")) return;
   scrollY = window.scrollY;
@@ -231,27 +221,20 @@ agree.onclick = ()=>{
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 阻止任何滑動 */
+/* 防滑 */
 ["touchmove","wheel","pointermove"].forEach(evt=>{
   layer.addEventListener(evt,e=>e.preventDefault(),{passive:false});
 });
 
-/* ===== 簽名 ===== */
+/* 簽名 */
 ctx.lineWidth=2;ctx.lineCap="round";
-canvas.addEventListener("pointerdown",e=>{
-  e.preventDefault();drawing=true;
-  ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);
-});
-canvas.addEventListener("pointermove",e=>{
-  if(!drawing) return;
-  e.preventDefault();ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();
-});
-canvas.addEventListener("pointerup",()=>drawing=false);
+canvas.onpointerdown=e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
+canvas.onpointermove=e=>{if(!drawing)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}
+canvas.onpointerup=()=>drawing=false;
 
-/* 清除 */
 clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
-/* ===== 送 Google 表單 ===== */
+/* 背景送 Google 表單 */
 function sendToGoogleForm(){
   const url="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/formResponse";
   const data=new FormData();
@@ -264,7 +247,7 @@ function sendToGoogleForm(){
   fetch(url,{method:"POST",mode:"no-cors",body:data});
 }
 
-/* ===== 完成 ===== */
+/* 確定簽名 */
 ok.onclick=()=>{
   sendToGoogleForm();
   layer.classList.remove("active");
@@ -274,6 +257,12 @@ ok.onclick=()=>{
   agree.classList.add("checked");
   next.disabled=false;
   next.classList.add("enabled");
+};
+
+/* ⭐ 同意並繼續 → 一定跳轉 ⭐ */
+next.onclick=()=>{
+  window.location.href =
+  "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

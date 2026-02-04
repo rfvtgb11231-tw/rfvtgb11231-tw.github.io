@@ -2,18 +2,23 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport"
+  content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
 html,body{
   margin:0;height:100%;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-  background:#FFF3E0;overscroll-behavior:none;
+  background:#FFF3E0;
+  overscroll-behavior:none;
+  touch-action:none;
 }
+
+/* ===== 主頁 ===== */
 .page{min-height:100%;display:flex;flex-direction:column;}
 .container{padding:16px;max-width:720px;margin:auto;padding-bottom:140px;}
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;}
 .info-box{background:#fff4ea;border-radius:14px;padding:14px 16px;}
 
 .jump-btn{
@@ -21,18 +26,19 @@ html,body{
   border-radius:10px;border:1px solid #22c55e;
   background:#f0fdf4;color:#15803d;
 }
+
 #contract{
   max-height:60vh;overflow-y:auto;
   border:1px solid #ddd;border-radius:12px;
   background:#fffaf3;padding:14px 14px 80px;
-  line-height:1.9;font-size:15px;
 }
+
 .footer{
   position:fixed;left:0;right:0;bottom:0;
   background:#fff;border-top:1px solid #eee;padding:12px 16px;
 }
-.agree{display:flex;align-items:center;gap:12px;color:#9ca3af;cursor:not-allowed;margin-bottom:8px;}
-.agree.enabled{color:#111;cursor:pointer}
+.agree{display:flex;align-items:center;gap:12px;color:#aaa;}
+.agree.enabled{color:#111}
 .circle{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;}
 .agree.checked .circle{background:#22c55e;border-color:#22c55e;}
 .agree.checked .circle::after{content:"✓";color:#fff;display:flex;justify-content:center;}
@@ -40,16 +46,28 @@ html,body{
   width:100%;padding:14px;border-radius:10px;
   border:none;font-size:16px;
 }
-.footer button:disabled{background:#d1d5db;color:#6b7280}
+.footer button:disabled{background:#ccc}
 .footer button.enabled{background:#22c55e;color:#fff}
 
-/* ===== 簽名 ===== */
+/* ===== 簽名層 ===== */
 #signLayer{
-  position:fixed;inset:0;background:#000;
-  display:none;flex-direction:column;z-index:9999;
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
+  flex-direction:column;
+  z-index:9999;
 }
 #signLayer.active{display:flex}
-.sign-head{color:#fff;text-align:center;padding:12px;}
+
+/* ⭐ 頂部防誤觸遮罩（關鍵） ⭐ */
+#topBlocker{
+  height:env(safe-area-inset-top, 44px);
+  background:#000;
+  flex-shrink:0;
+}
+
+.sign-head{color:#fff;text-align:center;padding:10px;}
 #signCanvas{flex:1;background:#fff;touch-action:none;}
 .sign-foot{display:flex;gap:12px;padding:12px;background:#111;}
 .sign-foot button{
@@ -182,6 +200,7 @@ html,body{
 
 <!-- ===== 簽名 ===== -->
 <div id="signLayer">
+  <div id="topBlocker"></div>
   <div class="sign-head">請於下方簽名 ｜ <span id="time"></span></div>
   <canvas id="signCanvas"></canvas>
   <div class="sign-foot">
@@ -191,39 +210,38 @@ html,body{
 </div>
 
 <script>
-const contract = document.getElementById("contract");
-const agree = document.getElementById("agree");
-const next = document.getElementById("next");
-const jump = document.getElementById("jump");
-const layer = document.getElementById("signLayer");
-const canvas = document.getElementById("signCanvas");
-const ctx = canvas.getContext("2d");
-
-let scrollY = 0, drawing=false;
+const contract=document.getElementById("contract");
+const agree=document.getElementById("agree");
+const next=document.getElementById("next");
+const jump=document.getElementById("jump");
+const layer=document.getElementById("signLayer");
+const canvas=document.getElementById("signCanvas");
+const ctx=canvas.getContext("2d");
+let scrollY=0,drawing=false;
 
 /* 滑到底 */
-jump.onclick = () => contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
-contract.addEventListener("scroll",()=>{
-  if(contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5){
+jump.onclick=()=>contract.scrollTo({top:99999});
+contract.onscroll=()=>{
+  if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
     agree.classList.add("enabled");
   }
-});
+};
 
 /* 開簽名 */
-agree.onclick = ()=>{
-  if(!agree.classList.contains("enabled")) return;
-  scrollY = window.scrollY;
+agree.onclick=()=>{
+  if(!agree.classList.contains("enabled"))return;
+  scrollY=window.scrollY;
   document.body.style.position="fixed";
   document.body.style.top=`-${scrollY}px`;
   layer.classList.add("active");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - 120;
-  time.textContent = new Date().toLocaleString("zh-TW");
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight-220;
+  time.textContent=new Date().toLocaleString("zh-TW");
 };
 
-/* 防滑 */
-["touchmove","wheel","pointermove"].forEach(evt=>{
-  layer.addEventListener(evt,e=>e.preventDefault(),{passive:false});
+/* 完全吃掉觸控（防 LINE 關閉） */
+["touchstart","touchmove","wheel"].forEach(e=>{
+  layer.addEventListener(e,ev=>ev.preventDefault(),{passive:false});
 });
 
 /* 簽名 */
@@ -234,22 +252,8 @@ canvas.onpointerup=()=>drawing=false;
 
 clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
-/* 背景送 Google 表單 */
-function sendToGoogleForm(){
-  const url="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/formResponse";
-  const data=new FormData();
-  data.append("entry.471801136","515");
-  data.append("entry.1743694249","56");
-  data.append("entry.194133932","656");
-  data.append("entry.1448175326","犬");
-  data.append("entry.1268206545","我已閱讀並同意");
-  data.append("entry.1167520877","我已閱讀並同意");
-  fetch(url,{method:"POST",mode:"no-cors",body:data});
-}
-
-/* 確定簽名 */
+/* 確定 */
 ok.onclick=()=>{
-  sendToGoogleForm();
   layer.classList.remove("active");
   document.body.style.position="";
   document.body.style.top="";
@@ -259,10 +263,9 @@ ok.onclick=()=>{
   next.classList.add("enabled");
 };
 
-/* ⭐ 同意並繼續 → 一定跳轉 ⭐ */
+/* 跳轉表單 */
 next.onclick=()=>{
-  window.location.href =
-  "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
+  location.href="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

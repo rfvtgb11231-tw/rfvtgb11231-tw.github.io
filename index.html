@@ -12,7 +12,6 @@ html, body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
   background: #FFF3E0;
-  color: #333;
 }
 
 .container {
@@ -35,7 +34,38 @@ html, body {
   padding: 14px 16px;
 }
 
-/* 合約可滑區 */
+/* 提示 */
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+}
+.scroll-hint .dot {
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+}
+
+/* 前往底部 */
+.jump-btn {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f0fdf4;
+  border: 1px solid #22c55e;
+  border-radius: 10px;
+  color: #15803d;
+  font-size: 14px;
+}
+
+/* 🔑 唯一可滑區 */
 #contractContent {
   height: 360px;
   overflow-y: auto;
@@ -43,13 +73,13 @@ html, body {
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-  padding-bottom: 340px;
+  padding-bottom: 420px; /* 關鍵：一定要夠 */
   line-height: 1.9;
   font-size: 15px;
 }
 
 /* 簽名 */
-.signature-section {
+.signature-box {
   margin-top: 32px;
   padding: 16px;
   background: #fff;
@@ -59,10 +89,9 @@ html, body {
 
 #sign {
   width: 100%;
-  height: 240px;
+  height: 260px;
   border: 2px dashed #ccc;
   border-radius: 12px;
-  background: #fff;
   touch-action: none;
 }
 
@@ -73,14 +102,14 @@ html, body {
 }
 
 .clear-btn {
-  margin-top: 12px;
+  margin-top: 10px;
   padding: 8px 14px;
   border-radius: 8px;
   border: none;
   background: #eee;
 }
 
-/* ===== LINE Bank 勾選樣式 ===== */
+/* ===== LINE Bank 勾選 ===== */
 .agree-item {
   display: flex;
   align-items: center;
@@ -89,7 +118,6 @@ html, body {
   font-size: 15px;
   color: #9ca3af;
   cursor: not-allowed;
-  user-select: none;
 }
 
 .agree-item.enabled {
@@ -102,26 +130,23 @@ html, body {
   height: 22px;
   border-radius: 50%;
   border: 2px solid #d1d5db;
+  background: #f9fafb;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  background: #f9fafb;
 }
 
 .agree-item.checked .agree-circle {
   background: #22c55e;
   border-color: #22c55e;
 }
-
 .agree-item.checked .agree-circle::after {
   content: "✓";
-  color: white;
-  font-size: 14px;
+  color: #fff;
   font-weight: 700;
 }
 
-/* 底部操作列 */
+/* 底部 */
 #actionBar {
   position: fixed;
   bottom: 0;
@@ -162,6 +187,12 @@ html, body {
 
   <div class="card">
     <h3>契約內容（請完整閱讀）</h3>
+
+    <div class="scroll-hint">
+      <span class="dot"></span> 請滑動詳讀合約內容
+    </div>
+
+    <button id="jumpBtn" class="jump-btn">前往契約底部</button>
 
     <div id="contractContent">
       <h4>簽約注意事項</h4>
@@ -258,11 +289,11 @@ html, body {
 
       ______________________________
 
-      <div class="signature-section">
+      <div class="signature-box">
         <h3>甲方手寫簽名</h3>
         <canvas id="sign"></canvas>
         <div id="signTime">簽署時間：尚未簽名</div>
-        <button type="button" class="clear-btn" id="clearSignBtn">清除簽名</button>
+        <button id="clearSignBtn" class="clear-btn">清除簽名</button>
       </div>
 
       <div id="contractEnd"></div>
@@ -270,13 +301,11 @@ html, body {
   </div>
 </div>
 
-<!-- 底部操作 -->
 <div id="actionBar">
   <div id="agreeItem" class="agree-item">
     <div class="agree-circle"></div>
     我已詳讀並同意上述契約內容
   </div>
-
   <button id="continueBtn" disabled>同意並繼續</button>
 </div>
 
@@ -291,42 +320,43 @@ let reachedBottom = false;
 let hasSigned = false;
 let agreed = false;
 
+/* 前往底部 */
+document.getElementById("jumpBtn").onclick = () => {
+  document.getElementById("contractEnd").scrollIntoView({ behavior: "smooth" });
+};
+
 /* 滑到底 */
 contract.addEventListener("scroll", () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 40) {
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 50) {
     reachedBottom = true;
-    updateAgreeState();
+    updateAgree();
   }
 });
 
-/* 勾選 */
-agreeItem.addEventListener("click", () => {
-  if (!agreeItem.classList.contains("enabled")) return;
-  agreed = !agreed;
-  agreeItem.classList.toggle("checked", agreed);
-  continueBtn.disabled = !agreed;
-});
-
-/* 狀態更新 */
-function updateAgreeState() {
+function updateAgree() {
   if (reachedBottom && hasSigned) {
     agreeItem.classList.add("enabled");
-    agreeItem.style.cursor = "pointer";
   } else {
-    agreeItem.classList.remove("enabled", "checked");
-    agreeItem.style.cursor = "not-allowed";
+    agreeItem.classList.remove("enabled","checked");
     agreed = false;
     continueBtn.disabled = true;
   }
 }
 
+agreeItem.onclick = () => {
+  if (!agreeItem.classList.contains("enabled")) return;
+  agreed = !agreed;
+  agreeItem.classList.toggle("checked", agreed);
+  continueBtn.disabled = !agreed;
+};
+
 /* 簽名 */
-function resizeCanvas() {
+function resize() {
   const r = canvas.getBoundingClientRect();
   canvas.width = r.width;
   canvas.height = r.height;
 }
-resizeCanvas();
+resize();
 
 ctx.lineWidth = 2;
 ctx.lineCap = "round";
@@ -342,14 +372,12 @@ function start(e) {
   e.preventDefault();
   drawing = true;
   hasSigned = true;
-  updateAgreeState();
+  updateAgree();
   const p = pos(e);
   ctx.beginPath();
   ctx.moveTo(p.x, p.y);
-  document.getElementById("signTime").innerText =
-    "簽署時間：" + new Date().toLocaleString("zh-TW");
+  signTime.innerText = "簽署時間：" + new Date().toLocaleString("zh-TW");
 }
-
 function move(e) {
   if (!drawing) return;
   e.preventDefault();
@@ -357,21 +385,20 @@ function move(e) {
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
 }
-
 function end() { drawing = false; }
 
-canvas.addEventListener("touchstart", start, { passive: false });
-canvas.addEventListener("touchmove", move, { passive: false });
+canvas.addEventListener("touchstart", start, { passive:false });
+canvas.addEventListener("touchmove", move, { passive:false });
 canvas.addEventListener("touchend", end);
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mousemove", move);
 canvas.addEventListener("mouseup", end);
 
-document.getElementById("clearSignBtn").onclick = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+clearSignBtn.onclick = () => {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   hasSigned = false;
-  updateAgreeState();
-  document.getElementById("signTime").innerText = "簽署時間：尚未簽名";
+  updateAgree();
+  signTime.innerText = "簽署時間：尚未簽名";
 };
 </script>
 

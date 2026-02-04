@@ -2,188 +2,174 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-  background: #FFF3E0;
+html,body{
+  margin:0;height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  background:#FFF3E0;
 }
 
-/* ===== 卡片 ===== */
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 16px;
-}
-.card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.06);
-}
-.info-box {
-  background: #fff4ea;
-  border-radius: 14px;
-  padding: 14px 16px;
+/* ===== 主頁 ===== */
+.page{
+  height:100%;
+  display:flex;
+  flex-direction:column;
 }
 
-/* ===== 合約 ===== */
-#contractContent {
-  height: calc(100vh - 360px);
-  min-height: 300px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background: #fffaf3;
-  padding: 14px;
-  line-height: 1.9;
-  font-size: 15px;
+.container{
+  flex:1;
+  overflow:hidden;
+  padding:16px;
+  max-width:720px;
+  margin:auto;
 }
 
-.jump-btn {
-  width: 100%;
-  margin: 10px 0;
-  padding: 12px;
-  background: #f0fdf4;
-  border: 1px solid #22c55e;
-  border-radius: 10px;
-  color: #15803d;
-  font-size: 14px;
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
 }
 
-/* ===== 勾選 ===== */
-.agree-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  font-size: 15px;
-  color: #9ca3af;
-  cursor: not-allowed;
+.info-box{
+  background:#fff4ea;
+  border-radius:14px;
+  padding:14px 16px;
 }
-.agree-item.enabled {
-  color: #111827;
-  cursor: pointer;
+
+/* ===== 契約 ===== */
+#contract{
+  height:calc(100vh - 360px);
+  overflow-y:auto;
+  border:1px solid #ddd;
+  border-radius:12px;
+  background:#fffaf3;
+  padding:14px;
+  line-height:1.9;
+  font-size:15px;
 }
-.agree-circle {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid #d1d5db;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+.jump-btn{
+  width:100%;
+  margin:10px 0;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #22c55e;
+  background:#f0fdf4;
+  color:#15803d;
 }
-.agree-item.checked .agree-circle {
-  background: #22c55e;
-  border-color: #22c55e;
+
+/* ===== 同意 ===== */
+.agree{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#9ca3af;
+  cursor:not-allowed;
 }
-.agree-item.checked .agree-circle::after {
-  content: "✓";
-  color: #fff;
-  font-weight: 700;
+.agree.enabled{
+  color:#111;
+  cursor:pointer;
+}
+.circle{
+  width:22px;height:22px;
+  border-radius:50%;
+  border:2px solid #ccc;
+}
+.agree.checked .circle{
+  background:#22c55e;
+  border-color:#22c55e;
+}
+.agree.checked .circle::after{
+  content:"✓";
+  color:#fff;
+  display:flex;
+  justify-content:center;
 }
 
 /* ===== 底部 ===== */
-#actionBar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
-  padding: 12px 16px;
+.footer{
+  padding:12px 16px;
+  background:#fff;
+  border-top:1px solid #eee;
 }
-#continueBtn {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  border: none;
-  border-radius: 10px;
-  background: #22c55e;
-  color: #fff;
+.footer button{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
 }
-#continueBtn:disabled {
-  background: #d1d5db;
-  color: #6b7280;
+.footer button:disabled{
+  background:#d1d5db;color:#6b7280;
+}
+.footer button.enabled{
+  background:#22c55e;color:#fff;
 }
 
-/* ===== 全螢幕簽名 ===== */
-#signOverlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 9999;
-  display: none;
-  flex-direction: column;
+/* ===== 簽名 Overlay ===== */
+#signLayer{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
+  flex-direction:column;
+  z-index:9999;
+}
+#signLayer.active{display:flex}
+
+.sign-head{
+  color:#fff;
+  text-align:center;
+  padding:12px;
 }
 
-#signOverlay.active {
-  display: flex;
+#signCanvas{
+  flex:1;
+  background:#fff;
+  touch-action:none;
 }
 
-.sign-header {
-  color: #fff;
-  padding: 12px;
-  text-align: center;
+.sign-foot{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  background:#111;
 }
-
-#signCanvas {
-  flex: 1;
-  background: #fff;
-  touch-action: none;
+.sign-foot button{
+  flex:1;
+  padding:12px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
 }
-
-.sign-footer {
-  display: flex;
-  gap: 12px;
-  padding: 12px;
-  background: #111;
-}
-
-.sign-footer button {
-  flex: 1;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-}
-
-.clear {
-  background: #444;
-  color: #fff;
-}
-
-.confirm {
-  background: #22c55e;
-  color: #fff;
-}
+.clear{background:#444;color:#fff}
+.ok{background:#22c55e;color:#fff}
 </style>
 </head>
 
 <body>
 
+<div class="page">
 <div class="container">
+
   <div class="card">
     <h2>寵物美容服務定型化契約</h2>
     <div class="info-box">
-      <p><strong>公司名稱：</strong>有吉寵物美容精品SPA</p>
-      <p><strong>地址：</strong>台中市南區工學北路115號</p>
-      <p><strong>官方 LINE：</strong>@422xxuvm</p>
+      <p><b>公司名稱：</b>有吉寵物美容精品SPA</p>
+      <p><b>地址：</b>台中市南區工學北路115號</p>
+      <p><b>官方 LINE：</b>@422xxuvm</p>
     </div>
   </div>
 
   <div class="card">
-    <button id="jumpBtn" class="jump-btn">前往契約底部</button>
+    <button id="jump" class="jump-btn">前往契約底部</button>
 
-    <div id="contractContent">
+    <div id="contract">
       <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
@@ -277,90 +263,82 @@ html, body {
 
 
       ______________________________
-      <div id="contractEnd"></div>
+      <div id="end"></div>
     </div>
   </div>
+
 </div>
 
-<div id="actionBar">
-  <div id="agreeItem" class="agree-item">
-    <div class="agree-circle"></div>
-    我已詳讀並同意上述契約內容
+<div class="footer">
+  <div id="agree" class="agree">
+    <div class="circle"></div>我已詳讀並同意上述契約內容
   </div>
-  <button id="continueBtn" disabled>同意並繼續</button>
+  <button id="next" disabled>同意並繼續</button>
+</div>
 </div>
 
-<!-- ===== 全螢幕簽名 ===== -->
-<div id="signOverlay">
-  <div class="sign-header">
-    請於下方簽名　｜　<span id="signTime"></span>
+<!-- ===== 簽名 ===== -->
+<div id="signLayer">
+  <div class="sign-head">
+    請於下方簽名 ｜ <span id="time"></span>
   </div>
   <canvas id="signCanvas"></canvas>
-  <div class="sign-footer">
-    <button class="clear" id="clearSign">清除</button>
-    <button class="confirm" id="confirmSign">確定簽名</button>
+  <div class="sign-foot">
+    <button class="clear" id="clear">清除</button>
+    <button class="ok" id="ok">確定簽名</button>
   </div>
 </div>
 
 <script>
-const contract = document.getElementById("contractContent");
-const agreeItem = document.getElementById("agreeItem");
-const continueBtn = document.getElementById("continueBtn");
-const overlay = document.getElementById("signOverlay");
+const contract=document.getElementById("contract");
+const agree=document.getElementById("agree");
+const next=document.getElementById("next");
+const layer=document.getElementById("signLayer");
 
-let reachedBottom = false;
-let hasSigned = false;
+let atBottom=false,signed=false;
 
-/* 前往底部 */
-jumpBtn.onclick = () => {
-  contract.scrollTo({ top: contract.scrollHeight, behavior: "smooth" });
-  reachedBottom = true;
-  agreeItem.classList.add("enabled");
+/* 到底 */
+jump.onclick=()=>contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
+contract.onscroll=()=>{
+  if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
+    atBottom=true;
+    agree.classList.add("enabled");
+  }
 };
 
-/* 點同意 → 開簽名 */
-agreeItem.onclick = () => {
-  if (!agreeItem.classList.contains("enabled")) return;
+/* 點同意 */
+agree.onclick=()=>{
+  if(!agree.classList.contains("enabled"))return;
   openSign();
 };
 
 /* ===== 簽名 ===== */
-const canvas = document.getElementById("signCanvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("signCanvas");
+const ctx=canvas.getContext("2d");
+ctx.lineWidth=2;ctx.lineCap="round";
 
-function openSign() {
-  overlay.classList.add("active");
-  resizeCanvas();
-  signTime.textContent = new Date().toLocaleString("zh-TW");
+function openSign(){
+  document.body.style.overflow="hidden";
+  layer.classList.add("active");
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight-120;
+  time.textContent=new Date().toLocaleString("zh-TW");
 }
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - 120;
-}
+let draw=false;
+canvas.onpointerdown=e=>{draw=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
+canvas.onpointermove=e=>{if(!draw)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}
+canvas.onpointerup=()=>draw=false;
 
-let drawing = false;
-canvas.addEventListener("pointerdown", e => {
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
-});
-canvas.addEventListener("pointermove", e => {
-  if (!drawing) return;
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
-});
-canvas.addEventListener("pointerup", () => drawing = false);
+clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
-clearSign.onclick = () => {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-};
-
-confirmSign.onclick = () => {
-  hasSigned = true;
-  overlay.classList.remove("active");
-  agreeItem.classList.add("checked");
-  continueBtn.disabled = false;
+ok.onclick=()=>{
+  signed=true;
+  layer.classList.remove("active");
+  document.body.style.overflow="";
+  agree.classList.add("checked");
+  next.disabled=false;
+  next.classList.add("enabled");
 };
 </script>
 

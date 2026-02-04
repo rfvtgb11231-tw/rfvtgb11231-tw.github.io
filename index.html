@@ -35,37 +35,7 @@ html, body {
   padding: 14px 16px;
 }
 
-.scroll-hint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0;
-  padding: 10px 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  font-size: 14px;
-}
-.scroll-hint .dot {
-  width: 8px;
-  height: 8px;
-  background: #22c55e;
-  border-radius: 50%;
-}
-
-.jump-btn {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 12px;
-  background: #f0fdf4;
-  border: 1px solid #22c55e;
-  border-radius: 10px;
-  color: #15803d;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-/* 合約唯一可滑區 */
+/* 合約可滑區 */
 #contractContent {
   height: 360px;
   overflow-y: auto;
@@ -73,15 +43,23 @@ html, body {
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-  padding-bottom: 240px;
+  padding-bottom: 340px;
   line-height: 1.9;
   font-size: 15px;
 }
 
 /* 簽名 */
+.signature-section {
+  margin-top: 32px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
 #sign {
   width: 100%;
-  height: 180px;
+  height: 240px;
   border: 2px dashed #ccc;
   border-radius: 12px;
   background: #fff;
@@ -89,17 +67,58 @@ html, body {
 }
 
 #signTime {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 14px;
   color: #666;
 }
 
 .clear-btn {
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 8px 14px;
   border-radius: 8px;
   border: none;
   background: #eee;
+}
+
+/* ===== LINE Bank 勾選樣式 ===== */
+.agree-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 15px;
+  color: #9ca3af;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.agree-item.enabled {
+  color: #111827;
+  cursor: pointer;
+}
+
+.agree-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f9fafb;
+}
+
+.agree-item.checked .agree-circle {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.agree-item.checked .agree-circle::after {
+  content: "✓";
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* 底部操作列 */
@@ -111,21 +130,6 @@ html, body {
   background: #fff;
   border-top: 1px solid #e5e7eb;
   padding: 12px 16px;
-}
-
-/* 灰階 checkbox（LINE Bank 風） */
-.agree-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 8px;
-}
-.agree-row input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #9ca3af; /* 反灰 */
 }
 
 #continueBtn {
@@ -159,14 +163,8 @@ html, body {
   <div class="card">
     <h3>契約內容（請完整閱讀）</h3>
 
-    <div class="scroll-hint">
-      <span class="dot"></span> 請滑動詳讀合約內容
-    </div>
-
-    <button id="jumpToEndBtn" class="jump-btn">前往契約底部</button>
-
     <div id="contractContent">
-     <h4>簽約注意事項</h4>
+      <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -260,81 +258,98 @@ html, body {
 
       ______________________________
 
-      <h3 style="margin-top:24px;">甲方手寫簽名</h3>
-      <canvas id="sign"></canvas>
-      <div id="signTime">簽署時間：尚未簽名</div>
-      <button type="button" class="clear-btn" id="clearSignBtn">清除簽名</button>
+      <div class="signature-section">
+        <h3>甲方手寫簽名</h3>
+        <canvas id="sign"></canvas>
+        <div id="signTime">簽署時間：尚未簽名</div>
+        <button type="button" class="clear-btn" id="clearSignBtn">清除簽名</button>
+      </div>
 
       <div id="contractEnd"></div>
     </div>
   </div>
 </div>
 
+<!-- 底部操作 -->
 <div id="actionBar">
-  <label class="agree-row">
-    <input type="checkbox" id="agreeCheckbox" disabled>
+  <div id="agreeItem" class="agree-item">
+    <div class="agree-circle"></div>
     我已詳讀並同意上述契約內容
-  </label>
+  </div>
+
   <button id="continueBtn" disabled>同意並繼續</button>
 </div>
 
 <script>
 const contract = document.getElementById("contractContent");
-const agreeCheckbox = document.getElementById("agreeCheckbox");
+const agreeItem = document.getElementById("agreeItem");
 const continueBtn = document.getElementById("continueBtn");
-const signCanvas = document.getElementById("sign");
+const canvas = document.getElementById("sign");
+const ctx = canvas.getContext("2d");
 
 let reachedBottom = false;
 let hasSigned = false;
+let agreed = false;
 
-document.getElementById("jumpToEndBtn").onclick = () => {
-  document.getElementById("contractEnd").scrollIntoView({ behavior: "smooth" });
-};
-
+/* 滑到底 */
 contract.addEventListener("scroll", () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 30) {
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 40) {
     reachedBottom = true;
-    unlockAgree();
+    updateAgreeState();
   }
 });
 
-function unlockAgree() {
-  agreeCheckbox.disabled = !(reachedBottom && hasSigned);
-}
-
-agreeCheckbox.addEventListener("change", () => {
-  continueBtn.disabled = !agreeCheckbox.checked;
+/* 勾選 */
+agreeItem.addEventListener("click", () => {
+  if (!agreeItem.classList.contains("enabled")) return;
+  agreed = !agreed;
+  agreeItem.classList.toggle("checked", agreed);
+  continueBtn.disabled = !agreed;
 });
 
-/* 簽名 */
-const ctx = signCanvas.getContext("2d");
-ctx.lineWidth = 2;
-ctx.lineCap = "round";
+/* 狀態更新 */
+function updateAgreeState() {
+  if (reachedBottom && hasSigned) {
+    agreeItem.classList.add("enabled");
+    agreeItem.style.cursor = "pointer";
+  } else {
+    agreeItem.classList.remove("enabled", "checked");
+    agreeItem.style.cursor = "not-allowed";
+    agreed = false;
+    continueBtn.disabled = true;
+  }
+}
 
+/* 簽名 */
 function resizeCanvas() {
-  const r = signCanvas.getBoundingClientRect();
-  signCanvas.width = r.width;
-  signCanvas.height = r.height;
+  const r = canvas.getBoundingClientRect();
+  canvas.width = r.width;
+  canvas.height = r.height;
 }
 resizeCanvas();
 
+ctx.lineWidth = 2;
+ctx.lineCap = "round";
 let drawing = false;
+
 function pos(e) {
-  const r = signCanvas.getBoundingClientRect();
+  const r = canvas.getBoundingClientRect();
   const t = e.touches ? e.touches[0] : e;
   return { x: t.clientX - r.left, y: t.clientY - r.top };
 }
+
 function start(e) {
   e.preventDefault();
   drawing = true;
   hasSigned = true;
-  unlockAgree();
+  updateAgreeState();
   const p = pos(e);
   ctx.beginPath();
   ctx.moveTo(p.x, p.y);
   document.getElementById("signTime").innerText =
     "簽署時間：" + new Date().toLocaleString("zh-TW");
 }
+
 function move(e) {
   if (!drawing) return;
   e.preventDefault();
@@ -342,21 +357,20 @@ function move(e) {
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
 }
+
 function end() { drawing = false; }
 
-signCanvas.addEventListener("touchstart", start, { passive: false });
-signCanvas.addEventListener("touchmove", move, { passive: false });
-signCanvas.addEventListener("touchend", end);
-signCanvas.addEventListener("mousedown", start);
-signCanvas.addEventListener("mousemove", move);
-signCanvas.addEventListener("mouseup", end);
+canvas.addEventListener("touchstart", start, { passive: false });
+canvas.addEventListener("touchmove", move, { passive: false });
+canvas.addEventListener("touchend", end);
+canvas.addEventListener("mousedown", start);
+canvas.addEventListener("mousemove", move);
+canvas.addEventListener("mouseup", end);
 
 document.getElementById("clearSignBtn").onclick = () => {
-  ctx.clearRect(0, 0, signCanvas.width, signCanvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   hasSigned = false;
-  agreeCheckbox.checked = false;
-  unlockAgree();
-  continueBtn.disabled = true;
+  updateAgreeState();
   document.getElementById("signTime").innerText = "簽署時間：尚未簽名";
 };
 </script>

@@ -7,13 +7,13 @@
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
+/* ===== 全域 ===== */
 html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
   background: #FFF3E0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-  overscroll-behavior: none;
 }
 
 /* ===== 主結構 ===== */
@@ -56,21 +56,16 @@ html, body {
   color: #15803d;
 }
 
-/* ===== 合約滾動區 ===== */
+/* ===== 合約滾動區（可上下自由滑） ===== */
 #contract {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   border: 1px solid #ddd;
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-}
-
-/* 🔹 隱形錨點（不顯示、不佔高度） */
-#contract-end {
-  height: 1px;
-  overflow: hidden;
 }
 
 /* ===== Footer ===== */
@@ -124,6 +119,7 @@ html, body {
   display: none;
   flex-direction: column;
   z-index: 9999;
+  overscroll-behavior: none;
 }
 #signLayer.active { display: flex; }
 
@@ -269,9 +265,6 @@ html, body {
 <p>本契約及其附件，均為契約之一部分。</p>
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
-
-        <!-- 隱形結尾錨點 -->
-        <div id="contract-end"></div>
       </div>
     </div>
 
@@ -304,32 +297,31 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
-const endAnchor = document.getElementById("contract-end");
 
 let drawing = false;
 let canAgree = false;
 
-/* ===== 解鎖函式（共用） ===== */
+/* 解鎖 */
 function enableAgree(){
   if (canAgree) return;
   canAgree = true;
   agree.classList.add("enabled");
 }
 
-/* 前往底部 → 滾動 + 直接解鎖 */
+/* 前往底部（不鎖死） */
 jump.onclick = () => {
-  endAnchor.scrollIntoView({ behavior: "smooth", block: "end" });
+  contract.scrollTop = contract.scrollHeight;
   enableAgree();
 };
 
-/* 手動滑到底 → 解鎖 */
+/* 滑到底 */
 contract.addEventListener("scroll", () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 2) {
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
     enableAgree();
   }
 });
 
-/* 點我已詳讀 → 開簽名 */
+/* 點我已詳讀 */
 agree.onclick = () => {
   if (!canAgree) return;
 
@@ -345,9 +337,9 @@ agree.onclick = () => {
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 阻止 LINE 下拉關閉 */
+/* 🔒 只在簽名頁攔截，防 LINE 關閉 */
 ["touchstart","touchmove","wheel"].forEach(evt=>{
-  layer.addEventListener(evt,e=>e.preventDefault(),{passive:false,capture:true});
+  layer.addEventListener(evt,e=>e.preventDefault(),{passive:false});
 });
 
 /* 簽名 */

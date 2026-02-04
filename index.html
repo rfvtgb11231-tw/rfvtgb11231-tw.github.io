@@ -117,6 +117,7 @@ html,body{
   flex-direction:column;
   z-index:9999;
   touch-action:none;
+  overscroll-behavior:none;
 }
 #signLayer.active{display:flex}
 
@@ -168,7 +169,7 @@ html,body{
       <button id="jump" class="jump-btn">前往契約底部</button>
 
       <div id="contract">
-        <h4>簽約注意事項</h4>
+          <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -259,7 +260,6 @@ html,body{
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
 
-
         <p>＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿</p>
       </div>
     </div>
@@ -287,89 +287,99 @@ html,body{
 </div>
 
 <script>
-const contract=document.getElementById("contract");
-const agree=document.getElementById("agree");
-const next=document.getElementById("next");
-const layer=document.getElementById("signLayer");
-const canvas=document.getElementById("signCanvas");
-const ctx=canvas.getContext("2d");
+const contract = document.getElementById("contract");
+const agree = document.getElementById("agree");
+const next = document.getElementById("next");
+const layer = document.getElementById("signLayer");
+const canvas = document.getElementById("signCanvas");
+const ctx = canvas.getContext("2d");
+const jump = document.getElementById("jump");
 
-let scrollY=0;
+let scrollY = 0;
 
 /* ===== 到底才可同意 ===== */
-jump.onclick=()=>contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
-contract.addEventListener("scroll",()=>{
-  if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
+jump.onclick = () => {
+  contract.scrollTo({ top: contract.scrollHeight, behavior: "smooth" });
+};
+contract.addEventListener("scroll", () => {
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
     agree.classList.add("enabled");
   }
 });
 
-/* ===== 開簽名 ===== */
-agree.onclick=()=>{
-  if(!agree.classList.contains("enabled"))return;
+/* ===== 開啟簽名 ===== */
+agree.onclick = () => {
+  if (!agree.classList.contains("enabled")) return;
   openSign();
 };
 
-function blockScroll(e){ e.preventDefault(); }
+function block(e){ e.preventDefault(); }
 
+/* ===== 簽名模式 ===== */
 function openSign(){
-  scrollY=window.scrollY;
+  scrollY = window.scrollY;
 
-  document.body.style.position="fixed";
-  document.body.style.top=`-${scrollY}px`;
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
 
-  /* 🔒 全面鎖 scroll */
-  document.addEventListener("touchmove", blockScroll, { passive:false });
-  document.addEventListener("wheel", blockScroll, { passive:false });
+  ["touchstart","touchmove","touchend","pointerdown","pointermove","wheel"]
+    .forEach(evt=>{
+      document.addEventListener(evt, block, { passive:false });
+      layer.addEventListener(evt, block, { passive:false });
+    });
 
   layer.classList.add("active");
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight-120;
-  time.textContent=new Date().toLocaleString("zh-TW");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight - 120;
+  time.textContent = new Date().toLocaleString("zh-TW");
 }
 
-/* ===== 簽名 ===== */
-ctx.lineWidth=2;
-ctx.lineCap="round";
-let drawing=false;
+/* ===== 畫圖 ===== */
+ctx.lineWidth = 2;
+ctx.lineCap = "round";
+let drawing = false;
 
-canvas.addEventListener("pointerdown",e=>{
+canvas.addEventListener("pointerdown", e => {
   e.preventDefault();
-  drawing=true;
+  drawing = true;
   ctx.beginPath();
-  ctx.moveTo(e.offsetX,e.offsetY);
-},{passive:false});
+  ctx.moveTo(e.offsetX, e.offsetY);
+}, { passive:false });
 
-canvas.addEventListener("pointermove",e=>{
-  if(!drawing)return;
+canvas.addEventListener("pointermove", e => {
+  if (!drawing) return;
   e.preventDefault();
-  ctx.lineTo(e.offsetX,e.offsetY);
+  ctx.lineTo(e.offsetX, e.offsetY);
   ctx.stroke();
-},{passive:false});
+}, { passive:false });
 
-canvas.addEventListener("pointerup",e=>{
+canvas.addEventListener("pointerup", e => {
   e.preventDefault();
-  drawing=false;
-},{passive:false});
+  drawing = false;
+}, { passive:false });
 
-/* 🔒 黑色空白區也吃掉事件 */
-layer.addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
-layer.addEventListener("pointermove",e=>e.preventDefault(),{passive:false});
+clear.onclick = () => ctx.clearRect(0,0,canvas.width,canvas.height);
 
-clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
-
-ok.onclick=()=>{
+/* ===== 完成 ===== */
+ok.onclick = () => {
   layer.classList.remove("active");
 
-  document.body.style.position="";
-  document.body.style.top="";
-  window.scrollTo(0,scrollY);
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  window.scrollTo(0, scrollY);
 
-  document.removeEventListener("touchmove", blockScroll);
-  document.removeEventListener("wheel", blockScroll);
+  ["touchstart","touchmove","touchend","pointerdown","pointermove","wheel"]
+    .forEach(evt=>{
+      document.removeEventListener(evt, block);
+      layer.removeEventListener(evt, block);
+    });
 
   agree.classList.add("checked");
-  next.disabled=false;
+  next.disabled = false;
   next.classList.add("enabled");
 };
 </script>

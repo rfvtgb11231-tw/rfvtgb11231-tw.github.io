@@ -11,21 +11,21 @@ html,body{
   height:100%;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   background:#FFF3E0;
+  overscroll-behavior: none; /* ✅ 關閉 iOS 橡皮筋 */
 }
 
-/* ===== 整頁 ===== */
+/* ===== 主結構 ===== */
 .page{
   min-height:100%;
   display:flex;
   flex-direction:column;
 }
 
-/* ===== 內容區（允許自然撐高） ===== */
 .container{
   padding:16px;
   max-width:720px;
   margin:auto;
-  padding-bottom:140px; /* ✅ 預留 footer 空間 */
+  padding-bottom:140px;
 }
 
 .card{
@@ -42,7 +42,7 @@ html,body{
   padding:14px 16px;
 }
 
-/* ===== 前往底部 ===== */
+/* ===== 契約 ===== */
 .jump-btn{
   width:100%;
   margin-bottom:12px;
@@ -51,17 +51,15 @@ html,body{
   border:1px solid #22c55e;
   background:#f0fdf4;
   color:#15803d;
-  font-size:14px;
 }
 
-/* ===== 契約（唯一滾動者） ===== */
 #contract{
-  max-height:60vh;           /* ✅ 關鍵：不是 100% */
+  max-height:60vh;
   overflow-y:auto;
   border:1px solid #ddd;
   border-radius:12px;
   background:#fffaf3;
-  padding:14px 14px 80px;    /* ✅ 底部安全距 */
+  padding:14px 14px 80px;
   line-height:1.9;
   font-size:15px;
 }
@@ -69,9 +67,7 @@ html,body{
 /* ===== footer ===== */
 .footer{
   position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
+  left:0;right:0;bottom:0;
   background:#fff;
   border-top:1px solid #eee;
   padding:12px 16px;
@@ -85,13 +81,9 @@ html,body{
   cursor:not-allowed;
   margin-bottom:8px;
 }
-.agree.enabled{
-  color:#111;
-  cursor:pointer;
-}
+.agree.enabled{color:#111;cursor:pointer}
 .circle{
-  width:22px;
-  height:22px;
+  width:22px;height:22px;
   border-radius:50%;
   border:2px solid #ccc;
 }
@@ -113,16 +105,10 @@ html,body{
   border:none;
   font-size:16px;
 }
-.footer button:disabled{
-  background:#d1d5db;
-  color:#6b7280;
-}
-.footer button.enabled{
-  background:#22c55e;
-  color:#fff;
-}
+.footer button:disabled{background:#d1d5db;color:#6b7280}
+.footer button.enabled{background:#22c55e;color:#fff}
 
-/* ===== 全螢幕簽名 ===== */
+/* ===== 簽名 Overlay ===== */
 #signLayer{
   position:fixed;
   inset:0;
@@ -130,6 +116,7 @@ html,body{
   display:none;
   flex-direction:column;
   z-index:9999;
+  touch-action:none; /* ✅ 關鍵 */
 }
 #signLayer.active{display:flex}
 
@@ -166,7 +153,6 @@ html,body{
 <body>
 
 <div class="page">
-
   <div class="container">
 
     <div class="card">
@@ -182,7 +168,7 @@ html,body{
       <button id="jump" class="jump-btn">前往契約底部</button>
 
       <div id="contract">
-        <h4>簽約注意事項</h4>
+      <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -275,8 +261,6 @@ html,body{
 
 
         <p>＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿</p>
-
-        <div id="end"></div>
       </div>
     </div>
 
@@ -284,12 +268,10 @@ html,body{
 
   <div class="footer">
     <div id="agree" class="agree">
-      <div class="circle"></div>
-      我已詳讀並同意上述契約內容
+      <div class="circle"></div>我已詳讀並同意上述契約內容
     </div>
     <button id="next" disabled>同意並繼續</button>
   </div>
-
 </div>
 
 <!-- ===== 簽名 ===== -->
@@ -309,43 +291,66 @@ const contract=document.getElementById("contract");
 const agree=document.getElementById("agree");
 const next=document.getElementById("next");
 const layer=document.getElementById("signLayer");
+const canvas=document.getElementById("signCanvas");
+const ctx=canvas.getContext("2d");
 
+let scrollY=0;
+
+/* 到底才可同意 */
 jump.onclick=()=>contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
-
 contract.addEventListener("scroll",()=>{
   if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
     agree.classList.add("enabled");
   }
 });
 
+/* 開簽名 */
 agree.onclick=()=>{
   if(!agree.classList.contains("enabled"))return;
   openSign();
 };
 
-/* ===== 簽名 ===== */
-const canvas=document.getElementById("signCanvas");
-const ctx=canvas.getContext("2d");
-ctx.lineWidth=2;ctx.lineCap="round";
-
 function openSign(){
-  document.body.style.overflow="hidden";
+  scrollY=window.scrollY;
+  document.body.style.position="fixed";
+  document.body.style.top=`-${scrollY}px`;
   layer.classList.add("active");
   canvas.width=window.innerWidth;
   canvas.height=window.innerHeight-120;
   time.textContent=new Date().toLocaleString("zh-TW");
 }
 
-let draw=false;
-canvas.onpointerdown=e=>{draw=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
-canvas.onpointermove=e=>{if(!draw)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}
-canvas.onpointerup=()=>draw=false;
+/* ===== 簽名（完全阻止滑動） ===== */
+ctx.lineWidth=2;
+ctx.lineCap="round";
+let drawing=false;
+
+canvas.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  drawing=true;
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX,e.offsetY);
+},{passive:false});
+
+canvas.addEventListener("pointermove",e=>{
+  if(!drawing)return;
+  e.preventDefault();
+  ctx.lineTo(e.offsetX,e.offsetY);
+  ctx.stroke();
+},{passive:false});
+
+canvas.addEventListener("pointerup",e=>{
+  e.preventDefault();
+  drawing=false;
+},{passive:false});
 
 clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
 ok.onclick=()=>{
   layer.classList.remove("active");
-  document.body.style.overflow="";
+  document.body.style.position="";
+  document.body.style.top="";
+  window.scrollTo(0,scrollY);
   agree.classList.add("checked");
   next.disabled=false;
   next.classList.add("enabled");

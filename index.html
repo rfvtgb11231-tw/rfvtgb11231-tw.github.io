@@ -7,97 +7,159 @@
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
-html,body{
-  margin:0;height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-  background:#FFF3E0;
-  overscroll-behavior:none;
+/* ===== 全域鎖滑 ===== */
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;              /* 🔒 永久鎖整頁 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  background: #FFF3E0;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 /* ===== 主頁 ===== */
-.page{min-height:100%;display:flex;flex-direction:column;}
-.container{padding:16px;max-width:720px;margin:auto;padding-bottom:140px;}
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;}
-.info-box{background:#fff4ea;border-radius:14px;padding:14px 16px;}
-
-.jump-btn{
-  width:100%;margin-bottom:12px;padding:12px;
-  border-radius:10px;border:1px solid #22c55e;
-  background:#f0fdf4;color:#15803d;
+.page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-#contract{
-  max-height:60vh;overflow-y:auto;
-  border:1px solid #ddd;border-radius:12px;
-  background:#fffaf3;padding:14px 14px 80px;
+.container {
+  flex: 1;
+  padding: 16px;
+  max-width: 720px;
+  margin: auto;
+  overflow: hidden;              /* 🔒 不給滑 */
 }
 
-.footer{
-  position:fixed;left:0;right:0;bottom:0;
-  background:#fff;border-top:1px solid #eee;padding:12px 16px;
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
 }
-.agree{display:flex;align-items:center;gap:12px;color:#aaa;}
-.agree.enabled{color:#111}
-.circle{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;}
-.agree.checked .circle{background:#22c55e;border-color:#22c55e;}
-.agree.checked .circle::after{
-  content:"✓";color:#fff;
-  display:flex;justify-content:center;
+
+.info-box {
+  background: #fff4ea;
+  border-radius: 14px;
+  padding: 14px 16px;
 }
-.footer button{
-  width:100%;padding:14px;border-radius:10px;
-  border:none;font-size:16px;
+
+.jump-btn {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #22c55e;
+  background: #f0fdf4;
+  color: #15803d;
 }
-.footer button:disabled{background:#ccc}
-.footer button.enabled{background:#22c55e;color:#fff}
+
+/* ✅ 只允許這裡滑 */
+#contract {
+  height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fffaf3;
+  padding: 14px 14px 80px;
+}
+
+/* ===== 底部 ===== */
+.footer {
+  flex-shrink: 0;
+  background: #fff;
+  border-top: 1px solid #eee;
+  padding: 12px 16px;
+}
+
+.agree {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #aaa;
+}
+.agree.enabled { color: #111; }
+
+.circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+.agree.checked .circle {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+.agree.checked .circle::after {
+  content: "✓";
+  color: #fff;
+  display: flex;
+  justify-content: center;
+}
+
+.footer button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+.footer button:disabled { background: #ccc; }
+.footer button.enabled { background: #22c55e; color: #fff; }
 
 /* ===== 簽名層 ===== */
-#signLayer{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:none;
-  flex-direction:column;
-  z-index:9999;
+#signLayer {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+  touch-action: none;
 }
-#signLayer.active{display:flex}
+#signLayer.active { display: flex; }
 
-/* 安全區遮罩（防 LINE 誤觸） */
-#topBlocker{
-  height:env(safe-area-inset-top, 44px);
-  background:#000;
-  flex-shrink:0;
-}
-
-.sign-head{
-  color:#fff;
-  text-align:center;
-  padding:10px;
-  flex-shrink:0;
+/* 防 LINE 手勢 */
+#topBlocker {
+  height: env(safe-area-inset-top, 44px);
+  background: #000;
+  flex-shrink: 0;
 }
 
-#signCanvas{
-  flex:1;
-  background:#fff;
-  touch-action:none;
+.sign-head {
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  flex-shrink: 0;
 }
 
-.sign-foot{
-  display:flex;
-  gap:12px;
-  padding:12px;
-  background:#111;
-  flex-shrink:0;
+#signCanvas {
+  flex: 1;
+  background: #fff;
+  touch-action: none;
 }
-.sign-foot button{
-  flex:1;
-  padding:12px;
-  font-size:16px;
-  border:none;
-  border-radius:8px;
+
+.sign-foot {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: #111;
+  flex-shrink: 0;
 }
-.clear{background:#444;color:#fff}
-.ok{background:#22c55e;color:#fff}
+
+.sign-foot button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+}
+.clear { background: #444; color: #fff; }
+.ok { background: #22c55e; color: #fff; }
 </style>
 </head>
 
@@ -117,7 +179,7 @@ html,body{
     <div class="card">
       <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
-        <h4>簽約注意事項</h4>
+          <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -207,7 +269,7 @@ html,body{
 <p>本契約及其附件，均為契約之一部分。</p>
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
-        <p style="height:800px"></p>
+        <p style="height:900px"></p>
       </div>
     </div>
   </div>
@@ -240,31 +302,27 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
-let drawing = false;
-let scrollY = 0;
 
-/* 滑到底解鎖 */
-jump.onclick = () => contract.scrollTo({top:99999});
+let drawing = false;
+
+/* 合約滑到底 */
+jump.onclick = () => contract.scrollTo({ top: contract.scrollHeight });
 contract.onscroll = () => {
-  if(contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5){
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
     agree.classList.add("enabled");
   }
 };
 
 /* 開啟簽名 */
 agree.onclick = () => {
-  if(!agree.classList.contains("enabled")) return;
-
-  scrollY = window.scrollY;
-  document.body.style.position="fixed";
-  document.body.style.top = `-${scrollY}px`;
+  if (!agree.classList.contains("enabled")) return;
 
   layer.classList.add("active");
 
   const dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.offsetWidth * dpr;
   canvas.height = canvas.offsetHeight * dpr;
-  ctx.scale(dpr, dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
 
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
@@ -272,43 +330,34 @@ agree.onclick = () => {
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 正確取得座標（iOS 必須） */
-function getPos(e){
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top
-  };
+/* 取得正確座標 */
+function pos(e){
+  const r = canvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
 }
 
 /* 簽名 */
 canvas.onpointerdown = e => {
   drawing = true;
-  const p = getPos(e);
+  const p = pos(e);
   ctx.beginPath();
   ctx.moveTo(p.x, p.y);
 };
 canvas.onpointermove = e => {
-  if(!drawing) return;
-  const p = getPos(e);
+  if (!drawing) return;
+  const p = pos(e);
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
 };
-canvas.onpointerup = () => drawing = false;
+canvas.onpointerup =
 canvas.onpointercancel = () => drawing = false;
 
 /* 清除 */
-clear.onclick = () => {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-};
+clear.onclick = () => ctx.clearRect(0,0,canvas.width,canvas.height);
 
 /* 確定 */
 ok.onclick = () => {
   layer.classList.remove("active");
-  document.body.style.position="";
-  document.body.style.top="";
-  window.scrollTo(0,scrollY);
-
   agree.classList.add("checked");
   next.disabled = false;
   next.classList.add("enabled");
@@ -316,7 +365,7 @@ ok.onclick = () => {
 
 /* 下一步 */
 next.onclick = () => {
-  location.href="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
+  location.href = "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

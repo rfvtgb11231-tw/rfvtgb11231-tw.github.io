@@ -7,7 +7,6 @@
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
-/* ===== 全域 ===== */
 html, body {
   margin: 0;
   height: 100%;
@@ -17,7 +16,7 @@ html, body {
   overscroll-behavior: none;
 }
 
-/* ===== 主頁結構 ===== */
+/* ===== 主結構 ===== */
 .page {
   height: 100%;
   display: flex;
@@ -29,6 +28,8 @@ html, body {
   padding: 16px;
   max-width: 720px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -55,17 +56,15 @@ html, body {
   color: #15803d;
 }
 
-/* ✅ 正確高度計算（關鍵） */
+/* ✅ 真正可視、不被吃掉的滾動區 */
 #contract {
-  height: calc(100vh - 420px); /* 🔥 扣掉 header + footer */
+  flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
   border: 1px solid #ddd;
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-  box-sizing: border-box;
 }
 
 /* ===== Footer ===== */
@@ -121,19 +120,10 @@ html, body {
 }
 #signLayer.active { display: flex; }
 
-/* 🚫 手勢隔離層（真正關鍵） */
-#gestureBlocker {
-  height: 80px;
-  background: #000;
-  flex-shrink: 0;
-  touch-action: none;
-}
-
-/* 簽名資訊 */
 .sign-head {
   color: #fff;
   text-align: center;
-  padding: 10px;
+  padding: 12px;
   flex-shrink: 0;
 }
 
@@ -167,6 +157,7 @@ html, body {
 
 <div class="page">
   <div class="container">
+
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -176,8 +167,9 @@ html, body {
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" style="flex:1;display:flex;flex-direction:column;">
       <button id="jump" class="jump-btn">前往契約底部</button>
+
       <div id="contract">
           <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
@@ -269,9 +261,12 @@ html, body {
 <p>本契約及其附件，均為契約之一部分。</p>
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
-        <p style="height:1200px"></p>
+
+        <!-- 🔽 最後一條一定要有一個錨點 -->
+        <p id="contract-end"><b>【最後一條條文】</b></p>
       </div>
     </div>
+
   </div>
 
   <div class="footer">
@@ -284,7 +279,6 @@ html, body {
 
 <!-- ===== 簽名 ===== -->
 <div id="signLayer">
-  <div id="gestureBlocker"></div>
   <div class="sign-head">請於下方簽名 ｜ <span id="time"></span></div>
   <canvas id="signCanvas"></canvas>
   <div class="sign-foot">
@@ -302,67 +296,76 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
+const endAnchor = document.getElementById("contract-end");
 
 let drawing = false;
 
+/* ✅ 永遠能看到最後一條 */
+jump.onclick = () => {
+  endAnchor.scrollIntoView({ behavior: "smooth", block: "end" });
+};
+
 /* 滑到底解鎖 */
-jump.onclick = () => contract.scrollTo({ top: contract.scrollHeight });
-contract.onscroll = () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
+contract.addEventListener("scroll", () => {
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 2) {
     agree.classList.add("enabled");
   }
-};
+});
 
 /* 開啟簽名 */
 agree.onclick = () => {
   if (!agree.classList.contains("enabled")) return;
+
   layer.classList.add("active");
 
   const dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.offsetWidth * dpr;
   canvas.height = canvas.offsetHeight * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
-
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
+
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 簽名座標 */
-function pos(e){
-  const r = canvas.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
-}
+/* 🔒 從根阻止 LINE 下拉關閉 */
+["touchstart","touchmove","wheel"].forEach(evt=>{
+  layer.addEventListener(evt,e=>e.preventDefault(),{passive:false,capture:true});
+});
 
 /* 簽名 */
-canvas.onpointerdown = e => {
-  drawing = true;
-  const p = pos(e);
+function pos(e){
+  const r = canvas.getBoundingClientRect();
+  return { x:e.clientX-r.left, y:e.clientY-r.top };
+}
+canvas.onpointerdown = e=>{
+  drawing=true;
+  const p=pos(e);
   ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
+  ctx.moveTo(p.x,p.y);
 };
-canvas.onpointermove = e => {
-  if (!drawing) return;
-  const p = pos(e);
-  ctx.lineTo(p.x, p.y);
+canvas.onpointermove = e=>{
+  if(!drawing) return;
+  const p=pos(e);
+  ctx.lineTo(p.x,p.y);
   ctx.stroke();
 };
 canvas.onpointerup =
-canvas.onpointercancel = () => drawing = false;
+canvas.onpointercancel = ()=>drawing=false;
 
 /* 清除 */
-clear.onclick = () => ctx.clearRect(0,0,canvas.width,canvas.height);
+clear.onclick = ()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
 /* 確定 */
-ok.onclick = () => {
+ok.onclick = ()=>{
   layer.classList.remove("active");
   agree.classList.add("checked");
-  next.disabled = false;
+  next.disabled=false;
   next.classList.add("enabled");
 };
 
 /* 下一步 */
-next.onclick = () => {
+next.onclick = ()=>{
   location.href="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>

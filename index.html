@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
 html, body {
   height: 100%;
-  overflow: hidden;
   margin: 0;
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
   background: #FFF3E0;
 }
 
+/* ===== 基本卡片 ===== */
 .container {
   max-width: 720px;
   margin: 0 auto;
   padding: 16px;
 }
-
 .card {
   background: #fff;
   border-radius: 16px;
@@ -27,14 +27,13 @@ html, body {
   margin-bottom: 16px;
   box-shadow: 0 2px 6px rgba(0,0,0,.06);
 }
-
 .info-box {
   background: #fff4ea;
   border-radius: 14px;
   padding: 14px 16px;
 }
 
-/* 提示 */
+/* ===== 提示 / 按鈕 ===== */
 .scroll-hint {
   display: flex;
   align-items: center;
@@ -52,8 +51,6 @@ html, body {
   background: #22c55e;
   border-radius: 50%;
 }
-
-/* 前往底部 */
 .jump-btn {
   width: 100%;
   margin-bottom: 12px;
@@ -65,7 +62,7 @@ html, body {
   font-size: 14px;
 }
 
-/* 🔑 唯一可滑區 */
+/* ===== 合約唯一可滑區（關鍵） ===== */
 #contractContent {
   height: 360px;
   overflow-y: auto;
@@ -73,12 +70,16 @@ html, body {
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
-  padding-bottom: 420px; /* 關鍵：一定要夠 */
   line-height: 1.9;
   font-size: 15px;
 }
 
-/* 簽名 */
+/* 👇 真正的底部空間（由 JS 動態撐） */
+#scrollSpacer {
+  height: 0;
+}
+
+/* ===== 簽名 ===== */
 .signature-box {
   margin-top: 32px;
   padding: 16px;
@@ -86,21 +87,19 @@ html, body {
   border-radius: 14px;
   border: 1px solid #e5e7eb;
 }
-
 #sign {
   width: 100%;
   height: 260px;
   border: 2px dashed #ccc;
   border-radius: 12px;
+  background: #fff;
   touch-action: none;
 }
-
 #signTime {
   margin-top: 10px;
   font-size: 14px;
   color: #666;
 }
-
 .clear-btn {
   margin-top: 10px;
   padding: 8px 14px;
@@ -109,7 +108,7 @@ html, body {
   background: #eee;
 }
 
-/* ===== LINE Bank 勾選 ===== */
+/* ===== LINE Bank 勾選樣式 ===== */
 .agree-item {
   display: flex;
   align-items: center;
@@ -119,12 +118,10 @@ html, body {
   color: #9ca3af;
   cursor: not-allowed;
 }
-
 .agree-item.enabled {
   color: #111827;
   cursor: pointer;
 }
-
 .agree-circle {
   width: 22px;
   height: 22px;
@@ -135,7 +132,6 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-
 .agree-item.checked .agree-circle {
   background: #22c55e;
   border-color: #22c55e;
@@ -146,7 +142,7 @@ html, body {
   font-weight: 700;
 }
 
-/* 底部 */
+/* ===== 底部固定列 ===== */
 #actionBar {
   position: fixed;
   bottom: 0;
@@ -156,7 +152,6 @@ html, body {
   border-top: 1px solid #e5e7eb;
   padding: 12px 16px;
 }
-
 #continueBtn {
   width: 100%;
   padding: 14px;
@@ -195,7 +190,7 @@ html, body {
     <button id="jumpBtn" class="jump-btn">前往契約底部</button>
 
     <div id="contractContent">
-      <h4>簽約注意事項</h4>
+     <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -293,10 +288,12 @@ html, body {
         <h3>甲方手寫簽名</h3>
         <canvas id="sign"></canvas>
         <div id="signTime">簽署時間：尚未簽名</div>
-        <button id="clearSignBtn" class="clear-btn">清除簽名</button>
+        <button class="clear-btn" id="clearSignBtn">清除簽名</button>
       </div>
 
+      <!-- 真正底部錨點 -->
       <div id="contractEnd"></div>
+      <div id="scrollSpacer"></div>
     </div>
   </div>
 </div>
@@ -313,21 +310,31 @@ html, body {
 const contract = document.getElementById("contractContent");
 const agreeItem = document.getElementById("agreeItem");
 const continueBtn = document.getElementById("continueBtn");
-const canvas = document.getElementById("sign");
-const ctx = canvas.getContext("2d");
+const actionBar = document.getElementById("actionBar");
+const spacer = document.getElementById("scrollSpacer");
 
+/* ✅ 用實際 actionBar 高度撐空間 */
+function updateSpacer() {
+  spacer.style.height = actionBar.offsetHeight + 16 + "px";
+}
+updateSpacer();
+window.addEventListener("resize", updateSpacer);
+
+/* 前往底部（不製造空白） */
+document.getElementById("jumpBtn").onclick = () => {
+  contract.scrollTo({
+    top: contract.scrollHeight,
+    behavior: "smooth"
+  });
+};
+
+/* ===== 同意邏輯 ===== */
 let reachedBottom = false;
 let hasSigned = false;
 let agreed = false;
 
-/* 前往底部 */
-document.getElementById("jumpBtn").onclick = () => {
-  document.getElementById("contractEnd").scrollIntoView({ behavior: "smooth" });
-};
-
-/* 滑到底 */
 contract.addEventListener("scroll", () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 50) {
+  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 10) {
     reachedBottom = true;
     updateAgree();
   }
@@ -337,7 +344,7 @@ function updateAgree() {
   if (reachedBottom && hasSigned) {
     agreeItem.classList.add("enabled");
   } else {
-    agreeItem.classList.remove("enabled","checked");
+    agreeItem.classList.remove("enabled", "checked");
     agreed = false;
     continueBtn.disabled = true;
   }
@@ -350,13 +357,16 @@ agreeItem.onclick = () => {
   continueBtn.disabled = !agreed;
 };
 
-/* 簽名 */
-function resize() {
+/* ===== 簽名 ===== */
+const canvas = document.getElementById("sign");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
   const r = canvas.getBoundingClientRect();
   canvas.width = r.width;
   canvas.height = r.height;
 }
-resize();
+resizeCanvas();
 
 ctx.lineWidth = 2;
 ctx.lineCap = "round";

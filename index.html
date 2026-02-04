@@ -116,7 +116,6 @@ html,body{
   display:none;
   flex-direction:column;
   z-index:9999;
-  touch-action:none;
   overscroll-behavior:none;
 }
 #signLayer.active{display:flex}
@@ -138,6 +137,7 @@ html,body{
   gap:12px;
   padding:12px;
   background:#111;
+  pointer-events:auto; /* ✅ 允許點擊 */
 }
 .sign-foot button{
   flex:1;
@@ -294,6 +294,8 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const jump = document.getElementById("jump");
+const clearBtn = document.getElementById("clear");
+const okBtn = document.getElementById("ok");
 
 let scrollY = 0;
 
@@ -313,22 +315,16 @@ agree.onclick = () => {
   openSign();
 };
 
-function block(e){ e.preventDefault(); }
+/* ===== 阻止滑動（只鎖 move） ===== */
+function blockMove(e){ e.preventDefault(); }
 
-/* ===== 簽名模式 ===== */
 function openSign(){
   scrollY = window.scrollY;
-
   document.body.style.position = "fixed";
   document.body.style.top = `-${scrollY}px`;
-  document.body.style.left = "0";
-  document.body.style.right = "0";
 
-  ["touchstart","touchmove","touchend","pointerdown","pointermove","wheel"]
-    .forEach(evt=>{
-      document.addEventListener(evt, block, { passive:false });
-      layer.addEventListener(evt, block, { passive:false });
-    });
+  document.addEventListener("touchmove", blockMove, { passive:false });
+  document.addEventListener("wheel", blockMove, { passive:false });
 
   layer.classList.add("active");
   canvas.width = window.innerWidth;
@@ -336,47 +332,39 @@ function openSign(){
   time.textContent = new Date().toLocaleString("zh-TW");
 }
 
-/* ===== 畫圖 ===== */
+/* ===== 簽名 ===== */
 ctx.lineWidth = 2;
 ctx.lineCap = "round";
 let drawing = false;
 
 canvas.addEventListener("pointerdown", e => {
-  e.preventDefault();
   drawing = true;
   ctx.beginPath();
   ctx.moveTo(e.offsetX, e.offsetY);
-}, { passive:false });
+});
 
 canvas.addEventListener("pointermove", e => {
   if (!drawing) return;
-  e.preventDefault();
   ctx.lineTo(e.offsetX, e.offsetY);
   ctx.stroke();
-}, { passive:false });
+});
 
-canvas.addEventListener("pointerup", e => {
-  e.preventDefault();
-  drawing = false;
-}, { passive:false });
+canvas.addEventListener("pointerup", () => drawing = false);
 
-clear.onclick = () => ctx.clearRect(0,0,canvas.width,canvas.height);
+/* ===== 按鈕 ===== */
+clearBtn.onclick = () => {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+};
 
-/* ===== 完成 ===== */
-ok.onclick = () => {
+okBtn.onclick = () => {
   layer.classList.remove("active");
 
   document.body.style.position = "";
   document.body.style.top = "";
-  document.body.style.left = "";
-  document.body.style.right = "";
   window.scrollTo(0, scrollY);
 
-  ["touchstart","touchmove","touchend","pointerdown","pointermove","wheel"]
-    .forEach(evt=>{
-      document.removeEventListener(evt, block);
-      layer.removeEventListener(evt, block);
-    });
+  document.removeEventListener("touchmove", blockMove);
+  document.removeEventListener("wheel", blockMove);
 
   agree.classList.add("checked");
   next.disabled = false;

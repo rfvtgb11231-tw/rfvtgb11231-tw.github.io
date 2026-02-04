@@ -12,7 +12,6 @@ html,body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   background:#FFF3E0;
   overscroll-behavior:none;
-  touch-action:none;
 }
 
 /* ===== 主頁 ===== */
@@ -41,7 +40,10 @@ html,body{
 .agree.enabled{color:#111}
 .circle{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;}
 .agree.checked .circle{background:#22c55e;border-color:#22c55e;}
-.agree.checked .circle::after{content:"✓";color:#fff;display:flex;justify-content:center;}
+.agree.checked .circle::after{
+  content:"✓";color:#fff;
+  display:flex;justify-content:center;
+}
 .footer button{
   width:100%;padding:14px;border-radius:10px;
   border:none;font-size:16px;
@@ -60,19 +62,39 @@ html,body{
 }
 #signLayer.active{display:flex}
 
-/* ⭐ 頂部防誤觸遮罩（關鍵） ⭐ */
+/* 安全區遮罩（防 LINE 誤觸） */
 #topBlocker{
   height:env(safe-area-inset-top, 44px);
   background:#000;
   flex-shrink:0;
 }
 
-.sign-head{color:#fff;text-align:center;padding:10px;}
-#signCanvas{flex:1;background:#fff;touch-action:none;}
-.sign-foot{display:flex;gap:12px;padding:12px;background:#111;}
+.sign-head{
+  color:#fff;
+  text-align:center;
+  padding:10px;
+  flex-shrink:0;
+}
+
+#signCanvas{
+  flex:1;
+  background:#fff;
+  touch-action:none;
+}
+
+.sign-foot{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  background:#111;
+  flex-shrink:0;
+}
 .sign-foot button{
-  flex:1;padding:12px;font-size:16px;
-  border:none;border-radius:8px;
+  flex:1;
+  padding:12px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
 }
 .clear{background:#444;color:#fff}
 .ok{background:#22c55e;color:#fff}
@@ -185,7 +207,7 @@ html,body{
 <p>本契約及其附件，均為契約之一部分。</p>
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
-        <p>＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿</p>
+        <p style="height:800px"></p>
       </div>
     </div>
   </div>
@@ -210,61 +232,90 @@ html,body{
 </div>
 
 <script>
-const contract=document.getElementById("contract");
-const agree=document.getElementById("agree");
-const next=document.getElementById("next");
-const jump=document.getElementById("jump");
-const layer=document.getElementById("signLayer");
-const canvas=document.getElementById("signCanvas");
-const ctx=canvas.getContext("2d");
-let scrollY=0,drawing=false;
+const contract = document.getElementById("contract");
+const agree = document.getElementById("agree");
+const next = document.getElementById("next");
+const jump = document.getElementById("jump");
+const layer = document.getElementById("signLayer");
+const canvas = document.getElementById("signCanvas");
+const ctx = canvas.getContext("2d");
+const time = document.getElementById("time");
+let drawing = false;
+let scrollY = 0;
 
-/* 滑到底 */
-jump.onclick=()=>contract.scrollTo({top:99999});
-contract.onscroll=()=>{
-  if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
+/* 滑到底解鎖 */
+jump.onclick = () => contract.scrollTo({top:99999});
+contract.onscroll = () => {
+  if(contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5){
     agree.classList.add("enabled");
   }
 };
 
-/* 開簽名 */
-agree.onclick=()=>{
-  if(!agree.classList.contains("enabled"))return;
-  scrollY=window.scrollY;
+/* 開啟簽名 */
+agree.onclick = () => {
+  if(!agree.classList.contains("enabled")) return;
+
+  scrollY = window.scrollY;
   document.body.style.position="fixed";
-  document.body.style.top=`-${scrollY}px`;
+  document.body.style.top = `-${scrollY}px`;
+
   layer.classList.add("active");
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight-220;
-  time.textContent=new Date().toLocaleString("zh-TW");
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = canvas.offsetWidth * dpr;
+  canvas.height = canvas.offsetHeight * dpr;
+  ctx.scale(dpr, dpr);
+
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+
+  time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 完全吃掉觸控（防 LINE 關閉） */
-["touchstart","touchmove","wheel"].forEach(e=>{
-  layer.addEventListener(e,ev=>ev.preventDefault(),{passive:false});
-});
+/* 正確取得座標（iOS 必須） */
+function getPos(e){
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+}
 
 /* 簽名 */
-ctx.lineWidth=2;ctx.lineCap="round";
-canvas.onpointerdown=e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
-canvas.onpointermove=e=>{if(!drawing)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}
-canvas.onpointerup=()=>drawing=false;
+canvas.onpointerdown = e => {
+  drawing = true;
+  const p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+};
+canvas.onpointermove = e => {
+  if(!drawing) return;
+  const p = getPos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+};
+canvas.onpointerup = () => drawing = false;
+canvas.onpointercancel = () => drawing = false;
 
-clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+/* 清除 */
+clear.onclick = () => {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+};
 
 /* 確定 */
-ok.onclick=()=>{
+ok.onclick = () => {
   layer.classList.remove("active");
   document.body.style.position="";
   document.body.style.top="";
   window.scrollTo(0,scrollY);
+
   agree.classList.add("checked");
-  next.disabled=false;
+  next.disabled = false;
   next.classList.add("enabled");
 };
 
-/* 跳轉表單 */
-next.onclick=()=>{
+/* 下一步 */
+next.onclick = () => {
   location.href="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>

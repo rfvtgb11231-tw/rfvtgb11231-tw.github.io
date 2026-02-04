@@ -11,7 +11,7 @@ html,body{
   height:100%;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   background:#FFF3E0;
-  overscroll-behavior: none; /* ✅ 關閉 iOS 橡皮筋 */
+  overscroll-behavior:none;
 }
 
 /* ===== 主結構 ===== */
@@ -108,7 +108,7 @@ html,body{
 .footer button:disabled{background:#d1d5db;color:#6b7280}
 .footer button.enabled{background:#22c55e;color:#fff}
 
-/* ===== 簽名 Overlay ===== */
+/* ===== 全螢幕簽名 ===== */
 #signLayer{
   position:fixed;
   inset:0;
@@ -116,7 +116,7 @@ html,body{
   display:none;
   flex-direction:column;
   z-index:9999;
-  touch-action:none; /* ✅ 關鍵 */
+  touch-action:none;
 }
 #signLayer.active{display:flex}
 
@@ -168,7 +168,7 @@ html,body{
       <button id="jump" class="jump-btn">前往契約底部</button>
 
       <div id="contract">
-      <h4>簽約注意事項</h4>
+        <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -296,7 +296,7 @@ const ctx=canvas.getContext("2d");
 
 let scrollY=0;
 
-/* 到底才可同意 */
+/* ===== 到底才可同意 ===== */
 jump.onclick=()=>contract.scrollTo({top:contract.scrollHeight,behavior:"smooth"});
 contract.addEventListener("scroll",()=>{
   if(contract.scrollTop+contract.clientHeight>=contract.scrollHeight-5){
@@ -304,23 +304,31 @@ contract.addEventListener("scroll",()=>{
   }
 });
 
-/* 開簽名 */
+/* ===== 開簽名 ===== */
 agree.onclick=()=>{
   if(!agree.classList.contains("enabled"))return;
   openSign();
 };
 
+function blockScroll(e){ e.preventDefault(); }
+
 function openSign(){
   scrollY=window.scrollY;
+
   document.body.style.position="fixed";
   document.body.style.top=`-${scrollY}px`;
+
+  /* 🔒 全面鎖 scroll */
+  document.addEventListener("touchmove", blockScroll, { passive:false });
+  document.addEventListener("wheel", blockScroll, { passive:false });
+
   layer.classList.add("active");
   canvas.width=window.innerWidth;
   canvas.height=window.innerHeight-120;
   time.textContent=new Date().toLocaleString("zh-TW");
 }
 
-/* ===== 簽名（完全阻止滑動） ===== */
+/* ===== 簽名 ===== */
 ctx.lineWidth=2;
 ctx.lineCap="round";
 let drawing=false;
@@ -344,13 +352,22 @@ canvas.addEventListener("pointerup",e=>{
   drawing=false;
 },{passive:false});
 
+/* 🔒 黑色空白區也吃掉事件 */
+layer.addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
+layer.addEventListener("pointermove",e=>e.preventDefault(),{passive:false});
+
 clear.onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
 ok.onclick=()=>{
   layer.classList.remove("active");
+
   document.body.style.position="";
   document.body.style.top="";
   window.scrollTo(0,scrollY);
+
+  document.removeEventListener("touchmove", blockScroll);
+  document.removeEventListener("wheel", blockScroll);
+
   agree.classList.add("checked");
   next.disabled=false;
   next.classList.add("enabled");

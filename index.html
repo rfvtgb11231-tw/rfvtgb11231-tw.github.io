@@ -21,6 +21,7 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0; /* ⭐ */
 }
 
 .container {
@@ -31,6 +32,7 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0; /* ⭐ */
 }
 
 .card {
@@ -38,6 +40,14 @@ html, body {
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
+}
+
+/* ⭐ 合約卡片一定要 */
+.contract-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* ⭐ 關鍵 */
 }
 
 .info-box {
@@ -56,11 +66,13 @@ html, body {
   color: #15803d;
 }
 
-/* ===== 合約滾動區（可上下自由滑） ===== */
+/* ===== 合約滾動區（終於能滑） ===== */
 #contract {
   flex: 1;
+  min-height: 0;                 /* ⭐⭐⭐ 最重要 */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   overscroll-behavior: contain;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -170,7 +182,8 @@ html, body {
       </div>
     </div>
 
-    <div class="card" style="flex:1;display:flex;flex-direction:column;">
+    <!-- ⭐ 用專用 class -->
+    <div class="card contract-card">
       <button id="jump" class="jump-btn">前往契約底部</button>
 
       <div id="contract">
@@ -308,7 +321,7 @@ function enableAgree(){
   agree.classList.add("enabled");
 }
 
-/* 前往底部（不鎖死） */
+/* 前往底部 */
 jump.onclick = () => {
   contract.scrollTop = contract.scrollHeight;
   enableAgree();
@@ -337,7 +350,7 @@ agree.onclick = () => {
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 🔒 只在簽名頁攔截，防 LINE 關閉 */
+/* 防 LINE 下拉關閉（只在簽名） */
 ["touchstart","touchmove","wheel"].forEach(evt=>{
   layer.addEventListener(evt,e=>e.preventDefault(),{passive:false});
 });

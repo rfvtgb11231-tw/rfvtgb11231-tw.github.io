@@ -56,7 +56,7 @@ html, body {
   color: #15803d;
 }
 
-/* ✅ 真正可視、不被吃掉的滾動區 */
+/* ===== 合約滾動區 ===== */
 #contract {
   flex: 1;
   overflow-y: auto;
@@ -65,6 +65,12 @@ html, body {
   border-radius: 12px;
   background: #fffaf3;
   padding: 14px;
+}
+
+/* 🔹 隱形錨點（不顯示、不佔高度） */
+#contract-end {
+  height: 1px;
+  overflow: hidden;
 }
 
 /* ===== Footer ===== */
@@ -79,6 +85,7 @@ html, body {
   align-items: center;
   gap: 12px;
   color: #aaa;
+  cursor: pointer;
 }
 .agree.enabled { color: #111; }
 
@@ -171,6 +178,7 @@ html, body {
       <button id="jump" class="jump-btn">前往契約底部</button>
 
       <div id="contract">
+        <!-- 這裡放完整契約內容 -->
           <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
@@ -262,8 +270,8 @@ html, body {
 
 <p><strong>第二十二條（其他約定事項）</strong></p>
 
-        <!-- 🔽 最後一條一定要有一個錨點 -->
-        <p id="contract-end"><b>【最後一條條文】</b></p>
+        <!-- 隱形結尾錨點 -->
+        <div id="contract-end"></div>
       </div>
     </div>
 
@@ -299,22 +307,31 @@ const time = document.getElementById("time");
 const endAnchor = document.getElementById("contract-end");
 
 let drawing = false;
+let canAgree = false;
 
-/* ✅ 永遠能看到最後一條 */
+/* ===== 解鎖函式（共用） ===== */
+function enableAgree(){
+  if (canAgree) return;
+  canAgree = true;
+  agree.classList.add("enabled");
+}
+
+/* 前往底部 → 滾動 + 直接解鎖 */
 jump.onclick = () => {
   endAnchor.scrollIntoView({ behavior: "smooth", block: "end" });
+  enableAgree();
 };
 
-/* 滑到底解鎖 */
+/* 手動滑到底 → 解鎖 */
 contract.addEventListener("scroll", () => {
   if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 2) {
-    agree.classList.add("enabled");
+    enableAgree();
   }
 });
 
-/* 開啟簽名 */
+/* 點我已詳讀 → 開簽名 */
 agree.onclick = () => {
-  if (!agree.classList.contains("enabled")) return;
+  if (!canAgree) return;
 
   layer.classList.add("active");
 
@@ -328,7 +345,7 @@ agree.onclick = () => {
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 🔒 從根阻止 LINE 下拉關閉 */
+/* 阻止 LINE 下拉關閉 */
 ["touchstart","touchmove","wheel"].forEach(evt=>{
   layer.addEventListener(evt,e=>e.preventDefault(),{passive:false,capture:true});
 });

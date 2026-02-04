@@ -288,6 +288,7 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
 
       ______________________________</p>
+      <div id="contractEnd"></div>
     </div>
   </div>
 
@@ -320,14 +321,14 @@ const agreeCheckbox = document.getElementById("agreeCheckbox");
 const continueBtn = document.getElementById("continueBtn");
 const jumpBtn = document.getElementById("jumpToEndBtn");
 
-jumpBtn.addEventListener("click", () => {
-  const actionBarHeight =
-    document.getElementById("actionBar").offsetHeight;
 
-  contract.scrollTo({
-    top: contract.scrollHeight - actionBarHeight - 20,
-    behavior: "smooth"
-  });
+jumpBtn.addEventListener("click", () => {
+  document.getElementById("contractEnd")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+});
 });
 /* ① 滑到最底才能勾選（LINE Bank） */
 contract.addEventListener("scroll", () => {

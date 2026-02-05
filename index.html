@@ -127,7 +127,7 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名畫面（完全鎖滑動） ===== */
+/* ===== 簽名畫面 ===== */
 #signModal {
   position: fixed;
   inset: 0;
@@ -339,7 +339,7 @@ let canAgree = false;
 let drawing = false;
 let hasDrawn = false;
 
-/* 判斷滑到底 */
+/* 判斷是否滑到底 */
 function checkReadDone() {
   if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
     canAgree = true;
@@ -354,6 +354,7 @@ jumpBtn.onclick = () => {
   checkReadDone();
 };
 
+/* 點同意 → 簽名 */
 agree.onclick = () => {
   if (!canAgree) return;
 
@@ -375,7 +376,7 @@ agree.onclick = () => {
   timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 🔒 完全鎖住簽名頁滑動 */
+/* 完全鎖滑 */
 modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
 
 canvas.onpointerdown = e => {
@@ -406,6 +407,12 @@ okBtn.onclick = () => {
   agree.classList.add("checked");
   nextBtn.disabled = false;
   nextBtn.classList.add("enabled");
+};
+
+/* ✅ 連結 Google 表單（補回） */
+nextBtn.onclick = () => {
+  location.href =
+    "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

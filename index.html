@@ -10,7 +10,6 @@
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden; /* ⭐ 整站鎖死 */
   background: #FFF3E0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
@@ -40,34 +39,18 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-}
-.info-box {
-  background: #fff4ea;
-  border-radius: 14px;
-  padding: 14px 16px;
-}
-.jump-btn {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #22c55e;
-  background: #f0fdf4;
-  color: #15803d;
 }
 #contract {
   flex: 1;
-  min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   border: 1px solid #ddd;
   border-radius: 12px;
-  background: #fffaf3;
   padding: 14px;
+  background: #fffaf3;
 }
 .footer {
-  padding: 12px 16px;
+  padding: 12px;
   background: #fff;
   border-top: 1px solid #eee;
 }
@@ -76,9 +59,8 @@ html, body {
   align-items: center;
   gap: 12px;
   color: #aaa;
-  cursor: pointer;
 }
-.agree.enabled { color: #111; }
+.agree.enabled { color: #111; cursor:pointer; }
 .circle {
   width: 22px;
   height: 22px;
@@ -94,51 +76,55 @@ html, body {
   padding: 14px;
   border-radius: 10px;
   border: none;
-  font-size: 16px;
 }
-.footer button:disabled { background: #ccc; }
-.footer button.enabled { background: #22c55e; color: #fff; }
+.footer button:disabled { background:#ccc; }
+.footer button.enabled { background:#22c55e; color:#fff; }
 
-/* ===== 簽名 Modal（卡片式） ===== */
-#signLayer {
+/* ===== 全頁硬遮罩（吃掉所有 touch） ===== */
+#signMask {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.9);
   display: none;
-  align-items: center;
-  justify-content: center;
   z-index: 99999;
+  pointer-events: auto;
 }
-#signLayer.active { display: flex; }
+#signMask.active { display: block; }
 
-/* 白色簽名卡 */
-.sign-card {
+/* ===== 簽名卡（唯一可互動區） ===== */
+#signCard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
   width: 92%;
   max-width: 420px;
   background: #fff;
   border-radius: 16px;
   padding: 16px;
-  display: flex;
-  flex-direction: column;
+  pointer-events: auto;
 }
 
 /* 標題 */
-.sign-title {
+#signCard h3 {
   text-align: center;
-  font-weight: 600;
-  margin-bottom: 8px;
+  margin: 0 0 6px;
 }
-
-/* 簽名框 */
-.sign-box {
-  border: 2px dashed #ccc;
-  border-radius: 12px;
-  height: 280px; /* ⭐ 固定高度，關鍵 */
-  margin-bottom: 12px;
-  position: relative;
+#time {
+  text-align:center;
+  display:block;
+  font-size: 13px;
+  color:#666;
+  margin-bottom: 10px;
 }
 
 /* Canvas */
+#signBox {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  height: 260px;
+  margin-bottom: 12px;
+}
 #signCanvas {
   width: 100%;
   height: 100%;
@@ -146,19 +132,18 @@ html, body {
 }
 
 /* 按鈕 */
-.sign-actions {
+.signBtns {
   display: flex;
   gap: 12px;
 }
-.sign-actions button {
-  flex: 1;
+.signBtns button {
+  flex:1;
   padding: 12px;
   border-radius: 10px;
   border: none;
-  font-size: 16px;
 }
-.clear { background: #ddd; }
-.ok { background: #22c55e; color: #fff; }
+.clear { background:#ddd; }
+.ok { background:#22c55e; color:#fff; }
 </style>
 </head>
 
@@ -168,15 +153,9 @@ html, body {
   <div class="container">
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
-      <div class="info-box">
-        <p><b>公司名稱：</b>有吉寵物美容精品SPA</p>
-        <p><b>地址：</b>台中市南區工學北路115號</p>
-        <p><b>官方 LINE：</b>@422xxuvm</p>
-      </div>
     </div>
 
     <div class="card contract-card">
-      <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
           <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
@@ -280,19 +259,17 @@ html, body {
   </div>
 </div>
 
-<!-- ===== 簽名卡 ===== -->
-<div id="signLayer">
-  <div class="sign-card">
-    <div class="sign-title">
-      請於下方簽名<br>
-      <small id="time"></small>
-    </div>
+<!-- ===== 硬遮罩 + 簽名卡 ===== -->
+<div id="signMask">
+  <div id="signCard">
+    <h3>請於下方簽名</h3>
+    <span id="time"></span>
 
-    <div class="sign-box">
+    <div id="signBox">
       <canvas id="signCanvas"></canvas>
     </div>
 
-    <div class="sign-actions">
+    <div class="signBtns">
       <button id="clear" class="clear">清除</button>
       <button id="ok" class="ok">確定簽名</button>
     </div>
@@ -300,43 +277,24 @@ html, body {
 </div>
 
 <script>
-const contract = document.getElementById("contract");
 const agree = document.getElementById("agree");
 const next = document.getElementById("next");
-const jump = document.getElementById("jump");
-const layer = document.getElementById("signLayer");
+const mask = document.getElementById("signMask");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
 
 let drawing = false;
-let canAgree = false;
-
-/* 解鎖 */
-function enableAgree(){
-  if (canAgree) return;
-  canAgree = true;
-  agree.classList.add("enabled");
-}
-jump.onclick = () => {
-  contract.scrollTop = contract.scrollHeight;
-  enableAgree();
-};
-contract.addEventListener("scroll", () => {
-  if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
-    enableAgree();
-  }
-});
+let canAgree = true;
 
 /* 開啟簽名 */
 agree.onclick = () => {
-  if (!canAgree) return;
-  layer.classList.add("active");
+  mask.classList.add("active");
 
-  const rect = canvas.getBoundingClientRect();
+  const r = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  canvas.width = r.width * dpr;
+  canvas.height = r.height * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
@@ -369,10 +327,15 @@ clear.onclick = ()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
 /* 確定 */
 ok.onclick = ()=>{
-  layer.classList.remove("active");
+  mask.classList.remove("active");
   agree.classList.add("checked");
-  next.disabled=false;
+  next.disabled = false;
   next.classList.add("enabled");
+};
+
+/* Google 表單 */
+next.onclick = ()=>{
+  location.href = "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

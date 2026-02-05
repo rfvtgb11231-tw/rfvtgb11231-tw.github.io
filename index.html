@@ -10,17 +10,15 @@
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden;
   background: #FFF3E0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
-/* ===== 主頁（完全不動） ===== */
+/* ===== 主頁 ===== */
 .page {
   height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
 .container {
   flex: 1;
@@ -62,8 +60,6 @@ html, body {
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  overscroll-behavior: contain;
   border: 1px solid #ddd;
   border-radius: 12px;
   background: #fffaf3;
@@ -102,28 +98,27 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ================= 簽名頁（重點修正） ================= */
+/* ================= 簽名層（關鍵修正） ================= */
 #signLayer {
   position: fixed;
   inset: 0;
   background: #000;
   display: none;
   flex-direction: column;
-  z-index: 99999;
+  z-index: 999999;
 }
 #signLayer.active { display: flex; }
 
-/* ✅ 一整塊「固定高度」黑色 Header（鎖死） */
+/* ✅ 真正不會變的 Header */
 .sign-header {
-  height: 110px;                /* 固定，不會變 */
+  padding-top: env(safe-area-inset-top);
+  height: calc(env(safe-area-inset-top) + 56px);
   background: #000;
   color: #fff;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding-bottom: 10px;
   flex-shrink: 0;
-  touch-action: none;           /* 關鍵 */
 }
 
 /* 畫布 */
@@ -139,7 +134,6 @@ html, body {
   gap: 12px;
   padding: 12px;
   background: #111;
-  flex-shrink: 0;
 }
 .sign-foot button {
   flex: 1;
@@ -295,6 +289,7 @@ const time = document.getElementById("time");
 
 let drawing = false;
 let canAgree = false;
+let scrollY = 0;
 
 /* 解鎖 */
 function enableAgree(){
@@ -312,9 +307,15 @@ contract.addEventListener("scroll", () => {
   }
 });
 
-/* 開啟簽名 */
+/* 開啟簽名（真正鎖死） */
 agree.onclick = () => {
   if (!canAgree) return;
+
+  scrollY = window.scrollY;
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.width = "100%";
+
   layer.classList.add("active");
 
   const dpr = window.devicePixelRatio || 1;
@@ -352,6 +353,11 @@ clear.onclick = ()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 /* 確定 */
 ok.onclick = ()=>{
   layer.classList.remove("active");
+
+  document.body.style.position = "";
+  document.body.style.top = "";
+  window.scrollTo(0, scrollY);
+
   agree.classList.add("checked");
   next.disabled=false;
   next.classList.add("enabled");

@@ -14,7 +14,6 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
-/* ===== 主頁 ===== */
 .page {
   height: 100%;
   display: flex;
@@ -40,10 +39,8 @@ html, body {
   background: #FFF4EA;
   border-radius: 14px;
   padding: 14px 16px;
-  line-height: 1.6;
 }
 
-/* 🍰 奶油黃按鈕 */
 .jump-btn {
   width: 100%;
   padding: 14px;
@@ -54,14 +51,8 @@ html, body {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 14px;
-  box-shadow: 0 4px 0 #E6C55A;
 }
 
-.jump-btn::after {
-  content: " ⤓";
-}
-
-/* 合約內容 */
 #contract {
   max-height: 50vh;
   overflow-y: auto;
@@ -71,7 +62,6 @@ html, body {
   background: #FFFBF5;
 }
 
-/* ===== Footer ===== */
 .footer {
   padding: 12px;
   background: #fff;
@@ -96,9 +86,6 @@ html, body {
   height: 22px;
   border-radius: 50%;
   border: 2px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .agree.checked .circle {
@@ -110,6 +97,7 @@ html, body {
   content: "✓";
   color: #fff;
   font-weight: bold;
+  margin-left: 4px;
 }
 
 .footer button {
@@ -123,14 +111,13 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名畫面 ===== */
+/* ===== 簽名 ===== */
 #signModal {
   position: fixed;
   inset: 0;
   background: #fff;
   display: none;
   z-index: 99999;
-  touch-action: none;
 }
 
 #signModal.active { display: block; }
@@ -187,7 +174,6 @@ html, body {
 
 <div class="page">
   <div class="container">
-
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -292,7 +278,6 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
       </div>
     </div>
-
   </div>
 
   <div class="footer">
@@ -304,7 +289,6 @@ html, body {
   </div>
 </div>
 
-<!-- ===== 簽名 ===== -->
 <div id="signModal">
   <canvas id="signCanvas"></canvas>
   <div class="sign-title">請於畫面任意處簽名</div>
@@ -322,8 +306,16 @@ const agree = document.getElementById("agree");
 const jumpBtn = document.getElementById("jump");
 const nextBtn = document.getElementById("next");
 
-/* 尚未閱讀完成 */
+const modal = document.getElementById("signModal");
+const canvas = document.getElementById("signCanvas");
+const ctx = canvas.getContext("2d");
+const clearBtn = document.getElementById("clear");
+const okBtn = document.getElementById("ok");
+const timeEl = document.getElementById("time");
+
 let canAgree = false;
+let drawing = false;
+let hasDrawn = false;
 
 /* 判斷是否滑到底 */
 function checkReadDone() {
@@ -335,19 +327,61 @@ function checkReadDone() {
 
 contract.addEventListener("scroll", checkReadDone);
 
-/* 點前往底部 */
 jumpBtn.onclick = () => {
   contract.scrollTop = contract.scrollHeight;
   checkReadDone();
 };
 
-/* 點同意 */
 agree.onclick = () => {
   if (!canAgree) return;
-  document.getElementById("signModal").classList.add("active");
+
+  modal.classList.add("active");
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = innerWidth * dpr;
+  canvas.height = innerHeight * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+
+  hasDrawn = false;
+  okBtn.disabled = true;
+  timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 以下維持你原本簽名邏輯（略，與你現有一致即可） */
+canvas.onpointerdown = e => {
+  drawing = true;
+  hasDrawn = true;
+  okBtn.disabled = false;
+  ctx.beginPath();
+  ctx.moveTo(e.clientX, e.clientY);
+};
+
+canvas.onpointermove = e => {
+  if (!drawing) return;
+  ctx.lineTo(e.clientX, e.clientY);
+  ctx.stroke();
+};
+
+canvas.onpointerup = canvas.onpointercancel = () => drawing = false;
+
+clearBtn.onclick = () => {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  hasDrawn = false;
+  okBtn.disabled = true;
+};
+
+okBtn.onclick = () => {
+  if (!hasDrawn) return;
+  modal.classList.remove("active");
+  agree.classList.add("checked");
+  nextBtn.disabled = false;
+  nextBtn.classList.add("enabled");
+};
 </script>
 
 </body>

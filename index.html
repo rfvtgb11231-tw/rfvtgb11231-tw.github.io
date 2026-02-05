@@ -98,7 +98,7 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ================= 簽名層（關鍵修正） ================= */
+/* ================= 簽名層（最終穩定版） ================= */
 #signLayer {
   position: fixed;
   inset: 0;
@@ -106,10 +106,11 @@ html, body {
   display: none;
   flex-direction: column;
   z-index: 999999;
+  overscroll-behavior: none; /* ⭐ */
 }
 #signLayer.active { display: flex; }
 
-/* ✅ 真正不會變的 Header */
+/* Header */
 .sign-header {
   padding-top: env(safe-area-inset-top);
   height: calc(env(safe-area-inset-top) + 56px);
@@ -121,14 +122,14 @@ html, body {
   flex-shrink: 0;
 }
 
-/* 畫布 */
+/* Canvas */
 #signCanvas {
   flex: 1;
   background: #fff;
   touch-action: none;
 }
 
-/* 按鈕 */
+/* Buttons */
 .sign-foot {
   display: flex;
   gap: 12px;
@@ -163,7 +164,7 @@ html, body {
     <div class="card contract-card">
       <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
-          <h4>簽約注意事項</h4>
+        <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -307,7 +308,7 @@ contract.addEventListener("scroll", () => {
   }
 });
 
-/* 開啟簽名（真正鎖死） */
+/* 開啟簽名（雙重鎖） */
 agree.onclick = () => {
   if (!canAgree) return;
 
@@ -326,6 +327,14 @@ agree.onclick = () => {
   ctx.lineCap = "round";
   time.textContent = new Date().toLocaleString("zh-TW");
 };
+
+/* ⭐⭐⭐ 關鍵：整個簽名層阻斷所有下拉（capture） ⭐⭐⭐ */
+["touchstart","touchmove","wheel"].forEach(evt=>{
+  layer.addEventListener(evt, e => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, { passive:false, capture:true });
+});
 
 /* 簽名 */
 function pos(e){

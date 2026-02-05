@@ -44,15 +44,33 @@ html, body {
   line-height: 1.6;
 }
 
+/* 🍰 奶油黃「前往契約底部」 */
 .jump-btn {
   width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 2px solid #22c55e;
-  background: #F0FDF4;
-  color: #15803d;
-  margin-bottom: 12px;
-  font-size: 15px;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(180deg, #FFF3C4, #FFE08A);
+  color: #7A5A00;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 0 #E6C55A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+
+.jump-btn::after {
+  content:"⤓";
+  font-size: 18px;
+}
+
+.jump-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #E6C55A;
 }
 
 /* 合約內容 */
@@ -125,7 +143,6 @@ html, body {
 
 #signModal.active { display: block; }
 
-/* Canvas 覆蓋整個畫面 */
 #signCanvas {
   position: fixed;
   inset: 0;
@@ -134,7 +151,6 @@ html, body {
   touch-action: none;
 }
 
-/* 上方提示 */
 .sign-title {
   position: fixed;
   top: 12px;
@@ -146,7 +162,6 @@ html, body {
   pointer-events: none;
 }
 
-/* 右下時間 */
 .sign-time {
   position: fixed;
   right: 12px;
@@ -156,7 +171,6 @@ html, body {
   pointer-events: none;
 }
 
-/* 底部按鈕 */
 .sign-actions {
   position: fixed;
   left: 0;
@@ -198,7 +212,7 @@ html, body {
     <div class="card">
       <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
-          <h4>簽約注意事項</h4>
+        <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
     <p>三、本契約得依個別狀況經雙方合意後增刪修改。</p>
@@ -305,7 +319,6 @@ html, body {
 <!-- ===== 簽名畫面 ===== -->
 <div id="signModal">
   <canvas id="signCanvas"></canvas>
-
   <div class="sign-title">請於畫面任意處簽名</div>
   <div id="time" class="sign-time"></div>
 
@@ -363,12 +376,10 @@ agree.onclick = () => {
   timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 完全阻止滑動 */
 modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
 
 function pos(e){ return { x:e.clientX, y:e.clientY }; }
 
-/* 簽名 */
 canvas.onpointerdown = e => {
   drawing = true;
   hasDrawn = true;
@@ -388,7 +399,6 @@ canvas.onpointermove = e => {
 canvas.onpointerup =
 canvas.onpointercancel = () => drawing = false;
 
-/* 清除 */
 clearBtn.onclick = () => {
   ctx.fillStyle = "#fff";
   ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -396,7 +406,6 @@ clearBtn.onclick = () => {
   okBtn.disabled = true;
 };
 
-/* 確定 */
 okBtn.onclick = () => {
   if(!hasDrawn) return;
 
@@ -410,7 +419,6 @@ okBtn.onclick = () => {
   nextBtn.classList.add("enabled");
 };
 
-/* Google 表單 */
 nextBtn.onclick = () => {
   location.href =
     "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";

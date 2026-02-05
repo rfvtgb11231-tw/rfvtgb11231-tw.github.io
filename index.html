@@ -10,11 +10,12 @@
 html, body {
   margin: 0;
   height: 100%;
+  overflow: hidden; /* ⭐ 關鍵：整站不給拖 */
   background: #FFF3E0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
-/* ===== 主頁（不動） ===== */
+/* ===== 主頁 ===== */
 .page {
   height: 100%;
   display: flex;
@@ -98,14 +99,14 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名層（穩定版） ===== */
+/* ===== 簽名層（乾淨版） ===== */
 #signLayer {
   position: fixed;
   inset: 0;
   background: #000;
   display: none;
   flex-direction: column;
-  z-index: 999999;
+  z-index: 99999;
 }
 #signLayer.active { display: flex; }
 
@@ -120,24 +121,15 @@ html, body {
   flex-shrink: 0;
 }
 
-/* 👉 專門阻擋下拉的透明層（關鍵） */
-#signBlocker {
-  flex: 1;
-  background: transparent;
-  touch-action: none;
-}
-
 /* Canvas */
 #signCanvas {
-  position: absolute;
-  inset: calc(env(safe-area-inset-top) + 56px) 0 64px 0;
+  flex: 1;
   background: #fff;
-  touch-action: none;
+  touch-action: none; /* 只給畫畫 */
 }
 
 /* Buttons */
 .sign-foot {
-  height: 64px;
   display: flex;
   gap: 12px;
   padding: 12px;
@@ -278,10 +270,7 @@ html, body {
   <div class="sign-header">
     請於下方簽名 ｜ <span id="time"></span>
   </div>
-
-  <div id="signBlocker"></div>
   <canvas id="signCanvas"></canvas>
-
   <div class="sign-foot">
     <button id="clear" class="clear">清除</button>
     <button id="ok" class="ok">確定簽名</button>
@@ -295,7 +284,6 @@ const next = document.getElementById("next");
 const jump = document.getElementById("jump");
 const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
-const blocker = document.getElementById("signBlocker");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
 
@@ -319,7 +307,7 @@ contract.addEventListener("scroll", () => {
   }
 });
 
-/* 開啟簽名 */
+/* 開啟簽名（只鎖 body） */
 agree.onclick = () => {
   if (!canAgree) return;
 
@@ -339,13 +327,6 @@ agree.onclick = () => {
 
   time.textContent = new Date().toLocaleString("zh-TW");
 };
-
-/* ⭐ 只攔 blocker（不影響按鈕 / canvas） */
-["touchstart","touchmove"].forEach(evt=>{
-  blocker.addEventListener(evt, e => {
-    e.preventDefault();
-  }, { passive:false });
-});
 
 /* 簽名 */
 function pos(e){

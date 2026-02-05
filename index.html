@@ -77,16 +77,29 @@ html, body {
   cursor: pointer;
 }
 
+/* ⭕ 圓圈 */
 .circle {
   width: 22px;
   height: 22px;
   border-radius: 50%;
   border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* ✅ 勾選後：綠色 + 勾勾（橫式正常顯示） */
 .agree.checked .circle {
   background: #22c55e;
   border-color: #22c55e;
+}
+
+.agree.checked .circle::after {
+  content: "✓";
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: bold;
 }
 
 .footer button {
@@ -109,13 +122,14 @@ html, body {
   align-items: center;
   justify-content: center;
   z-index: 99999;
+  touch-action: none;
 }
 
 #signModal.active { display: flex; }
 
 .sign-card {
   width: 95%;
-  max-width: 520px;
+  max-width: 560px;
   background: #fff;
   border-radius: 18px;
   padding: 16px;
@@ -125,10 +139,10 @@ html, body {
 .sign-title {
   text-align: center;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
-/* 簽名框 */
+/* 簽名框（加大） */
 .sign-box {
   position: relative;
   border: 2px dashed #ccc;
@@ -143,7 +157,7 @@ html, body {
   touch-action: none;
 }
 
-/* 簽名時間（右下） */
+/* ⏱ 簽名時間（右下角） */
 .sign-time {
   position: absolute;
   right: 10px;
@@ -285,7 +299,8 @@ html, body {
 
   <div class="footer">
     <div id="agree" class="agree">
-      <div class="circle"></div>我已詳讀並同意上述契約內容
+      <div class="circle"></div>
+      我已詳讀並同意上述契約內容
     </div>
     <button id="next" disabled>同意並繼續</button>
   </div>
@@ -348,7 +363,7 @@ agree.onclick = () => {
   timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 阻止整個 Modal 滑動 */
+/* 阻止滑動關閉 */
 modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
 
 /* 簽名 */

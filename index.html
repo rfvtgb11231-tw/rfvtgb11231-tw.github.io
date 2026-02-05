@@ -27,6 +27,7 @@ html, body {
   max-width: 720px;
   margin: auto;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .card {
@@ -40,8 +41,21 @@ html, body {
   background: #FFF4EA;
   border-radius: 14px;
   padding: 14px 16px;
+  line-height: 1.6;
 }
 
+.jump-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #22c55e;
+  background: #F0FDF4;
+  color: #15803d;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+/* 合約內容 */
 #contract {
   max-height: 50vh;
   overflow-y: auto;
@@ -83,6 +97,7 @@ html, body {
 .agree.checked .circle::after {
   content: "✓";
   color: #fff;
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -97,20 +112,20 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 全白簽名畫面 ===== */
+/* ===== 全螢幕白底簽名 ===== */
 #signModal {
   position: fixed;
   inset: 0;
   background: #fff;
   display: none;
   z-index: 99999;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
-#signModal.active {
-  display: block;
-}
+#signModal.active { display: block; }
 
-/* Canvas 全畫面 */
+/* Canvas 覆蓋整個畫面 */
 #signCanvas {
   position: fixed;
   inset: 0;
@@ -170,6 +185,7 @@ html, body {
 
 <div class="page">
   <div class="container">
+
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -180,6 +196,7 @@ html, body {
     </div>
 
     <div class="card">
+      <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
           <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
@@ -273,17 +290,19 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
       </div>
     </div>
+
   </div>
 
   <div class="footer">
     <div id="agree" class="agree">
-      <div class="circle"></div>我已詳讀並同意上述契約內容
+      <div class="circle"></div>
+      我已詳讀並同意上述契約內容
     </div>
     <button id="next" disabled>同意並繼續</button>
   </div>
 </div>
 
-<!-- ===== 簽名 ===== -->
+<!-- ===== 簽名畫面 ===== -->
 <div id="signModal">
   <canvas id="signCanvas"></canvas>
 
@@ -299,6 +318,9 @@ html, body {
 <script>
 const agree = document.getElementById("agree");
 const nextBtn = document.getElementById("next");
+const jumpBtn = document.getElementById("jump");
+const contract = document.getElementById("contract");
+
 const modal = document.getElementById("signModal");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
@@ -310,10 +332,17 @@ let drawing = false;
 let hasDrawn = false;
 let scrollY = 0;
 
+/* 前往契約底部 */
+jumpBtn.onclick = () => {
+  contract.scrollTop = contract.scrollHeight;
+};
+
+/* 開啟簽名 */
 agree.onclick = () => {
   scrollY = window.scrollY;
   document.body.style.position = "fixed";
   document.body.style.top = `-${scrollY}px`;
+  document.body.style.width = "100%";
 
   modal.classList.add("active");
 
@@ -334,8 +363,12 @@ agree.onclick = () => {
   timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
 
+/* 完全阻止滑動 */
+modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
+
 function pos(e){ return { x:e.clientX, y:e.clientY }; }
 
+/* 簽名 */
 canvas.onpointerdown = e => {
   drawing = true;
   hasDrawn = true;
@@ -353,8 +386,9 @@ canvas.onpointermove = e => {
 };
 
 canvas.onpointerup =
-canvas.onpointercancel = () => drawing=false;
+canvas.onpointercancel = () => drawing = false;
 
+/* 清除 */
 clearBtn.onclick = () => {
   ctx.fillStyle = "#fff";
   ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -362,6 +396,7 @@ clearBtn.onclick = () => {
   okBtn.disabled = true;
 };
 
+/* 確定 */
 okBtn.onclick = () => {
   if(!hasDrawn) return;
 
@@ -375,6 +410,7 @@ okBtn.onclick = () => {
   nextBtn.classList.add("enabled");
 };
 
+/* Google 表單 */
 nextBtn.onclick = () => {
   location.href =
     "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";

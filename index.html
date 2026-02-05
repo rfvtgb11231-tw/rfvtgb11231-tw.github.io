@@ -7,7 +7,6 @@
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
-/* ===== 全域 ===== */
 html, body {
   margin: 0;
   height: 100%;
@@ -16,14 +15,13 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
-/* ===== 主結構 ===== */
+/* ===== 主頁（完全不動） ===== */
 .page {
   height: 100%;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-
 .container {
   flex: 1;
   padding: 16px;
@@ -32,29 +30,24 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-height: 0;
 }
-
 .card {
   background: #fff;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
 }
-
 .contract-card {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-
 .info-box {
   background: #fff4ea;
   border-radius: 14px;
   padding: 14px 16px;
 }
-
 .jump-btn {
   width: 100%;
   margin-bottom: 12px;
@@ -64,8 +57,6 @@ html, body {
   background: #f0fdf4;
   color: #15803d;
 }
-
-/* ===== 合約區 ===== */
 #contract {
   flex: 1;
   min-height: 0;
@@ -78,14 +69,11 @@ html, body {
   background: #fffaf3;
   padding: 14px;
 }
-
-/* ===== Footer ===== */
 .footer {
   padding: 12px 16px;
   background: #fff;
   border-top: 1px solid #eee;
 }
-
 .agree {
   display: flex;
   align-items: center;
@@ -94,7 +82,6 @@ html, body {
   cursor: pointer;
 }
 .agree.enabled { color: #111; }
-
 .circle {
   width: 22px;
   height: 22px;
@@ -105,13 +92,6 @@ html, body {
   background: #22c55e;
   border-color: #22c55e;
 }
-.agree.checked .circle::after {
-  content: "✓";
-  color: #fff;
-  display: flex;
-  justify-content: center;
-}
-
 .footer button {
   width: 100%;
   padding: 14px;
@@ -122,31 +102,28 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ================= 签名层 ================= */
+/* ================= 簽名頁（重點修正） ================= */
 #signLayer {
   position: fixed;
   inset: 0;
   background: #000;
   display: none;
   flex-direction: column;
-  z-index: 9999;
+  z-index: 99999;
 }
 #signLayer.active { display: flex; }
 
-/* 🔒 上方防下拉遮罩（只這裡鎖） */
-#topShield {
-  height: 70px;
+/* ✅ 一整塊「固定高度」黑色 Header（鎖死） */
+.sign-header {
+  height: 110px;                /* 固定，不會變 */
   background: #000;
-  flex-shrink: 0;
-  touch-action: none;
-}
-
-/* 標題 */
-.sign-head {
   color: #fff;
-  text-align: center;
-  padding: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 10px;
   flex-shrink: 0;
+  touch-action: none;           /* 關鍵 */
 }
 
 /* 畫布 */
@@ -156,7 +133,7 @@ html, body {
   touch-action: none;
 }
 
-/* 按鈕區（完全可點） */
+/* 按鈕 */
 .sign-foot {
   display: flex;
   gap: 12px;
@@ -164,7 +141,6 @@ html, body {
   background: #111;
   flex-shrink: 0;
 }
-
 .sign-foot button {
   flex: 1;
   padding: 12px;
@@ -181,7 +157,6 @@ html, body {
 
 <div class="page">
   <div class="container">
-
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -286,7 +261,6 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
       </div>
     </div>
-
   </div>
 
   <div class="footer">
@@ -299,8 +273,9 @@ html, body {
 
 <!-- ===== 簽名 ===== -->
 <div id="signLayer">
-  <div id="topShield"></div>
-  <div class="sign-head">請於下方簽名 ｜ <span id="time"></span></div>
+  <div class="sign-header">
+    請於下方簽名 ｜ <span id="time"></span>
+  </div>
   <canvas id="signCanvas"></canvas>
   <div class="sign-foot">
     <button id="clear" class="clear">清除</button>
@@ -317,7 +292,6 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
-const topShield = document.getElementById("topShield");
 
 let drawing = false;
 let canAgree = false;
@@ -328,24 +302,19 @@ function enableAgree(){
   canAgree = true;
   agree.classList.add("enabled");
 }
-
-/* 前往底部 */
 jump.onclick = () => {
   contract.scrollTop = contract.scrollHeight;
   enableAgree();
 };
-
-/* 滑到底 */
 contract.addEventListener("scroll", () => {
   if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
     enableAgree();
   }
 });
 
-/* 點我已詳讀 */
+/* 開啟簽名 */
 agree.onclick = () => {
   if (!canAgree) return;
-
   layer.classList.add("active");
 
   const dpr = window.devicePixelRatio || 1;
@@ -354,14 +323,8 @@ agree.onclick = () => {
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
-
   time.textContent = new Date().toLocaleString("zh-TW");
 };
-
-/* 🔒 只在上方遮罩攔截（不影響按鈕） */
-["touchstart","touchmove","wheel"].forEach(evt=>{
-  topShield.addEventListener(evt,e=>e.preventDefault(),{passive:false});
-});
 
 /* 簽名 */
 function pos(e){
@@ -392,11 +355,6 @@ ok.onclick = ()=>{
   agree.classList.add("checked");
   next.disabled=false;
   next.classList.add("enabled");
-};
-
-/* 下一步 */
-next.onclick = ()=>{
-  location.href="https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

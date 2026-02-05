@@ -21,7 +21,7 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* ⭐ */
+  min-height: 0;
 }
 
 .container {
@@ -32,7 +32,7 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-height: 0; /* ⭐ */
+  min-height: 0;
 }
 
 .card {
@@ -42,12 +42,11 @@ html, body {
   margin-bottom: 16px;
 }
 
-/* ⭐ 合約卡片一定要 */
 .contract-card {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* ⭐ 關鍵 */
+  min-height: 0;
 }
 
 .info-box {
@@ -66,10 +65,10 @@ html, body {
   color: #15803d;
 }
 
-/* ===== 合約滾動區（終於能滑） ===== */
+/* ===== 合約區 ===== */
 #contract {
   flex: 1;
-  min-height: 0;                 /* ⭐⭐⭐ 最重要 */
+  min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
@@ -123,7 +122,7 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名層 ===== */
+/* ================= 签名层 ================= */
 #signLayer {
   position: fixed;
   inset: 0;
@@ -131,23 +130,33 @@ html, body {
   display: none;
   flex-direction: column;
   z-index: 9999;
-  overscroll-behavior: none;
 }
 #signLayer.active { display: flex; }
 
+/* 🔒 上方防下拉遮罩（只這裡鎖） */
+#topShield {
+  height: 70px;
+  background: #000;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+/* 標題 */
 .sign-head {
   color: #fff;
   text-align: center;
-  padding: 12px;
+  padding: 10px;
   flex-shrink: 0;
 }
 
+/* 畫布 */
 #signCanvas {
   flex: 1;
   background: #fff;
   touch-action: none;
 }
 
+/* 按鈕區（完全可點） */
 .sign-foot {
   display: flex;
   gap: 12px;
@@ -182,12 +191,9 @@ html, body {
       </div>
     </div>
 
-    <!-- ⭐ 用專用 class -->
     <div class="card contract-card">
       <button id="jump" class="jump-btn">前往契約底部</button>
-
       <div id="contract">
-        <!-- 這裡放完整契約內容 -->
           <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
     <p>二、乙方應於簽訂本契約前，提供相關詢問事項及基本資料表，並逐條向甲方說明，使甲方充分瞭解其權利義務。</p>
@@ -293,6 +299,7 @@ html, body {
 
 <!-- ===== 簽名 ===== -->
 <div id="signLayer">
+  <div id="topShield"></div>
   <div class="sign-head">請於下方簽名 ｜ <span id="time"></span></div>
   <canvas id="signCanvas"></canvas>
   <div class="sign-foot">
@@ -310,6 +317,7 @@ const layer = document.getElementById("signLayer");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
 const time = document.getElementById("time");
+const topShield = document.getElementById("topShield");
 
 let drawing = false;
 let canAgree = false;
@@ -350,9 +358,9 @@ agree.onclick = () => {
   time.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 防 LINE 下拉關閉（只在簽名） */
+/* 🔒 只在上方遮罩攔截（不影響按鈕） */
 ["touchstart","touchmove","wheel"].forEach(evt=>{
-  layer.addEventListener(evt,e=>e.preventDefault(),{passive:false});
+  topShield.addEventListener(evt,e=>e.preventDefault(),{passive:false});
 });
 
 /* 簽名 */

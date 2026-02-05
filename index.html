@@ -10,7 +10,7 @@
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden; /* ⭐ 關鍵：整站不給拖 */
+  overflow: hidden; /* ⭐ 整站鎖死 */
   background: #FFF3E0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
@@ -99,50 +99,65 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名層（乾淨版） ===== */
+/* ===== 簽名 Modal（卡片式） ===== */
 #signLayer {
   position: fixed;
   inset: 0;
-  background: #000;
+  background: rgba(0,0,0,0.9);
   display: none;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   z-index: 99999;
 }
 #signLayer.active { display: flex; }
 
-.sign-header {
-  padding-top: env(safe-area-inset-top);
-  height: calc(env(safe-area-inset-top) + 56px);
-  background: #000;
-  color: #fff;
+/* 白色簽名卡 */
+.sign-card {
+  width: 92%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  flex-direction: column;
+}
+
+/* 標題 */
+.sign-title {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* 簽名框 */
+.sign-box {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  height: 280px; /* ⭐ 固定高度，關鍵 */
+  margin-bottom: 12px;
+  position: relative;
 }
 
 /* Canvas */
 #signCanvas {
-  flex: 1;
-  background: #fff;
-  touch-action: none; /* 只給畫畫 */
+  width: 100%;
+  height: 100%;
+  touch-action: none;
 }
 
-/* Buttons */
-.sign-foot {
+/* 按鈕 */
+.sign-actions {
   display: flex;
   gap: 12px;
-  padding: 12px;
-  background: #111;
 }
-.sign-foot button {
+.sign-actions button {
   flex: 1;
   padding: 12px;
-  font-size: 16px;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
+  font-size: 16px;
 }
-.clear { background: #444; color: #fff; }
+.clear { background: #ddd; }
 .ok { background: #22c55e; color: #fff; }
 </style>
 </head>
@@ -265,15 +280,22 @@ html, body {
   </div>
 </div>
 
-<!-- ===== 簽名 ===== -->
+<!-- ===== 簽名卡 ===== -->
 <div id="signLayer">
-  <div class="sign-header">
-    請於下方簽名 ｜ <span id="time"></span>
-  </div>
-  <canvas id="signCanvas"></canvas>
-  <div class="sign-foot">
-    <button id="clear" class="clear">清除</button>
-    <button id="ok" class="ok">確定簽名</button>
+  <div class="sign-card">
+    <div class="sign-title">
+      請於下方簽名<br>
+      <small id="time"></small>
+    </div>
+
+    <div class="sign-box">
+      <canvas id="signCanvas"></canvas>
+    </div>
+
+    <div class="sign-actions">
+      <button id="clear" class="clear">清除</button>
+      <button id="ok" class="ok">確定簽名</button>
+    </div>
   </div>
 </div>
 
@@ -289,7 +311,6 @@ const time = document.getElementById("time");
 
 let drawing = false;
 let canAgree = false;
-let scrollY = 0;
 
 /* 解鎖 */
 function enableAgree(){
@@ -307,20 +328,15 @@ contract.addEventListener("scroll", () => {
   }
 });
 
-/* 開啟簽名（只鎖 body） */
+/* 開啟簽名 */
 agree.onclick = () => {
   if (!canAgree) return;
-
-  scrollY = window.scrollY;
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${scrollY}px`;
-  document.body.style.width = "100%";
-
   layer.classList.add("active");
 
+  const rect = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = canvas.offsetWidth * dpr;
-  canvas.height = canvas.offsetHeight * dpr;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
@@ -354,10 +370,6 @@ clear.onclick = ()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 /* 確定 */
 ok.onclick = ()=>{
   layer.classList.remove("active");
-  document.body.style.position = "";
-  document.body.style.top = "";
-  window.scrollTo(0, scrollY);
-
   agree.classList.add("checked");
   next.disabled=false;
   next.classList.add("enabled");

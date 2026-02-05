@@ -41,7 +41,6 @@ html, body {
   background: #FFF4EA;
   border-radius: 14px;
   padding: 14px 16px;
-  line-height: 1.6;
 }
 
 .jump-btn {
@@ -77,7 +76,6 @@ html, body {
   cursor: pointer;
 }
 
-/* ⭕ 圓圈 */
 .circle {
   width: 22px;
   height: 22px;
@@ -88,7 +86,6 @@ html, body {
   justify-content: center;
 }
 
-/* ✅ 勾選後：綠色 + 勾勾（橫式正常顯示） */
 .agree.checked .circle {
   background: #22c55e;
   border-color: #22c55e;
@@ -97,8 +94,6 @@ html, body {
 .agree.checked .circle::after {
   content: "✓";
   color: #fff;
-  font-size: 16px;
-  line-height: 1;
   font-weight: bold;
 }
 
@@ -113,68 +108,65 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名 Modal ===== */
+/* ===== 全螢幕簽名模式 ===== */
 #signModal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.85);
   display: none;
-  align-items: center;
-  justify-content: center;
   z-index: 99999;
-  touch-action: none;
 }
 
-#signModal.active { display: flex; }
-
-.sign-card {
-  width: 95%;
-  max-width: 560px;
-  background: #fff;
-  border-radius: 18px;
-  padding: 16px;
+#signModal.active {
+  display: block;
 }
 
-/* 標題 */
-.sign-title {
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-/* 簽名框（加大） */
-.sign-box {
-  position: relative;
-  border: 2px dashed #ccc;
-  border-radius: 14px;
-  height: 320px;
-  margin-bottom: 12px;
-}
-
+/* Canvas = 整個畫面 */
 #signCanvas {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   touch-action: none;
 }
 
-/* ⏱ 簽名時間（右下角） */
-.sign-time {
-  position: absolute;
-  right: 10px;
-  bottom: 6px;
-  font-size: 12px;
-  color: #888;
+/* UI 浮層 */
+.sign-ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
 }
 
-/* 按鈕 */
-.signBtns {
+.sign-title {
+  text-align: center;
+  color: #fff;
+  margin-top: 14px;
+  font-size: 16px;
+}
+
+.sign-time {
+  position: fixed;
+  right: 12px;
+  bottom: 64px;
+  color: #ccc;
+  font-size: 12px;
+}
+
+/* 按鈕列 */
+.sign-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 12px;
   display: flex;
   gap: 12px;
+  padding: 0 12px;
+  pointer-events: auto;
 }
 
-.signBtns button {
+.sign-actions button {
   flex: 1;
-  padding: 12px;
+  padding: 14px;
   border-radius: 10px;
   border: none;
   font-size: 16px;
@@ -182,6 +174,7 @@ html, body {
 
 .clear { background: #ddd; }
 .ok { background: #22c55e; color: #fff; }
+.ok:disabled { background: #999; }
 </style>
 </head>
 
@@ -189,7 +182,6 @@ html, body {
 
 <div class="page">
   <div class="container">
-
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -294,31 +286,27 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
       </div>
     </div>
-
   </div>
 
   <div class="footer">
     <div id="agree" class="agree">
-      <div class="circle"></div>
-      我已詳讀並同意上述契約內容
+      <div class="circle"></div>我已詳讀並同意上述契約內容
     </div>
     <button id="next" disabled>同意並繼續</button>
   </div>
 </div>
 
-<!-- ===== 簽名 Modal ===== -->
+<!-- ===== 全螢幕簽名 ===== -->
 <div id="signModal">
-  <div class="sign-card">
-    <div class="sign-title">請於下方簽名</div>
+  <canvas id="signCanvas"></canvas>
 
-    <div class="sign-box">
-      <canvas id="signCanvas"></canvas>
-      <div id="time" class="sign-time"></div>
-    </div>
+  <div class="sign-ui">
+    <div class="sign-title">請於畫面任意處簽名</div>
+    <div id="time" class="sign-time"></div>
 
-    <div class="signBtns">
+    <div class="sign-actions">
       <button id="clear" class="clear">清除</button>
-      <button id="ok" class="ok">確定簽名</button>
+      <button id="ok" class="ok" disabled>確定簽名</button>
     </div>
   </div>
 </div>
@@ -332,72 +320,65 @@ const ctx = canvas.getContext("2d");
 const timeEl = document.getElementById("time");
 const clearBtn = document.getElementById("clear");
 const okBtn = document.getElementById("ok");
-const jumpBtn = document.getElementById("jump");
-const contract = document.getElementById("contract");
 
 let drawing = false;
+let hasDrawn = false;
 let scrollY = 0;
-
-/* 前往底部 */
-jumpBtn.onclick = () => {
-  contract.scrollTop = contract.scrollHeight;
-};
 
 /* 開啟簽名 */
 agree.onclick = () => {
   scrollY = window.scrollY;
   document.body.style.position = "fixed";
   document.body.style.top = `-${scrollY}px`;
-  document.body.style.width = "100%";
 
   modal.classList.add("active");
 
-  const r = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = r.width * dpr;
-  canvas.height = r.height * dpr;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
 
+  hasDrawn = false;
+  okBtn.disabled = true;
   timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
 
-/* 阻止滑動關閉 */
-modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
-
 /* 簽名 */
-function pos(e){
-  const r = canvas.getBoundingClientRect();
-  return { x:e.clientX - r.left, y:e.clientY - r.top };
-}
+function pos(e){ return { x:e.clientX, y:e.clientY }; }
 
 canvas.onpointerdown = e => {
   drawing = true;
+  hasDrawn = true;
+  okBtn.disabled = false;
   const p = pos(e);
   ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
+  ctx.moveTo(p.x,p.y);
 };
 
 canvas.onpointermove = e => {
-  if (!drawing) return;
+  if(!drawing) return;
   const p = pos(e);
-  ctx.lineTo(p.x, p.y);
+  ctx.lineTo(p.x,p.y);
   ctx.stroke();
 };
 
 canvas.onpointerup =
-canvas.onpointercancel = () => drawing = false;
+canvas.onpointercancel = () => drawing=false;
 
 /* 清除 */
 clearBtn.onclick = () => {
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  hasDrawn = false;
+  okBtn.disabled = true;
 };
 
 /* 確定 */
 okBtn.onclick = () => {
-  modal.classList.remove("active");
+  if(!hasDrawn) return;
 
+  modal.classList.remove("active");
   document.body.style.position = "";
   document.body.style.top = "";
   window.scrollTo(0, scrollY);
@@ -409,8 +390,7 @@ okBtn.onclick = () => {
 
 /* Google 表單 */
 nextBtn.onclick = () => {
-  location.href =
-    "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
+  location.href = "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

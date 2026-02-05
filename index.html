@@ -100,7 +100,7 @@ html, body {
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名 Modal（關鍵） ===== */
+/* ===== 簽名 Modal ===== */
 #signModal {
   position: fixed;
   inset: 0;
@@ -114,31 +114,26 @@ html, body {
 #signModal.active { display: flex; }
 
 .sign-card {
-  width: 92%;
-  max-width: 420px;
+  width: 95%;
+  max-width: 520px;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 16px;
 }
 
+/* 標題 */
 .sign-title {
   text-align: center;
-  margin-bottom: 8px;
   font-weight: 600;
+  margin-bottom: 6px;
 }
 
-#time {
-  text-align: center;
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 10px;
-  display: block;
-}
-
+/* 簽名框 */
 .sign-box {
+  position: relative;
   border: 2px dashed #ccc;
-  border-radius: 12px;
-  height: 260px;
+  border-radius: 14px;
+  height: 320px;
   margin-bottom: 12px;
 }
 
@@ -148,6 +143,16 @@ html, body {
   touch-action: none;
 }
 
+/* 簽名時間（右下） */
+.sign-time {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* 按鈕 */
 .signBtns {
   display: flex;
   gap: 12px;
@@ -158,6 +163,7 @@ html, body {
   padding: 12px;
   border-radius: 10px;
   border: none;
+  font-size: 16px;
 }
 
 .clear { background: #ddd; }
@@ -289,10 +295,10 @@ html, body {
 <div id="signModal">
   <div class="sign-card">
     <div class="sign-title">請於下方簽名</div>
-    <span id="time"></span>
 
     <div class="sign-box">
       <canvas id="signCanvas"></canvas>
+      <div id="time" class="sign-time"></div>
     </div>
 
     <div class="signBtns">
@@ -308,7 +314,7 @@ const nextBtn = document.getElementById("next");
 const modal = document.getElementById("signModal");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
-const time = document.getElementById("time");
+const timeEl = document.getElementById("time");
 const clearBtn = document.getElementById("clear");
 const okBtn = document.getElementById("ok");
 const jumpBtn = document.getElementById("jump");
@@ -339,8 +345,11 @@ agree.onclick = () => {
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
 
-  time.textContent = new Date().toLocaleString("zh-TW");
+  timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
+
+/* 阻止整個 Modal 滑動 */
+modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
 
 /* 簽名 */
 function pos(e){

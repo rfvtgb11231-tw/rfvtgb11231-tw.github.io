@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-  content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>犬、貓美容服務定型化契約</title>
 
 <style>
@@ -14,136 +14,135 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
-/* ===== 主頁 ===== */
+/* ===== 主頁結構 ===== */
 .page {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
+
 .container {
   flex: 1;
   padding: 16px;
   max-width: 720px;
   margin: auto;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+/* ===== 卡片 ===== */
 .card {
   background: #fff;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
 }
-.contract-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+
+/* 公司資訊卡 */
+.info-box {
+  background: #FFF4EA;
+  border-radius: 14px;
+  padding: 14px 16px;
+  line-height: 1.6;
 }
+
+/* 前往底部按鈕 */
+.jump-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #22c55e;
+  background: #F0FDF4;
+  color: #15803d;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+/* 合約內容 */
 #contract {
-  flex: 1;
+  max-height: 50vh;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 14px;
-  background: #fffaf3;
+  background: #FFFBF5;
 }
-.footer {
-  padding: 12px;
-  background: #fff;
-  border-top: 1px solid #eee;
-}
-.agree {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #aaa;
-}
-.agree.enabled { color: #111; cursor:pointer; }
-.circle {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-}
-.agree.checked .circle {
-  background: #22c55e;
-  border-color: #22c55e;
-}
-.footer button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-}
-.footer button:disabled { background:#ccc; }
-.footer button.enabled { background:#22c55e; color:#fff; }
 
-/* ===== 全頁硬遮罩（吃掉所有 touch） ===== */
-#signMask {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
+/* ===== 簽名區（頁面內） ===== */
+#signSection {
   display: none;
-  z-index: 99999;
-  pointer-events: auto;
-}
-#signMask.active { display: block; }
-
-/* ===== 簽名卡（唯一可互動區） ===== */
-#signCard {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  width: 92%;
-  max-width: 420px;
+  margin-top: 16px;
   background: #fff;
   border-radius: 16px;
   padding: 16px;
-  pointer-events: auto;
 }
 
-/* 標題 */
-#signCard h3 {
-  text-align: center;
-  margin: 0 0 6px;
-}
-#time {
-  text-align:center;
-  display:block;
-  font-size: 13px;
-  color:#666;
-  margin-bottom: 10px;
-}
-
-/* Canvas */
 #signBox {
   border: 2px dashed #ccc;
   border-radius: 12px;
-  height: 260px;
+  height: 220px;
   margin-bottom: 12px;
 }
+
 #signCanvas {
   width: 100%;
   height: 100%;
   touch-action: none;
 }
 
-/* 按鈕 */
 .signBtns {
   display: flex;
   gap: 12px;
 }
+
 .signBtns button {
-  flex:1;
+  flex: 1;
   padding: 12px;
   border-radius: 10px;
   border: none;
+  font-size: 16px;
 }
-.clear { background:#ddd; }
-.ok { background:#22c55e; color:#fff; }
+
+.clear { background: #ddd; }
+.ok { background: #22c55e; color: #fff; }
+
+/* ===== Footer ===== */
+.footer {
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.agree {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #111;
+  cursor: pointer;
+}
+
+.circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.agree.checked .circle {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.footer button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+
+.footer button:disabled { background: #ccc; }
+.footer button.enabled { background: #22c55e; color: #fff; }
 </style>
 </head>
 
@@ -151,11 +150,20 @@ html, body {
 
 <div class="page">
   <div class="container">
+
+    <!-- 標題卡 -->
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
+      <div class="info-box">
+        <p><b>公司名稱：</b>有吉寵物美容精品SPA</p>
+        <p><b>地址：</b>台中市南區工學北路115號</p>
+        <p><b>官方 LINE：</b>@422xxuvm</p>
+      </div>
     </div>
 
-    <div class="card contract-card">
+    <!-- 合約卡 -->
+    <div class="card">
+      <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
           <h4>簽約注意事項</h4>
     <p>一、本契約之審閱期間不得少於 1 日，提供單次犬、貓美容或必要時，並應給予即時或合理之審閱期間。但審閱期間經雙方合意另行約定者，不在此限。</p>
@@ -249,8 +257,22 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
       </div>
     </div>
+
+    <!-- 簽名區 -->
+    <div id="signSection">
+      <h3 style="text-align:center;">請於下方簽名</h3>
+      <div id="signBox">
+        <canvas id="signCanvas"></canvas>
+      </div>
+      <div class="signBtns">
+        <button id="clear" class="clear">清除</button>
+        <button id="ok" class="ok">確定簽名</button>
+      </div>
+    </div>
+
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     <div id="agree" class="agree">
       <div class="circle"></div>我已詳讀並同意上述契約內容
@@ -259,37 +281,28 @@ html, body {
   </div>
 </div>
 
-<!-- ===== 硬遮罩 + 簽名卡 ===== -->
-<div id="signMask">
-  <div id="signCard">
-    <h3>請於下方簽名</h3>
-    <span id="time"></span>
-
-    <div id="signBox">
-      <canvas id="signCanvas"></canvas>
-    </div>
-
-    <div class="signBtns">
-      <button id="clear" class="clear">清除</button>
-      <button id="ok" class="ok">確定簽名</button>
-    </div>
-  </div>
-</div>
-
 <script>
 const agree = document.getElementById("agree");
-const next = document.getElementById("next");
-const mask = document.getElementById("signMask");
+const signSection = document.getElementById("signSection");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
-const time = document.getElementById("time");
+const clearBtn = document.getElementById("clear");
+const okBtn = document.getElementById("ok");
+const nextBtn = document.getElementById("next");
+const jumpBtn = document.getElementById("jump");
+const contract = document.getElementById("contract");
 
 let drawing = false;
-let canAgree = true;
 
-/* 開啟簽名 */
+/* 前往契約底部 */
+jumpBtn.onclick = () => {
+  contract.scrollTop = contract.scrollHeight;
+};
+
+/* 顯示簽名區 */
 agree.onclick = () => {
-  mask.classList.add("active");
+  agree.classList.add("checked");
+  signSection.style.display = "block";
 
   const r = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
@@ -299,43 +312,47 @@ agree.onclick = () => {
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
 
-  time.textContent = new Date().toLocaleString("zh-TW");
+  signSection.scrollIntoView({ behavior: "smooth" });
 };
 
 /* 簽名 */
 function pos(e){
   const r = canvas.getBoundingClientRect();
-  return { x:e.clientX-r.left, y:e.clientY-r.top };
+  return { x:e.clientX - r.left, y:e.clientY - r.top };
 }
-canvas.onpointerdown = e=>{
-  drawing=true;
-  const p=pos(e);
+
+canvas.onpointerdown = e => {
+  drawing = true;
+  const p = pos(e);
   ctx.beginPath();
-  ctx.moveTo(p.x,p.y);
+  ctx.moveTo(p.x, p.y);
 };
-canvas.onpointermove = e=>{
-  if(!drawing) return;
-  const p=pos(e);
-  ctx.lineTo(p.x,p.y);
+
+canvas.onpointermove = e => {
+  if (!drawing) return;
+  const p = pos(e);
+  ctx.lineTo(p.x, p.y);
   ctx.stroke();
 };
+
 canvas.onpointerup =
-canvas.onpointercancel = ()=>drawing=false;
+canvas.onpointercancel = () => drawing = false;
 
 /* 清除 */
-clear.onclick = ()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+clearBtn.onclick = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
 
 /* 確定 */
-ok.onclick = ()=>{
-  mask.classList.remove("active");
-  agree.classList.add("checked");
-  next.disabled = false;
-  next.classList.add("enabled");
+okBtn.onclick = () => {
+  nextBtn.disabled = false;
+  nextBtn.classList.add("enabled");
 };
 
 /* Google 表單 */
-next.onclick = ()=>{
-  location.href = "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
+nextBtn.onclick = () => {
+  location.href =
+    "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };
 </script>
 

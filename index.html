@@ -14,7 +14,7 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
-/* ===== 主頁結構 ===== */
+/* ===== 主頁 ===== */
 .page {
   height: 100%;
   display: flex;
@@ -30,7 +30,6 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ===== 卡片 ===== */
 .card {
   background: #fff;
   border-radius: 16px;
@@ -38,7 +37,6 @@ html, body {
   margin-bottom: 16px;
 }
 
-/* 公司資訊卡 */
 .info-box {
   background: #FFF4EA;
   border-radius: 14px;
@@ -46,7 +44,6 @@ html, body {
   line-height: 1.6;
 }
 
-/* 前往底部按鈕 */
 .jump-btn {
   width: 100%;
   padding: 12px;
@@ -54,11 +51,9 @@ html, body {
   border: 2px solid #22c55e;
   background: #F0FDF4;
   color: #15803d;
-  font-size: 15px;
   margin-bottom: 12px;
 }
 
-/* 合約內容 */
 #contract {
   max-height: 50vh;
   overflow-y: auto;
@@ -67,44 +62,6 @@ html, body {
   padding: 14px;
   background: #FFFBF5;
 }
-
-/* ===== 簽名區（頁面內） ===== */
-#signSection {
-  display: none;
-  margin-top: 16px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-}
-
-#signBox {
-  border: 2px dashed #ccc;
-  border-radius: 12px;
-  height: 220px;
-  margin-bottom: 12px;
-}
-
-#signCanvas {
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-}
-
-.signBtns {
-  display: flex;
-  gap: 12px;
-}
-
-.signBtns button {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  font-size: 16px;
-}
-
-.clear { background: #ddd; }
-.ok { background: #22c55e; color: #fff; }
 
 /* ===== Footer ===== */
 .footer {
@@ -117,7 +74,6 @@ html, body {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #111;
   cursor: pointer;
 }
 
@@ -143,6 +99,69 @@ html, body {
 
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
+
+/* ===== 簽名 Modal（關鍵） ===== */
+#signModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+#signModal.active { display: flex; }
+
+.sign-card {
+  width: 92%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.sign-title {
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+#time {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.sign-box {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  height: 260px;
+  margin-bottom: 12px;
+}
+
+#signCanvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.signBtns {
+  display: flex;
+  gap: 12px;
+}
+
+.signBtns button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+.clear { background: #ddd; }
+.ok { background: #22c55e; color: #fff; }
 </style>
 </head>
 
@@ -151,7 +170,6 @@ html, body {
 <div class="page">
   <div class="container">
 
-    <!-- 標題卡 -->
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -161,7 +179,6 @@ html, body {
       </div>
     </div>
 
-    <!-- 合約卡 -->
     <div class="card">
       <button id="jump" class="jump-btn">前往契約底部</button>
       <div id="contract">
@@ -258,21 +275,8 @@ html, body {
       </div>
     </div>
 
-    <!-- 簽名區 -->
-    <div id="signSection">
-      <h3 style="text-align:center;">請於下方簽名</h3>
-      <div id="signBox">
-        <canvas id="signCanvas"></canvas>
-      </div>
-      <div class="signBtns">
-        <button id="clear" class="clear">清除</button>
-        <button id="ok" class="ok">確定簽名</button>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Footer -->
   <div class="footer">
     <div id="agree" class="agree">
       <div class="circle"></div>我已詳讀並同意上述契約內容
@@ -281,28 +285,51 @@ html, body {
   </div>
 </div>
 
+<!-- ===== 簽名 Modal ===== -->
+<div id="signModal">
+  <div class="sign-card">
+    <div class="sign-title">請於下方簽名</div>
+    <span id="time"></span>
+
+    <div class="sign-box">
+      <canvas id="signCanvas"></canvas>
+    </div>
+
+    <div class="signBtns">
+      <button id="clear" class="clear">清除</button>
+      <button id="ok" class="ok">確定簽名</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const agree = document.getElementById("agree");
-const signSection = document.getElementById("signSection");
+const nextBtn = document.getElementById("next");
+const modal = document.getElementById("signModal");
 const canvas = document.getElementById("signCanvas");
 const ctx = canvas.getContext("2d");
+const time = document.getElementById("time");
 const clearBtn = document.getElementById("clear");
 const okBtn = document.getElementById("ok");
-const nextBtn = document.getElementById("next");
 const jumpBtn = document.getElementById("jump");
 const contract = document.getElementById("contract");
 
 let drawing = false;
+let scrollY = 0;
 
-/* 前往契約底部 */
+/* 前往底部 */
 jumpBtn.onclick = () => {
   contract.scrollTop = contract.scrollHeight;
 };
 
-/* 顯示簽名區 */
+/* 開啟簽名 */
 agree.onclick = () => {
-  agree.classList.add("checked");
-  signSection.style.display = "block";
+  scrollY = window.scrollY;
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.width = "100%";
+
+  modal.classList.add("active");
 
   const r = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
@@ -312,7 +339,7 @@ agree.onclick = () => {
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
 
-  signSection.scrollIntoView({ behavior: "smooth" });
+  time.textContent = new Date().toLocaleString("zh-TW");
 };
 
 /* 簽名 */
@@ -340,11 +367,18 @@ canvas.onpointercancel = () => drawing = false;
 
 /* 清除 */
 clearBtn.onclick = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 };
 
 /* 確定 */
 okBtn.onclick = () => {
+  modal.classList.remove("active");
+
+  document.body.style.position = "";
+  document.body.style.top = "";
+  window.scrollTo(0, scrollY);
+
+  agree.classList.add("checked");
   nextBtn.disabled = false;
   nextBtn.classList.add("enabled");
 };

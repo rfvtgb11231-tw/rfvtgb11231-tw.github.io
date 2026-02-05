@@ -28,6 +28,7 @@ html, body {
   overflow-y: auto;
 }
 
+/* 卡片 */
 .card {
   background: #fff;
   border-radius: 16px;
@@ -41,6 +42,7 @@ html, body {
   padding: 14px 16px;
 }
 
+/* 🍰 奶油黃 */
 .jump-btn {
   width: 100%;
   padding: 14px;
@@ -62,12 +64,14 @@ html, body {
   background: #FFFBF5;
 }
 
+/* ===== Footer ===== */
 .footer {
   padding: 12px;
   background: #fff;
   border-top: 1px solid #eee;
 }
 
+/* 同意列 */
 .agree {
   display: flex;
   align-items: center;
@@ -76,6 +80,18 @@ html, body {
   opacity: .5;
 }
 
+/* 🔒 尚未閱讀完成（灰勾勾） */
+.agree.locked .circle {
+  background: #eee;
+  border-color: #ccc;
+}
+.agree.locked .circle::after {
+  content: "✓";
+  color: #bbb;
+  font-weight: bold;
+}
+
+/* ✅ 可點 */
 .agree.enabled {
   cursor: pointer;
   opacity: 1;
@@ -86,18 +102,19 @@ html, body {
   height: 22px;
   border-radius: 50%;
   border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .agree.checked .circle {
   background: #22c55e;
   border-color: #22c55e;
 }
-
 .agree.checked .circle::after {
   content: "✓";
   color: #fff;
   font-weight: bold;
-  margin-left: 4px;
 }
 
 .footer button {
@@ -107,17 +124,18 @@ html, body {
   border: none;
   font-size: 16px;
 }
-
 .footer button:disabled { background: #ccc; }
 .footer button.enabled { background: #22c55e; color: #fff; }
 
-/* ===== 簽名 ===== */
+/* ===== 簽名畫面（完全鎖滑動） ===== */
 #signModal {
   position: fixed;
   inset: 0;
   background: #fff;
   display: none;
   z-index: 99999;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 #signModal.active { display: block; }
@@ -127,6 +145,7 @@ html, body {
   inset: 0;
   width: 100%;
   height: 100%;
+  touch-action: none;
 }
 
 .sign-title {
@@ -174,6 +193,7 @@ html, body {
 
 <div class="page">
   <div class="container">
+
     <div class="card">
       <h2>寵物美容服務定型化契約</h2>
       <div class="info-box">
@@ -278,10 +298,11 @@ html, body {
 <p><strong>第二十二條（其他約定事項）</strong></p>
       </div>
     </div>
+
   </div>
 
   <div class="footer">
-    <div id="agree" class="agree">
+    <div id="agree" class="agree locked">
       <div class="circle"></div>
       我已詳讀並同意上述契約內容
     </div>
@@ -289,6 +310,7 @@ html, body {
   </div>
 </div>
 
+<!-- 簽名 -->
 <div id="signModal">
   <canvas id="signCanvas"></canvas>
   <div class="sign-title">請於畫面任意處簽名</div>
@@ -317,14 +339,14 @@ let canAgree = false;
 let drawing = false;
 let hasDrawn = false;
 
-/* 判斷是否滑到底 */
+/* 判斷滑到底 */
 function checkReadDone() {
   if (contract.scrollTop + contract.clientHeight >= contract.scrollHeight - 5) {
     canAgree = true;
+    agree.classList.remove("locked");
     agree.classList.add("enabled");
   }
 }
-
 contract.addEventListener("scroll", checkReadDone);
 
 jumpBtn.onclick = () => {
@@ -352,6 +374,9 @@ agree.onclick = () => {
   okBtn.disabled = true;
   timeEl.textContent = new Date().toLocaleString("zh-TW");
 };
+
+/* 🔒 完全鎖住簽名頁滑動 */
+modal.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
 
 canvas.onpointerdown = e => {
   drawing = true;

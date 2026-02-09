@@ -403,7 +403,18 @@ clearBtn.onclick = () => {
 
 okBtn.onclick = () => {
   if (!hasDrawn) return;
+
+  // 把簽名轉成圖片
+  const signatureData = canvas.toDataURL("image/png");
+
+  // 存到iPad（永久保存）
+  localStorage.setItem("contractSignature", signatureData);
+
+  // 存簽署時間
+  localStorage.setItem("contractTime", new Date().toLocaleString("zh-TW"));
+
   modal.classList.remove("active");
+
   agree.classList.add("checked");
   nextBtn.disabled = false;
   nextBtn.classList.add("enabled");

@@ -2,120 +2,144 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>美容服務收據</title>
 
 <style>
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-  background:#f6f6f6;
+  background:#FFF3E0;
 }
 
-/* 表單 */
-.form{
-  max-width:520px;
-  margin:20px auto;
-  background:#fff;
+/* 卡片 */
+.wrap{
   padding:18px;
-  border-radius:16px;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  max-width:700px;
+  margin:auto;
 }
 
-h2{
-  text-align:center;
-  margin-top:0;
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
 }
 
+/* 輸入 */
 label{
-  font-size:14px;
+  font-weight:600;
+  display:block;
   margin-top:12px;
+  margin-bottom:6px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+/* 奶油黃按鈕 */
+button.main{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(180deg,#FFF3C4,#FFE08A);
+  font-size:16px;
+  font-weight:700;
+  margin-top:16px;
+}
+
+/* 列印按鈕 */
+button.print{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#22c55e;
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+  margin-top:12px;
+}
+
+/* 簽名狀態 */
+.signStatus{
+  margin-top:10px;
+  font-size:14px;
+  color:#999;
+}
+
+/* ===== 全螢幕簽名 ===== */
+#signModal{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  display:none;
+  z-index:99999;
+  touch-action:none;
+  overscroll-behavior:none;
+}
+
+#signModal.active{
   display:block;
 }
 
-input{
-  width:100%;
-  padding:10px;
-  margin-top:4px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  font-size:16px;
-}
-
-/* 簽名區 */
-.sign-box{
-  border:2px dashed #bbb;
-  border-radius:14px;
-  height:180px;
-  margin-top:12px;
-  position:relative;
-}
-
-canvas{
+#signCanvas{
+  position:fixed;
+  inset:0;
   width:100%;
   height:100%;
+  touch-action:none;
 }
 
-.sign-tip{
-  position:absolute;
+/* 上方文字 */
+.signTitle{
+  position:fixed;
+  top:10px;
   left:0;
   right:0;
-  top:50%;
-  transform:translateY(-50%);
   text-align:center;
-  color:#999;
-  pointer-events:none;
+  font-weight:700;
+  font-size:18px;
 }
 
-/* 按鈕 */
-.btns{
+/* 按鈕列 */
+.signActions{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:14px;
   display:flex;
-  gap:10px;
-  margin-top:14px;
+  gap:12px;
+  padding:0 14px;
 }
 
-button{
+.signActions button{
   flex:1;
-  padding:12px;
+  padding:14px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   font-size:16px;
 }
 
-.print{ background:#ffd86b; }
-.clear{ background:#ddd; }
-
-/* 列印用收據 */
-#printArea{
-  display:none;
-  width:80mm;
-  padding:10px;
-  font-size:13px;
-  background:#fff;
-  color:#000;
-}
-
-.print-title{
-  text-align:center;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.line{
-  border-top:1px dashed #000;
-  margin:8px 0;
-}
-
-.sign-img{
-  width:200px;
-}
+.clear{background:#ddd;}
+.ok{background:#22c55e;color:#fff;}
+.ok:disabled{background:#aaa;}
 </style>
 </head>
 
 <body>
 
-<div class="form">
+<div class="wrap">
 
+<div class="card">
 <h2>美容服務收據</h2>
 
 <label>飼主姓名</label>
@@ -124,97 +148,118 @@ button{
 <label>寵物名字</label>
 <input id="pet">
 
-<label>服務項目</label>
-<input id="service">
+<label>服務內容</label>
+<select id="service">
+<option value="大美容">大美容</option>
+<option value="小美容">小美容</option>
+<option value="其他">其他</option>
+</select>
+
+<label>其他服務說明</label>
+<textarea id="other" placeholder="只有選『其他』才需要填"></textarea>
 
 <label>金額</label>
-<input id="price" type="number">
+<input id="amount" type="number">
 
-<div class="sign-box">
-  <canvas id="sign"></canvas>
-  <div class="sign-tip">請在此簽名</div>
-</div>
+<button class="main" id="openSign">客人簽名</button>
+<div class="signStatus" id="status">尚未簽名</div>
 
-<div class="btns">
-  <button class="clear" onclick="clearSign()">清除簽名</button>
-  <button class="print" onclick="printReceipt()">列印收據</button>
+<button class="print" id="printBtn" disabled>列印收據</button>
 </div>
 
 </div>
 
-<!-- 真正列印的收據 -->
-<div id="printArea">
-  <div class="print-title">寵物美容收據</div>
-  <div class="line"></div>
+<!-- 全螢幕簽名 -->
+<div id="signModal">
+<canvas id="signCanvas"></canvas>
+<div class="signTitle">請在畫面簽名</div>
 
-  店名：有吉寵物美容精品SPA<br>
-  地址：台中市南區工學北路115號<br>
-  電話：_____________<br>
-
-  <div class="line"></div>
-
-  飼主：<span id="p_owner"></span><br>
-  寵物：<span id="p_pet"></span><br>
-  服務：<span id="p_service"></span><br>
-  金額：$<span id="p_price"></span><br>
-  日期：<span id="p_date"></span><br>
-
-  <div class="line"></div>
-  簽名：<br>
-  <img id="p_sign" class="sign-img">
-
-  <div class="line"></div>
-  本收據為美容服務證明
+<div class="signActions">
+<button class="clear" id="clear">清除</button>
+<button class="ok" id="ok" disabled>確定簽名</button>
+</div>
 </div>
 
 <script>
-const canvas=document.getElementById("sign");
+const modal=document.getElementById("signModal");
+const canvas=document.getElementById("signCanvas");
 const ctx=canvas.getContext("2d");
-let drawing=false;
+const clearBtn=document.getElementById("clear");
+const okBtn=document.getElementById("ok");
+const openSign=document.getElementById("openSign");
+const status=document.getElementById("status");
+const printBtn=document.getElementById("printBtn");
 
-function resize(){
-  const r=canvas.getBoundingClientRect();
-  canvas.width=r.width;
-  canvas.height=r.height;
+let drawing=false;
+let signed=false;
+
+/* 打開簽名 */
+openSign.onclick=()=>{
+  modal.classList.add("active");
+
+  document.body.style.overflow="hidden";
+
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=innerWidth*dpr;
+  canvas.height=innerHeight*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="#000";
   ctx.lineWidth=2;
   ctx.lineCap="round";
-}
-resize();
-window.onresize=resize;
 
+  signed=false;
+  okBtn.disabled=true;
+};
+
+/* 完全鎖滑動 */
+modal.addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
+
+/* 簽名 */
 canvas.onpointerdown=e=>{
   drawing=true;
+  signed=true;
+  okBtn.disabled=false;
   ctx.beginPath();
-  ctx.moveTo(e.offsetX,e.offsetY);
+  ctx.moveTo(e.clientX,e.clientY);
 };
+
 canvas.onpointermove=e=>{
   if(!drawing)return;
-  ctx.lineTo(e.offsetX,e.offsetY);
+  ctx.lineTo(e.clientX,e.clientY);
   ctx.stroke();
 };
-canvas.onpointerup=()=>drawing=false;
-canvas.onpointercancel=()=>drawing=false;
 
-function clearSign(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
+canvas.onpointerup=canvas.onpointercancel=()=>drawing=false;
 
-function printReceipt(){
+/* 清除 */
+clearBtn.onclick=()=>{
+  ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  signed=false;
+  okBtn.disabled=true;
+};
 
-  document.getElementById("p_owner").textContent=document.getElementById("owner").value;
-  document.getElementById("p_pet").textContent=document.getElementById("pet").value;
-  document.getElementById("p_service").textContent=document.getElementById("service").value;
-  document.getElementById("p_price").textContent=document.getElementById("price").value;
-  document.getElementById("p_date").textContent=new Date().toLocaleDateString("zh-TW");
+/* 確認簽名 */
+okBtn.onclick=()=>{
+  if(!signed)return;
 
-  document.getElementById("p_sign").src=canvas.toDataURL();
+  modal.classList.remove("active");
+  document.body.style.overflow="";
 
-  const area=document.getElementById("printArea").outerHTML;
-  const w=window.open("","","width=400,height=600");
-  w.document.write(area);
-  w.document.close();
-  w.print();
-}
+  status.innerText="已完成簽名 ✓";
+  status.style.color="#16a34a";
+
+  printBtn.disabled=false;
+};
+
+/* 列印 */
+printBtn.onclick=()=>{
+  window.print();
+};
 </script>
 
 </body>

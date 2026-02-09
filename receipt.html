@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美容服務收據</title>
+
+<style>
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  background:#f6f6f6;
+}
+
+/* 表單 */
+.form{
+  max-width:520px;
+  margin:20px auto;
+  background:#fff;
+  padding:18px;
+  border-radius:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+h2{
+  text-align:center;
+  margin-top:0;
+}
+
+label{
+  font-size:14px;
+  margin-top:12px;
+  display:block;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:4px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:16px;
+}
+
+/* 簽名區 */
+.sign-box{
+  border:2px dashed #bbb;
+  border-radius:14px;
+  height:180px;
+  margin-top:12px;
+  position:relative;
+}
+
+canvas{
+  width:100%;
+  height:100%;
+}
+
+.sign-tip{
+  position:absolute;
+  left:0;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
+  text-align:center;
+  color:#999;
+  pointer-events:none;
+}
+
+/* 按鈕 */
+.btns{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+
+button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+}
+
+.print{ background:#ffd86b; }
+.clear{ background:#ddd; }
+
+/* 列印用收據 */
+#printArea{
+  display:none;
+  width:80mm;
+  padding:10px;
+  font-size:13px;
+  background:#fff;
+  color:#000;
+}
+
+.print-title{
+  text-align:center;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.line{
+  border-top:1px dashed #000;
+  margin:8px 0;
+}
+
+.sign-img{
+  width:200px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="form">
+
+<h2>美容服務收據</h2>
+
+<label>飼主姓名</label>
+<input id="owner">
+
+<label>寵物名字</label>
+<input id="pet">
+
+<label>服務項目</label>
+<input id="service">
+
+<label>金額</label>
+<input id="price" type="number">
+
+<div class="sign-box">
+  <canvas id="sign"></canvas>
+  <div class="sign-tip">請在此簽名</div>
+</div>
+
+<div class="btns">
+  <button class="clear" onclick="clearSign()">清除簽名</button>
+  <button class="print" onclick="printReceipt()">列印收據</button>
+</div>
+
+</div>
+
+<!-- 真正列印的收據 -->
+<div id="printArea">
+  <div class="print-title">寵物美容收據</div>
+  <div class="line"></div>
+
+  店名：有吉寵物美容精品SPA<br>
+  地址：台中市南區工學北路115號<br>
+  電話：_____________<br>
+
+  <div class="line"></div>
+
+  飼主：<span id="p_owner"></span><br>
+  寵物：<span id="p_pet"></span><br>
+  服務：<span id="p_service"></span><br>
+  金額：$<span id="p_price"></span><br>
+  日期：<span id="p_date"></span><br>
+
+  <div class="line"></div>
+  簽名：<br>
+  <img id="p_sign" class="sign-img">
+
+  <div class="line"></div>
+  本收據為美容服務證明
+</div>
+
+<script>
+const canvas=document.getElementById("sign");
+const ctx=canvas.getContext("2d");
+let drawing=false;
+
+function resize(){
+  const r=canvas.getBoundingClientRect();
+  canvas.width=r.width;
+  canvas.height=r.height;
+  ctx.lineWidth=2;
+  ctx.lineCap="round";
+}
+resize();
+window.onresize=resize;
+
+canvas.onpointerdown=e=>{
+  drawing=true;
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX,e.offsetY);
+};
+canvas.onpointermove=e=>{
+  if(!drawing)return;
+  ctx.lineTo(e.offsetX,e.offsetY);
+  ctx.stroke();
+};
+canvas.onpointerup=()=>drawing=false;
+canvas.onpointercancel=()=>drawing=false;
+
+function clearSign(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function printReceipt(){
+
+  document.getElementById("p_owner").textContent=document.getElementById("owner").value;
+  document.getElementById("p_pet").textContent=document.getElementById("pet").value;
+  document.getElementById("p_service").textContent=document.getElementById("service").value;
+  document.getElementById("p_price").textContent=document.getElementById("price").value;
+  document.getElementById("p_date").textContent=new Date().toLocaleDateString("zh-TW");
+
+  document.getElementById("p_sign").src=canvas.toDataURL();
+
+  const area=document.getElementById("printArea").outerHTML;
+  const w=window.open("","","width=400,height=600");
+  w.document.write(area);
+  w.document.close();
+  w.print();
+}
+</script>
+
+</body>
+</html>

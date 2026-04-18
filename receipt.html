@@ -141,7 +141,8 @@ button.print{
 
 <div class="card">
 <h2>美容服務收據</h2>
-
+<label>聯絡電話</label>
+<input id="phone" onblur="loadCustomer()">
 <label>飼主姓名</label>
 <input id="owner">
 
@@ -282,6 +283,18 @@ printBtn.onclick=()=>{
     },
     body: JSON.stringify(data)
   });
+}
+function loadCustomer() {
+  const phone = document.getElementById("phone").value;
+
+  fetch("https://script.google.com/macros/s/AKfycbzv2eKStubjKcAByO5t-tQWjFrLXXDgJ12riZYUj6RfHx26LUIbv87RQlEVrRMCrZTGJA/exec?phone=" + phone)
+    .then(res => res.json())
+    .then(data => {
+      if (data.name) {
+        document.getElementById("owner").value = data.name;
+        document.getElementById("pet").value = data.pet;
+      }
+    });
 }
 </script>
 

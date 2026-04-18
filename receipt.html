@@ -258,8 +258,23 @@ okBtn.onclick=()=>{
 
 /* 列印 */
 printBtn.onclick=()=>{
-  window.print();
+  sendToSheet();   // ⭐送到Google Sheet
+  window.print();  // 再列印
 };
+  function sendToSheet() {
+  const data = {
+    name: document.getElementById("owner").value,
+    phone: localStorage.getItem("phone") || "",
+    pet: document.getElementById("pet").value,
+    amount: document.getElementById("amount").value,
+    service: document.getElementById("service").value
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbzv2eKStubjKcAByO5t-tQWjFrLXXDgJ12riZYUj6RfHx26LUIbv87RQlEVrRMCrZTGJA/exec", {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+}
 </script>
 
 </body>

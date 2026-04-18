@@ -284,18 +284,7 @@ printBtn.onclick=()=>{
     body: JSON.stringify(data)
   });
 }
-function loadCustomer() {
-  const phone = document.getElementById("phone").value;
-
-  fetch("https://script.google.com/macros/s/AKfycbzCMPUl2BR259zhmuKZIVC9DU8xeL99o_PuyayKzcuKjNomJj06W-vAPuL-yzvn_ZSoaQ/exec" + phone)
-    .then(res => res.json())
-    .then(data => {
-      if (data.name) {
-        document.getElementById("owner").value = data.name;
-        document.getElementById("pet").value = data.pet;
-      }
-    });
-}
+https://script.google.com/macros/s/AKfycbzCMPUl2BR259zhmuKZIVC9DU8xeL99o_PuyayKzcuKjNomJj06W-vAPuL-yzvn_ZSoaQ/exec
 </script>
 
 </body>

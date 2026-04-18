@@ -216,9 +216,6 @@ openSign.onclick=()=>{
   okBtn.disabled=true;
 };
 
-/* 完全鎖滑動 */
-modal.addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
-
 /* 簽名 */
 canvas.onpointerdown=e=>{
   drawing=true;
@@ -257,21 +254,26 @@ okBtn.onclick=()=>{
   printBtn.disabled=false;
 };
 
-/* 列印 */
-printBtn.onclick=()=>{
-  sendToSheet();   // ⭐送到Google Sheet
-  window.print();  // 再列印
-};
-  function sendToSheet() {
+/* 🔥 自動帶客戶資料 */
+function loadCustomer() {
+  const phone = document.getElementById("phone").value;
+
+  fetch("https://script.google.com/macros/s/AKfycbzCMPUl2BR259zhmuKZIVC9DU8xeL99o_PuyayKzcuKjNomJj06W-vAPuL-yzvn_ZSoaQ/exec?phone=" + phone)
+    .then(res => res.json())
+    .then(data => {
+      if (data.name) {
+        document.getElementById("owner").value = data.name;
+        document.getElementById("pet").value = data.pet;
+      }
+    });
+}
+
+/* 🔥 傳送資料 */
+function sendToSheet() {
   const data = {
     name: document.getElementById("owner").value,
-    phone: localStorage.getItem("phone") || "",
+    phone: document.getElementById("phone").value,
     pet: document.getElementById("pet").value,
-    amount: document.getElementById("amount").value,
-    service: document.getElementById("service").value
-  };
-
-  document.getElementById("pet").value,
     amount: document.getElementById("amount").value,
     service: document.getElementById("service").value
   };
@@ -284,7 +286,12 @@ printBtn.onclick=()=>{
     body: JSON.stringify(data)
   });
 }
-https://script.google.com/macros/s/AKfycbzCMPUl2BR259zhmuKZIVC9DU8xeL99o_PuyayKzcuKjNomJj06W-vAPuL-yzvn_ZSoaQ/exec
+
+/* 列印 */
+printBtn.onclick=()=>{
+  sendToSheet();
+  window.print();
+};
 </script>
 
 </body>

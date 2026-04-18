@@ -270,8 +270,16 @@ printBtn.onclick=()=>{
     service: document.getElementById("service").value
   };
 
+  document.getElementById("pet").value,
+    amount: document.getElementById("amount").value,
+    service: document.getElementById("service").value
+  };
+
   fetch("https://script.google.com/macros/s/AKfycbzv2eKStubjKcAByO5t-tQWjFrLXXDgJ12riZYUj6RfHx26LUIbv87RQlEVrRMCrZTGJA/exec", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify(data)
   });
 }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>美容服務收據</title>
-
+<div id="visitCount" style="margin-top:6px;color:#666;font-size:14px;"></div>
 <style>
 body{
   margin:0;
@@ -264,6 +264,13 @@ function loadCustomer() {
       if (data.name) {
         document.getElementById("owner").value = data.name;
         document.getElementById("pet").value = data.pet;
+
+        // 🔥 顯示第幾次來
+        if (data.count) {
+          document.getElementById("visitCount").innerText = "第 " + data.count + " 次來店";
+        }
+      } else {
+        document.getElementById("visitCount").innerText = "";
       }
     });
 }

@@ -5,58 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>美容服務收據</title>
-<div id="visitCount" style="margin-top:6px;color:#666;font-size:14px;"></div>
+
 <style>
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   background:#FFF3E0;
 }
-
-/* 卡片 */
 .wrap{
   padding:18px;
   max-width:700px;
   margin:auto;
 }
-
 .card{
   background:#fff;
   border-radius:18px;
   padding:18px;
   margin-bottom:18px;
 }
-
-/* 輸入 */
 label{
   font-weight:600;
   display:block;
   margin-top:12px;
   margin-bottom:6px;
 }
-
 input,select,textarea{
   width:100%;
   padding:12px;
   border-radius:12px;
   border:1px solid #ddd;
   font-size:16px;
-  box-sizing:border-box;
 }
-
-/* 奶油黃按鈕 */
 button.main{
   width:100%;
   padding:14px;
   border:none;
   border-radius:16px;
   background:linear-gradient(180deg,#FFF3C4,#FFE08A);
-  font-size:16px;
-  font-weight:700;
-  margin-top:16px;
 }
-
-/* 列印按鈕 */
 button.print{
   width:100%;
   padding:14px;
@@ -64,85 +50,21 @@ button.print{
   border-radius:16px;
   background:#22c55e;
   color:#fff;
-  font-size:16px;
-  font-weight:700;
-  margin-top:12px;
 }
-
-/* 簽名狀態 */
-.signStatus{
-  margin-top:10px;
-  font-size:14px;
-  color:#999;
-}
-
-/* ===== 全螢幕簽名 ===== */
-#signModal{
-  position:fixed;
-  inset:0;
-  background:#fff;
-  display:none;
-  z-index:99999;
-  touch-action:none;
-  overscroll-behavior:none;
-}
-
-#signModal.active{
-  display:block;
-}
-
-#signCanvas{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  touch-action:none;
-}
-
-/* 上方文字 */
-.signTitle{
-  position:fixed;
-  top:10px;
-  left:0;
-  right:0;
-  text-align:center;
-  font-weight:700;
-  font-size:18px;
-}
-
-/* 按鈕列 */
-.signActions{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:14px;
-  display:flex;
-  gap:12px;
-  padding:0 14px;
-}
-
-.signActions button{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-}
-
-.clear{background:#ddd;}
-.ok{background:#22c55e;color:#fff;}
-.ok:disabled{background:#aaa;}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
-
 <div class="card">
+
 <h2>美容服務收據</h2>
+<div id="visitCount" style="margin-top:6px;color:#666;font-size:14px;"></div>
+
 <label>聯絡電話</label>
 <input id="phone" onchange="loadCustomer()">
+
 <label>飼主姓名</label>
 <input id="owner">
 
@@ -156,105 +78,21 @@ button.print{
 <option value="其他">其他</option>
 </select>
 
-<label>其他服務說明</label>
-<textarea id="other" placeholder="只有選『其他』才需要填"></textarea>
-
 <label>金額</label>
 <input id="amount" type="number">
 
 <button class="main" id="openSign">客人簽名</button>
-<div class="signStatus" id="status">尚未簽名</div>
+<div id="status">尚未簽名</div>
 
 <button class="print" id="printBtn" disabled>列印收據</button>
-</div>
 
-</div>
-
-<!-- 全螢幕簽名 -->
-<div id="signModal">
-<canvas id="signCanvas"></canvas>
-<div class="signTitle">請在畫面簽名</div>
-
-<div class="signActions">
-<button class="clear" id="clear">清除</button>
-<button class="ok" id="ok" disabled>確定簽名</button>
 </div>
 </div>
 
 <script>
-const modal=document.getElementById("signModal");
-const canvas=document.getElementById("signCanvas");
-const ctx=canvas.getContext("2d");
-const clearBtn=document.getElementById("clear");
-const okBtn=document.getElementById("ok");
-const openSign=document.getElementById("openSign");
-const status=document.getElementById("status");
 const printBtn=document.getElementById("printBtn");
 
-let drawing=false;
-let signed=false;
-
-/* 打開簽名 */
-openSign.onclick=()=>{
-  modal.classList.add("active");
-
-  document.body.style.overflow="hidden";
-
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=innerWidth*dpr;
-  canvas.height=innerHeight*dpr;
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-
-  ctx.fillStyle="#fff";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  ctx.strokeStyle="#000";
-  ctx.lineWidth=2;
-  ctx.lineCap="round";
-
-  signed=false;
-  okBtn.disabled=true;
-};
-
-/* 簽名 */
-canvas.onpointerdown=e=>{
-  drawing=true;
-  signed=true;
-  okBtn.disabled=false;
-  ctx.beginPath();
-  ctx.moveTo(e.clientX,e.clientY);
-};
-
-canvas.onpointermove=e=>{
-  if(!drawing)return;
-  ctx.lineTo(e.clientX,e.clientY);
-  ctx.stroke();
-};
-
-canvas.onpointerup=canvas.onpointercancel=()=>drawing=false;
-
-/* 清除 */
-clearBtn.onclick=()=>{
-  ctx.fillStyle="#fff";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  signed=false;
-  okBtn.disabled=true;
-};
-
-/* 確認簽名 */
-okBtn.onclick=()=>{
-  if(!signed)return;
-
-  modal.classList.remove("active");
-  document.body.style.overflow="";
-
-  status.innerText="已完成簽名 ✓";
-  status.style.color="#16a34a";
-
-  printBtn.disabled=false;
-};
-
-/* 🔥 自動帶客戶資料 */
+/* 自動帶客戶資料 */
 function loadCustomer() {
   const phone = document.getElementById("phone").value;
 
@@ -265,9 +103,10 @@ function loadCustomer() {
         document.getElementById("owner").value = data.name;
         document.getElementById("pet").value = data.pet;
 
-        // 🔥 顯示第幾次來
         if (data.count) {
           document.getElementById("visitCount").innerText = "第 " + data.count + " 次來店";
+        } else {
+          document.getElementById("visitCount").innerText = "首次來店";
         }
       } else {
         document.getElementById("visitCount").innerText = "";
@@ -275,7 +114,7 @@ function loadCustomer() {
     });
 }
 
-/* 🔥 傳送資料 */
+/* 傳送資料 */
 function sendToSheet() {
   const data = {
     name: document.getElementById("owner").value,
@@ -287,12 +126,18 @@ function sendToSheet() {
 
   fetch("https://script.google.com/macros/s/AKfycbzCMPUl2BR259zhmuKZIVC9DU8xeL99o_PuyayKzcuKjNomJj06W-vAPuL-yzvn_ZSoaQ/exec", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
   });
+
+  printBtn.disabled=false;
 }
+
+/* 模擬簽名完成 */
+document.getElementById("openSign").onclick = () => {
+  document.getElementById("status").innerText = "已完成簽名 ✓";
+  printBtn.disabled=false;
+};
 
 /* 列印 */
 printBtn.onclick=()=>{

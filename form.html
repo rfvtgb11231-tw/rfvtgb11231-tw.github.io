@@ -43,7 +43,31 @@ section {
 }
 </style>
 </head>
+<script>
 
+document.getElementById("goForm").onclick = function(){
+
+    // 取得目前電話
+    const phone =
+      localStorage.getItem("currentPhone");
+
+    // 建立第一次來店紀錄
+    const customerData = {
+        agreed:true,
+        createdAt:new Date().toLocaleString("zh-TW")
+    };
+
+    // 儲存客戶
+    localStorage.setItem(
+        phone,
+        JSON.stringify(customerData)
+    );
+
+    // 跳到契約
+    window.location.href = "contract.html";
+};
+
+</script>
 <body>
 
 <header>📝 契約資料填寫</header>
@@ -54,7 +78,7 @@ section {
     請點擊下方按鈕，前往填寫契約所需之基本資料。
   </p>
 
-  <a class="button" href="https://forms.gle/hqgMSecVZQDFK2LX6">
+  <a class="button" id="goForm">
     前往填寫契約資料
   </a>
 </section>

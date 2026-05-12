@@ -154,7 +154,7 @@ label { display:block; margin-top: 12px; font-weight: bold; }
 
   <div class="nav">
     <button class="secondary" onclick="prev()">上一頁</button>
-    <button id="goForm" disabled onclick="toForm()">前往填寫資料</button>
+    <button id="goForm" disabled onclick="toForm()">完成並進入收據</button>
   </div>
 </section>
 
@@ -171,7 +171,27 @@ function next(){ if(page < sections.length-1){ page++; show(page);} }
 function prev(){ if(page > 0){ page--; show(page);} }
 
 agree?.addEventListener('change', ()=> goForm.disabled = !agree.checked);
-function toForm(){ window.location.href = "form.html"; }
+function toForm(){
+
+  // 取得電話
+  const phone =
+    localStorage.getItem("currentPhone");
+
+  // 建立客戶紀錄
+  const customerData = {
+    agreed:true,
+    signTime:new Date().toLocaleString("zh-TW")
+  };
+
+  // 儲存
+  localStorage.setItem(
+    phone,
+    JSON.stringify(customerData)
+  );
+
+  // 前往收據頁
+  window.location.href = "receipt.html";
+}
 </script>
 
 </body>

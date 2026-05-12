@@ -435,9 +435,8 @@ nextBtn.onclick = () => {
   // 存成永久客戶
   localStorage.setItem(phone, JSON.stringify(customerData));
 
-  // 前往 Google 表單
-  location.href =
-    "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
+   // 前往收據頁
+  window.location.href = "receipt.html"
 };
 </script>
 

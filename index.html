@@ -424,19 +424,46 @@ okBtn.onclick = () => {
 nextBtn.onclick = () => {
 
   // 取得目前電話
-  const phone = localStorage.getItem("currentPhone");
+  const phone =
+    localStorage.getItem("currentPhone");
 
-  // 建立客戶資料
+  // 取得原本資料
+  let oldData = {};
+
+  try{
+    oldData =
+      JSON.parse(localStorage.getItem(phone)) || {};
+  }catch(e){
+    oldData = {};
+  }
+
+  // 完整客戶資料
   const customerData = {
+
+    ...oldData,
+
+    phone: phone,
+
     agreed: true,
-    signTime: new Date().toLocaleString("zh-TW")
+
+    signTime:
+      new Date().toLocaleString("zh-TW"),
+
+    signature:
+      localStorage.getItem("contractSignature"),
+
+    contractSigned: true
   };
 
-  // 存成永久客戶
-  localStorage.setItem(phone, JSON.stringify(customerData));
+  // 永久儲存
+  localStorage.setItem(
+    phone,
+    JSON.stringify(customerData)
+  );
 
-   // 前往收據頁
-  window.location.href = "receipt.html"
+  // 前往收據頁
+  window.location.href =
+    "receipt.html";
 };
 </script>
 

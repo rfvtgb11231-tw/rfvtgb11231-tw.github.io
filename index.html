@@ -422,6 +422,20 @@ okBtn.onclick = () => {
 
 /* ✅ 連結 Google 表單（補回） */
 nextBtn.onclick = () => {
+
+  // 取得目前電話
+  const phone = localStorage.getItem("currentPhone");
+
+  // 建立客戶資料
+  const customerData = {
+    agreed: true,
+    signTime: new Date().toLocaleString("zh-TW")
+  };
+
+  // 存成永久客戶
+  localStorage.setItem(phone, JSON.stringify(customerData));
+
+  // 前往 Google 表單
   location.href =
     "https://docs.google.com/forms/d/e/1FAIpQLSebEvNO4Nha8bL079jVF_O72zst9zYL8y8qIKVuQj1TF8z0DA/viewform";
 };

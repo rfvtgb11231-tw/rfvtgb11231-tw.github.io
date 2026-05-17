@@ -189,7 +189,28 @@ disabled>
 </div>
 
 <script>
+// ⭐ 一進來就判斷
+localStorage.setItem("currentPhone", phone);
 
+if (data.exists) {
+  localStorage.setItem("isOldCustomer", "true");
+} else {
+  localStorage.setItem("isOldCustomer", "false");
+}
+const phone = localStorage.getItem("currentPhone");
+
+// 👉 舊客直接跳走（完全跳過這頁）
+if (isOldCustomer === "true") {
+  window.location.href = "receipt.html?phone=" + phone;
+}
+  // ⭐ 自動帶入電話
+window.onload = function() {
+  const phone = localStorage.getItem("currentPhone");
+  if (phone) {
+    document.getElementById("phone").value = phone;
+    loadCustomer(); // 自動查資料
+  }
+};
 /* 改成你的 GAS 網址 */
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzCMPUl2BR259zhmuKZIVC9DU8xeL99o_PuyayKzcuKjNomJj06W-vAPuL-yzvn_ZSoaQ/exec";

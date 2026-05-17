@@ -197,19 +197,7 @@ const isOldCustomer = localStorage.getItem("isOldCustomer") || "true";
 if (isOldCustomer === "false") {
   window.location.href = "contract.html";
 }
-const phone = localStorage.getItem("currentPhone");
 
-// 👉 舊客直接跳走（完全跳過這頁）
-if (isOldCustomer === "true") {
-  window.location.href = "receipt.html?phone=" + phone;
-}
-  // ⭐ 自動帶入電話
-window.onload = function() {
-  const phone = localStorage.getItem("currentPhone");
-  if (phone) {
-    document.getElementById("phone").value = phone;
-    loadCustomer(); // 自動查資料
-  }
 };
 /* 改成你的 GAS 網址 */
 const API_URL =

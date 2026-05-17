@@ -189,13 +189,13 @@ disabled>
 </div>
 
 <script>
-// ⭐ 一進來就判斷
-localStorage.setItem("currentPhone", phone);
+// ⭐ 安全判斷（不會爆）
+const phone = localStorage.getItem("currentPhone") || "";
+const isOldCustomer = localStorage.getItem("isOldCustomer") || "true";
 
-if (data.exists) {
-  localStorage.setItem("isOldCustomer", "true");
-} else {
-  localStorage.setItem("isOldCustomer", "false");
+// 👉 如果是新客 → 強制去簽契約
+if (isOldCustomer === "false") {
+  window.location.href = "contract.html";
 }
 const phone = localStorage.getItem("currentPhone");
 

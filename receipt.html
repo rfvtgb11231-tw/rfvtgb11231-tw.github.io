@@ -189,15 +189,13 @@ disabled>
 </div>
 
 <script>
-// ⭐ 安全判斷（不會爆）
-const phone = localStorage.getItem("currentPhone") || "";
-const isOldCustomer = localStorage.getItem("isOldCustomer") || "true";
-
-// 👉 如果是新客 → 強制去簽契約
-if (isOldCustomer === "false") {
-  window.location.href = "contract.html";
-}
-
+// ⭐ 自動帶入電話（保留這段）
+window.onload = function() {
+  const phone = localStorage.getItem("currentPhone");
+  if (phone) {
+    document.getElementById("phone").value = phone;
+    loadCustomer();
+  }
 };
 /* 改成你的 GAS 網址 */
 const API_URL =

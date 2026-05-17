@@ -321,7 +321,9 @@ html, body {
     <button id="ok" class="ok" disabled>確定簽名</button>
   </div>
 </div>
-// ⭐ 一進來就判斷
+
+<script>
+  // ⭐ 一進來就判斷
 localStorage.setItem("currentPhone", phone);
 
 if (data.exists) {
@@ -335,7 +337,6 @@ const phone = localStorage.getItem("currentPhone");
 if (isOldCustomer === "true") {
   window.location.href = "receipt.html?phone=" + phone;
 }
-<script>
 const contract = document.getElementById("contract");
 const agree = document.getElementById("agree");
 const jumpBtn = document.getElementById("jump");

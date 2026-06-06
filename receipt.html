@@ -215,21 +215,65 @@ now.getDate();
 /* 收據編號 */
 document.getElementById("receiptNo").innerText =
 "NO." + Date.now().toString().slice(-6);
+  /* 自動讀取客戶 */
+function loadCustomer(){
 
-console.log("API回傳資料:", data);
+  const phone =
+    document.getElementById("phone")
+    .value
+    .trim();
 
+  if(!phone){
+    return;
+  }
 
+  fetch(
+    API_URL +
+    "?phone=" +
+    encodeURIComponent(phone)
+  )
+  .then(res => res.json())
+  .then(data => {
+
+    console.log("API回傳資料:", data);
+
+    // 首次來店
+    if(!data || Object.keys(data).length === 0){
+
+      localStorage.setItem(
+        "currentPhone",
+        phone
+      );
+
+      window.location.href =
+        "contract.html";
+
+      return;
+    }
+
+    // 舊客
+    document.getElementById("owner").value =
+      data.name || "";
+
+    document.getElementById("pet").value =
+      data.pet || "";
+
+    document.getElementById("visitCount").innerText =
+      "第 " + data.count + " 次來店";
+
+  })
   .catch(err => {
 
-    console.log(err);
+    console.error(err);
 
     document.getElementById("visitCount")
-    .innerText =
-    "讀取失敗";
+      .innerText = "讀取失敗";
 
   });
 
 }
+
+
 
 /* 寫入試算表 */
 function sendToSheet(){

@@ -241,25 +241,10 @@ function loadCustomer(){
     console.log("API回傳資料:", data);
 alert(JSON.stringify(data));
 
-    if(data.name){
-
-      document.getElementById("owner").value =
-        data.name || "";
-
-      document.getElementById("pet").value =
-        data.pet || "";
-
-      if(data.count > 0){
+if(Object.keys(data).length === 0){
 
   document.getElementById("visitCount")
-  .innerText =
-  "第 " + data.count + " 次來店";
-
-}else{
-
-  document.getElementById("visitCount")
-  .innerText =
-  "首次來店";
+  .innerText = "首次來店";
 
   localStorage.setItem(
     "currentPhone",
@@ -269,17 +254,19 @@ alert(JSON.stringify(data));
   window.location.href =
     "contract.html";
 
+}else{
+
+  document.getElementById("owner").value =
+    data.name || "";
+
+  document.getElementById("pet").value =
+    data.pet || "";
+
+  document.getElementById("visitCount")
+  .innerText =
+  "第 " + (data.count || 1) + " 次來店";
+
 }
-
-    }else{
-
-      document.getElementById("visitCount")
-      .innerText =
-      "首次來店";
-
-    }
-
-  })
 
   .catch(err => {
 

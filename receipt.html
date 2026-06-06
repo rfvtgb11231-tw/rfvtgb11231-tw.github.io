@@ -250,17 +250,25 @@ function loadCustomer(){
 
       if(data.count > 0){
 
-        document.getElementById("visitCount")
-        .innerText =
-        "第 " + data.count + " 次來店";
+  document.getElementById("visitCount")
+  .innerText =
+  "第 " + data.count + " 次來店";
 
-      }else{
+}else{
 
-        document.getElementById("visitCount")
-        .innerText =
-        "首次來店";
+  document.getElementById("visitCount")
+  .innerText =
+  "首次來店";
 
-      }
+  localStorage.setItem(
+    "currentPhone",
+    phone
+  );
+
+  window.location.href =
+    "contract.html";
+
+}
 
     }else{
 

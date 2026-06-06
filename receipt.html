@@ -238,18 +238,18 @@ function loadCustomer(){
     console.log("API回傳資料:", data);
 
     // 首次來店
-    if(!data || Object.keys(data).length === 0){
+     if(!data || Object.keys(data).length === 0){
 
-      localStorage.setItem(
-        "currentPhone",
-        phone
-      );
+  localStorage.setItem(
+    "currentPhone",
+    phone
+  );
 
-      window.location.href =
-        "contract.html";
+  window.location.href =
+    "https://rfvtgb11231-tw.github.io/";
 
-      return;
-    }
+  return;
+}
 
     // 舊客
     document.getElementById("owner").value =

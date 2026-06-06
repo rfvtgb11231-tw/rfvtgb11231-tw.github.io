@@ -238,7 +238,8 @@ function loadCustomer(){
 
   .then(data => {
 
-    console.log(data);
+    console.log("API回傳資料:", data);
+alert(JSON.stringify(data));
 
     if(data.name){
 

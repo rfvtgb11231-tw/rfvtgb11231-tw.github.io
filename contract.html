@@ -172,27 +172,26 @@ function prev(){ if(page > 0){ page--; show(page);} }
 
 agree?.addEventListener('change', ()=> goForm.disabled = !agree.checked);
 function toForm(){
-    window.location.href = "receipt.html";
-}
 
-  // 取得電話
+  //取得目前電話
   const phone =
     localStorage.getItem("currentPhone");
 
-  // 建立客戶紀錄
+  //建立客戶資料
   const customerData = {
     agreed:true,
     signTime:new Date().toLocaleString("zh-TW")
   };
 
-  // 儲存
+  //儲存
   localStorage.setItem(
     phone,
     JSON.stringify(customerData)
   );
 
-  // 前往收據頁
-  window.location.href = "receipt.html";
+  //跳回收據頁
+  window.location.href="receipt.html";
+
 }
 </script>
 

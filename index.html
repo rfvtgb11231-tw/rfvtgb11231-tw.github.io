@@ -119,14 +119,20 @@ html, body {
   justify-content: center;
 }
 
-.agree.checked .circle {
-  background: #FFE08A;
-  border-color: #E7C95E;
+.agree.enabled .circle {
+
+  background:#FFE08A;
+
+  border-color:#E7C95E;
+
 }
-.agree.checked .circle::after {
-  content: "✓";
-  color: #fff;
-  font-weight: bold;
+
+.agree.enabled .circle::after {
+
+  content:"✓";
+
+  color:#7A5A00;
+
 }
 
 .footer button {
@@ -442,7 +448,6 @@ okBtn.onclick = () => {
 
   modal.classList.remove("active");
 
-  agree.classList.add("checked");
   nextBtn.disabled = false;
   nextBtn.classList.add("enabled");
 };

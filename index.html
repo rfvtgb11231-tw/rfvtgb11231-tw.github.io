@@ -323,19 +323,20 @@ html, body {
 </div>
 
 <script>
-  // ⭐ 一進來就判斷
-localStorage.setItem("currentPhone", phone);
+// 取得目前電話
+const phone =
+  localStorage.getItem("currentPhone");
 
-if (data.exists) {
-  localStorage.setItem("isOldCustomer", "true");
-} else {
-  localStorage.setItem("isOldCustomer", "false");
-}
-const phone = localStorage.getItem("currentPhone");
+// 是否舊客
+const isOldCustomer =
+  localStorage.getItem("isOldCustomer");
 
-// 👉 舊客直接跳走（完全跳過這頁）
-if (isOldCustomer === "true") {
-  window.location.href = "receipt.html?phone=" + phone;
+// 舊客直接跳過契約
+if(isOldCustomer === "true"){
+
+  window.location.href =
+    "receipt.html";
+
 }
 const contract = document.getElementById("contract");
 const agree = document.getElementById("agree");

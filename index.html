@@ -121,15 +121,20 @@ html, body {
 
 .agree.enabled .circle {
 
-  background:#FFE08A;
+  background:#FFF8D9;
 
   border-color:#E7C95E;
 
 }
+.agree.checked {
 
-.agree.enabled .circle::after {
+  background:#FFF8D9;
 
-  content:"✓";
+  border:1px solid #FFE08A;
+
+  border-radius:14px;
+
+  padding:10px 14px;
 
   color:#7A5A00;
 
@@ -448,6 +453,7 @@ okBtn.onclick = () => {
 
   modal.classList.remove("active");
 
+agree.classList.add("checked");
   nextBtn.disabled = false;
   nextBtn.classList.add("enabled");
 };

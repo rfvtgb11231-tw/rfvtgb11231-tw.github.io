@@ -192,14 +192,14 @@ disabled>
 // ⭐ 自動帶入電話（保留這段）
 window.onload = function () {
 
-  // 清除上一位客人的電話
-  localStorage.removeItem("currentPhone");
+  const phone = localStorage.getItem("currentPhone");
 
-  // 電話欄保持空白
-  document.getElementById("phone").value = "";
-
-  // 游標直接停在電話欄
-  document.getElementById("phone").focus();
+  if (phone) {
+    document.getElementById("phone").value = phone;
+    loadCustomer();
+  } else {
+    document.getElementById("phone").focus();
+  }
 
 };
 /* 改成你的 GAS 網址 */
